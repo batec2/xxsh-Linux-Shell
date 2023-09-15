@@ -2,7 +2,7 @@ CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c99 
 LDFLAGS= -lm
 
-all: 
+all: dataStructures
 
 dataStructures: dataStructures.o 
 	$(CC) $(CFLAGS) $^ -o $@

@@ -5,18 +5,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct entry{
+typedef struct Entry{
     char *key;
     char *value;
-}entry;
+}Entry;
 
 typedef struct HashTable{
     int size;
-    entry *entryTable;
+    int items;
+    Entry *entryTable;
 }HashTable;
-
+/*
+*/
 HashTable *createTable();
-
+/*
+*/
 void addEntry(char* key, char *value,int index,HashTable *table);
+/*
+*/
+void destroyTable(HashTable *table);
+
+Entry *resize(Entry *table, int size);
 
 #endif
