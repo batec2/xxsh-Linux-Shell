@@ -22,7 +22,7 @@ memCheck: test_dataStructure
 
 tar:
 	make clean
-	tar -czvf ../A3.tar.gz -C .. A3
+	tar -czvf ../dataStructure.tar.gz -C .. dataStructure
 
 clean:
-	rm -f *~ *.o
+	rm -f *~ *.o test_dataStructure
