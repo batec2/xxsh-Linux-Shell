@@ -1,16 +1,19 @@
 #include "dataStructure.h"
 
-#define INITIAL_SIZE 10
-#define LOAD_FACTOR 0.75
-
+#define INITIAL_SIZE 5
+#define LOAD_FACTOR 0.70
+#define RESIZE_MULT 2
 int main(int argc, char *argv[]){
-    unsigned int index;
     HashTable *table = createTable();
+    addEntry("Crush","Bate",table);
     printEntrys(table);
-    index = hash("Crush")%table->size;
-    addEntry("Crush","Bate",index,table);
+    printf("%i\n",findEntry(table,"Crush"));
+    addEntry("Crush1","Bate1",table);
+    addEntry("Crush2","Bate2",table);
+    addEntry("Crush3","Bate3",table);
+    addEntry("Crush4","Bate4",table);
     printEntrys(table);
-    printf("%hu\n",findEntry(table,"Crush"));
+    printf("%i\n",findEntry(table,"Crush"));
     return 0;
 }
 
@@ -31,11 +34,14 @@ void setNull(Entry *table,int size){
     }
 }
 
-void addEntry(char* key, char *value,int index,HashTable *table){
-    
+void addEntry(char* key, char *value,HashTable *table){
+    table->items++;
     if((table->items/table->size)>LOAD_FACTOR){
         table->entryTable = resize(table->entryTable,table->size);
+        table->size *= RESIZE_MULT;
+        printf("%i resized\n",table->size);
     }
+    int index = nextOpen(table->entryTable,(hash(key)%table->size),table->size);
     table->entryTable[index].key = malloc(strlen(key)+1);
     strcpy( table->entryTable[index].key,key);
     table->entryTable[index].value = malloc(strlen(value)+1);
@@ -43,11 +49,32 @@ void addEntry(char* key, char *value,int index,HashTable *table){
 }
 
 Entry *resize(Entry *table, int size){
-    Entry *newTable = malloc((size*1.5)*sizeof(Entry));
+    int newSize = size*RESIZE_MULT;
+    int index = 0;
+    Entry *newTable = malloc(newSize*sizeof(Entry));
+    setNull(newTable,newSize);
     for(int i = 0; i<size;i++){
-        
+        if(table[i].key != NULL){
+            index = nextOpen(newTable,hash(table[i].key)%newSize,newSize);
+            newTable[index].key = table[i].key;
+            newTable[index].value = table[i].value;
+            table[i].key = NULL;
+            table[i].value = NULL;
+        }
     }
     return newTable;
+}
+
+int nextOpen(Entry *table,int index,int size){
+    while(table[index].key!=NULL){
+        if(index == (size-1)){
+            index = 0;
+        }
+        else{
+            index++;
+        }
+    }
+    return index;
 }
 /**
  * found from here: http://www.cse.yorku.ca/~oz/hash.html

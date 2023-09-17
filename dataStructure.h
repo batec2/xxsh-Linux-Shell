@@ -29,7 +29,7 @@ void setNull(Entry *table,int size);
 /**
  * 
 */
-void addEntry(char* key, char *value,int index,HashTable *table);
+void addEntry(char* key, char *value,HashTable *table);
 
 /**
  * 
@@ -41,6 +41,8 @@ void destroyTable(HashTable *table);
 unsigned int hash(char* str);
 
 Entry *resize(Entry *table, int size);
+
+int nextOpen(Entry *table,int index,int size);
 
 void printEntrys(HashTable *table);
 

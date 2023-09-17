@@ -2,13 +2,13 @@ CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c99 
 LDFLAGS= -lm
 
-all: dataStructures
+all: dataStructure
 
-dataStructures: dataStructures.o 
+dataStructures: dataStructure.o 
 	$(CC) $(CFLAGS) $^ -o $@
 
-dataStructures.o: dataStructures.c dataStructures.h 
-	$(CC) $(CFLAGS) -c dataStructures.c
+dataStructures.o: dataStructure.c dataStructure.h 
+	$(CC) $(CFLAGS) -c dataStructure.c
 
 tar:
 
