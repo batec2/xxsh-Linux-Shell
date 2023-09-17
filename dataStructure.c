@@ -3,19 +3,6 @@
 #define INITIAL_SIZE 5
 #define LOAD_FACTOR 0.70
 #define RESIZE_MULT 2
-int main(int argc, char *argv[]){
-    HashTable *table = createTable();
-    addEntry("Crush","Bate",table);
-    printEntrys(table);
-    printf("%i\n",findEntry(table,"Crush"));
-    addEntry("Crush1","Bate1",table);
-    addEntry("Crush2","Bate2",table);
-    addEntry("Crush3","Bate3",table);
-    addEntry("Crush4","Bate4",table);
-    printEntrys(table);
-    printf("%i\n",findEntry(table,"Crush"));
-    return 0;
-}
 
 /*create,destroy,get,set,remove,search,print,printspecific*/
 
@@ -23,6 +10,7 @@ int main(int argc, char *argv[]){
 HashTable *createTable(){
     HashTable *table = malloc(sizeof(HashTable));
     table->size = INITIAL_SIZE;
+    table->items = 0;
     table->entryTable = malloc(sizeof(Entry)*INITIAL_SIZE);
     setNull(table->entryTable,INITIAL_SIZE);
     return table;
@@ -36,7 +24,7 @@ void setNull(Entry *table,int size){
 
 void addEntry(char* key, char *value,HashTable *table){
     table->items++;
-    if((table->items/table->size)>LOAD_FACTOR){
+    if(((float)table->items/table->size)>LOAD_FACTOR){
         table->entryTable = resize(table->entryTable,table->size);
         table->size *= RESIZE_MULT;
         printf("%i resized\n",table->size);
@@ -62,6 +50,7 @@ Entry *resize(Entry *table, int size){
             table[i].value = NULL;
         }
     }
+    free(table);
     return newTable;
 }
 
@@ -92,20 +81,13 @@ unsigned int hash(char* str) {
 	return hash;
 }
 
-void checkLoad(){
-
-}
-
-void destroyTable(HashTable *table){
-}
 
 void printEntrys(HashTable *table){
     for(int i = 0;i<table->size;i++){
         if(table->entryTable[i].key != NULL){
             printf("%i %s , %s\n",i,table->entryTable[i].key,table->entryTable[i].value);
-
         }
-        else{
+        else if(table->entryTable[i].key == NULL){
             printf("%i NULL\n",i);
         }
 
@@ -134,22 +116,58 @@ int findEntry(HashTable *table,char *key){
         }
     }
 }
+
+void destroyTable(HashTable *table){
+    for(int i = 0; i<table->size;i++){
+        if(table->entryTable[i].key!=NULL){
+            free(table->entryTable[i].key);
+            free(table->entryTable[i].value);
+            table->entryTable[i].key=NULL;
+            table->entryTable[i].value=NULL;
+        }
+    }
+    free(table->entryTable);
+    free(table);
+}
 /*
 void checkNull(HashTable *check){
     if(check == NULL){
         printf("Malloc Failed!");
     }
 }
-
-void getEntry(){
-
-}
-
-void setEntry(){
-
-}
-
-void removeEntry(){
-
-}
 */
+char *getEntry(HashTable *table,char *key){
+    int index = findEntry(table,key);
+    if(index == -1){
+        return NULL;
+    }
+    else{
+        return table->entryTable[index].value;
+    }
+}
+
+int setEntry(HashTable *table,char *key, char *value){
+    int index = findEntry(table,key);
+    if(index == -1){
+        return index;
+    }
+    else{
+        table->entryTable[index].value = realloc(table->entryTable[index].value,(strlen(value)+1));
+        strcpy(table->entryTable[index].value,value);
+        return index;
+    }
+}
+
+int removeEntry(HashTable *table,char *key){
+    int index = findEntry(table,key);
+    if(index == -1){
+        return index;
+    }
+    else{
+        free(table->entryTable[index].key);
+        free(table->entryTable[index].value);
+        table->entryTable[index].key = NULL;
+        table->entryTable[index].value = NULL;
+        return index;
+    }
+}

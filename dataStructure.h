@@ -34,10 +34,6 @@ void addEntry(char* key, char *value,HashTable *table);
 /**
  * 
 */
-void destroyTable(HashTable *table);
-/**
- * 
-*/
 unsigned int hash(char* str);
 
 Entry *resize(Entry *table, int size);
@@ -47,5 +43,13 @@ int nextOpen(Entry *table,int index,int size);
 void printEntrys(HashTable *table);
 
 int findEntry(HashTable *table,char *key);
+
+void destroyTable(HashTable *table);
+
+char *getEntry(HashTable *table,char *key);
+
+int setEntry(HashTable *table,char *key, char *value);
+
+int removeEntry(HashTable *table,char *key);
 
 #endif
