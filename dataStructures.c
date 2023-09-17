@@ -4,17 +4,11 @@
 #define LOAD_FACTOR 0.75
 
 int main(int argc, char *argv[]){
+    unsigned int index;
     HashTable *table = createTable();
-    printf("%lu\n", (sizeof((table->entryTable))/sizeof(Entry)));
-    addEntry("Crush","Bate",0,table);
-    addEntry("Crush1","Bate",1,table);
-    printf("%s %s\n",table->entryTable[1].key,table->entryTable[1].value);
-    int size = 10;
-    int items = 8;
-
-    //printf("%i",((items/size)>LOAD_FACTOR));
-    
-
+    index = hash("Crush")%table->size;
+    addEntry("Crush","Bate",index,table);
+    printf("%s",table->entryTable[index].value);
     return 0;
 }
 
@@ -29,6 +23,7 @@ HashTable *createTable(){
 }
 
 void addEntry(char* key, char *value,int index,HashTable *table){
+    
     if((table->items/table->size)>LOAD_FACTOR){
         table->entryTable = resize(table->entryTable,table->size);
     }
@@ -39,7 +34,26 @@ void addEntry(char* key, char *value,int index,HashTable *table){
 }
 
 Entry *resize(Entry *table, int size){
-    return realloc(table,(size*1.5)*sizeof(Entry));
+    Entry *newTable = malloc((size*1.5)*sizeof(Entry));
+    for(int i = 0; i<size;i++){
+        
+    }
+    return newTable;
+}
+/**
+ * found from here: http://www.cse.yorku.ca/~oz/hash.html
+ * implemented from here: https://www.programmingalgorithms.com/algorithm/sdbm-hash/c/
+*/
+unsigned int hash(char* str) {
+	unsigned int hash = 0;
+	unsigned int i = 0;
+
+	for (i = 0; i < strlen(str); str++, i++)
+	{
+		hash = (*str) + (hash << 6) + (hash << 16) - hash;
+	}
+
+	return hash;
 }
 
 void checkLoad(){

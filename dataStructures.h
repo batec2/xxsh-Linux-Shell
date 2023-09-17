@@ -15,15 +15,22 @@ typedef struct HashTable{
     int items;
     Entry *entryTable;
 }HashTable;
-/*
+/**
+ * 
 */
 HashTable *createTable();
-/*
+/**
+ * 
 */
 void addEntry(char* key, char *value,int index,HashTable *table);
-/*
+/**
+ * 
 */
 void destroyTable(HashTable *table);
+/**
+ * 
+*/
+unsigned int hash(char* str);
 
 Entry *resize(Entry *table, int size);
 
