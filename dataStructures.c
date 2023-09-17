@@ -6,9 +6,11 @@
 int main(int argc, char *argv[]){
     unsigned int index;
     HashTable *table = createTable();
+    printEntrys(table);
     index = hash("Crush")%table->size;
     addEntry("Crush","Bate",index,table);
-    printf("%s",table->entryTable[index].value);
+    printEntrys(table);
+    printf("%hu\n",findEntry(table,"Crush"));
     return 0;
 }
 
@@ -19,7 +21,14 @@ HashTable *createTable(){
     HashTable *table = malloc(sizeof(HashTable));
     table->size = INITIAL_SIZE;
     table->entryTable = malloc(sizeof(Entry)*INITIAL_SIZE);
+    setNull(table->entryTable,INITIAL_SIZE);
     return table;
+}
+
+void setNull(Entry *table,int size){
+    for(int i =0; i<size;i++){
+        table[i] = (Entry){.key = NULL,.value = NULL};
+    }
 }
 
 void addEntry(char* key, char *value,int index,HashTable *table){
@@ -63,7 +72,41 @@ void checkLoad(){
 void destroyTable(HashTable *table){
 }
 
+void printEntrys(HashTable *table){
+    for(int i = 0;i<table->size;i++){
+        if(table->entryTable[i].key != NULL){
+            printf("%i %s , %s\n",i,table->entryTable[i].key,table->entryTable[i].value);
 
+        }
+        else{
+            printf("%i NULL\n",i);
+        }
+
+    }
+}
+
+int findEntry(HashTable *table,char *key){
+    int index = hash(key)%table->size;
+    if((table->entryTable[index].key!=NULL)&&(strcmp(table->entryTable[index].key,key)==0)){
+        return index;
+    }
+    else{
+        while((table->entryTable[index].key!=NULL)&&(strcmp(table->entryTable[index].key,key)!=0)){
+            if(index == (table->size-1)){
+                index = 0;
+            }
+            else{
+                index++;
+            }
+        }
+        if((table->entryTable[index].key==NULL)){
+            return -1;
+        }
+        else{
+            return index;
+        }
+    }
+}
 /*
 void checkNull(HashTable *check){
     if(check == NULL){
