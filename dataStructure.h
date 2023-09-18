@@ -42,6 +42,8 @@ int nextOpen(Entry *table,int index,int size);
 
 void printEntrys(HashTable *table);
 
+void printEntry(HashTable *table, char *key);
+
 int findEntry(HashTable *table,char *key);
 
 void destroyTable(HashTable *table);
@@ -51,5 +53,7 @@ char *getEntry(HashTable *table,char *key);
 int setEntry(HashTable *table,char *key, char *value);
 
 int removeEntry(HashTable *table,char *key);
+
+void checkNull(void *check);
 
 #endif

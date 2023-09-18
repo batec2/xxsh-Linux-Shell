@@ -1,5 +1,4 @@
 #include "dataStructure.h"
-
 #define INITIAL_SIZE 5
 #define LOAD_FACTOR 0.70
 #define RESIZE_MULT 2
@@ -9,9 +8,11 @@
 /*creates hashTable*/
 HashTable *createTable(){
     HashTable *table = malloc(sizeof(HashTable));
+    checkNull(table);
     table->size = INITIAL_SIZE;
     table->items = 0;
     table->entryTable = malloc(sizeof(Entry)*INITIAL_SIZE);
+    checkNull(table->entryTable);
     setNull(table->entryTable,INITIAL_SIZE);
     return table;
 }
@@ -31,8 +32,10 @@ void addEntry(char* key, char *value,HashTable *table){
     }
     int index = nextOpen(table->entryTable,(hash(key)%table->size),table->size);
     table->entryTable[index].key = malloc(strlen(key)+1);
+    checkNull(table->entryTable[index].key);
     strcpy( table->entryTable[index].key,key);
     table->entryTable[index].value = malloc(strlen(value)+1);
+    checkNull(table->entryTable[index].value);
     strcpy( table->entryTable[index].value,value);
 }
 
@@ -40,6 +43,7 @@ Entry *resize(Entry *table, int size){
     int newSize = size*RESIZE_MULT;
     int index = 0;
     Entry *newTable = malloc(newSize*sizeof(Entry));
+    checkNull(newTable);
     setNull(newTable,newSize);
     for(int i = 0; i<size;i++){
         if(table[i].key != NULL){
@@ -51,6 +55,7 @@ Entry *resize(Entry *table, int size){
         }
     }
     free(table);
+    table = NULL;
     return newTable;
 }
 
@@ -94,6 +99,16 @@ void printEntrys(HashTable *table){
     }
 }
 
+void printEntry(HashTable *table, char *key){
+    int index = findEntry(table,key);
+    if(index==-1){
+        printf("%s does not exist.",key);
+    }
+    else{
+        printf("%s, %s",key,table->entryTable[index].value);
+    }
+}
+
 int findEntry(HashTable *table,char *key){
     int index = hash(key)%table->size;
     if((table->entryTable[index].key!=NULL)&&(strcmp(table->entryTable[index].key,key)==0)){
@@ -127,15 +142,11 @@ void destroyTable(HashTable *table){
         }
     }
     free(table->entryTable);
+    table->entryTable = NULL;
     free(table);
+    table = NULL;
 }
-/*
-void checkNull(HashTable *check){
-    if(check == NULL){
-        printf("Malloc Failed!");
-    }
-}
-*/
+
 char *getEntry(HashTable *table,char *key){
     int index = findEntry(table,key);
     if(index == -1){
@@ -169,5 +180,12 @@ int removeEntry(HashTable *table,char *key){
         table->entryTable[index].key = NULL;
         table->entryTable[index].value = NULL;
         return index;
+    }
+}
+
+void checkNull(void *check){
+    if(check == NULL){
+        printf("Malloc Failed!");
+        exit(EXIT_FAILURE);
     }
 }
