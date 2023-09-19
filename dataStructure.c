@@ -1,7 +1,10 @@
 #include "dataStructure.h"
+
 #define INITIAL_SIZE 5
 #define LOAD_FACTOR 0.70
 #define RESIZE_MULT 2
+#define MAX_INPUT_SIZE 8
+#define MAX_TABLE_SIZE 10
 
 /*create,destroy,get,set,remove,search,print,printspecific*/
 
