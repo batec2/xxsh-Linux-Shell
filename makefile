@@ -16,6 +16,7 @@ dataStructure.o: dataStructure.c dataStructure.h
 .PHONY:
 
 test: memCheck
+	./test_dataStructure
 
 memCheck: test_dataStructure
 	valgrind -s --leak-check=yes ./test_dataStructure
