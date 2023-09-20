@@ -5,11 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*Entries of HashTable*/
 typedef struct Entry{
     char *key;
     char *value;
 }Entry;
-
+/*HashTable struct holds, array and information on table*/
 typedef struct HashTable{
     int size;
     int items;

@@ -32,7 +32,10 @@ void setNull(Entry * table, int size)
 		.key = NULL,.value = NULL};
 	}
 }
-
+/**
+ * Finds index for key and allocates memory for key, the key is then
+ * inserted in the table.
+*/
 void addEntry(char *key, char *value, HashTable * table)
 {
 	table->items++;
@@ -235,6 +238,7 @@ int removeEntry(HashTable * table, char *key)
 		free(table->entryTable[index].value);
 		table->entryTable[index].key = NULL;
 		table->entryTable[index].value = NULL;
+		table->items--;
 		return index;
 	}
 }
