@@ -14,6 +14,7 @@ typedef struct Entry{
 typedef struct HashTable{
     int size;
     int items;
+    int tombstones;
     Entry *entryTable;
 }HashTable;
 
@@ -30,10 +31,10 @@ HashTable *createTable();
 void setNull(Entry *table,int size);
 
 /**
- * Arguments: char*,char*,HashTable
+ * Arguments:HashTable*,char*,char*
  * Returns:
 */
-void addEntry(char* key, char *value,HashTable *table);
+void addEntry(HashTable *table,char *key, char *value);
 
 /**
  * Arguments: char*

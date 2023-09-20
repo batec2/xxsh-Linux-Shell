@@ -1,3 +1,23 @@
+/**
+ * QUESTION 3:
+ * Hashtables time complexity:
+ * 	Look-up: 
+ * 		Average: O(1) - the hash should directly point to index of key
+ * 		Bestcase: O(1) 
+ * 		Worstcase: O(n) - A low efficency hash could cause high collision rates
+ * 						meaning resorting to linear search which is O(n)
+ * 	Insert:
+ * 		Average: O(1) - low collision hash would have unique indexs for keys
+ * 		Bestcase: O(1) 
+ * 		Worstcase: O(n) - high collision rates will make use of linear probing
+ * 						which is O(n). Aswell resizing of table will cause
+ * 						an increase in insert times, as the table needs
+ * 						to be remade and all entries rehashed and reinserted.
+ * 	Delete:
+ * 		Average: O(1)
+ * 		Bestcase: O(1)
+ * 		Worstcase: O(n)
+*/
 #include "dataStructure.h"
 
 #define INITIAL_SIZE 5
@@ -16,6 +36,7 @@ HashTable *createTable()
 	checkNull(table);
 	table->size = INITIAL_SIZE;
 	table->items = 0;
+	table->tombstones= 0;
 	table->entryTable = malloc(sizeof(Entry) * INITIAL_SIZE);
 	checkNull(table->entryTable);
 	setNull(table->entryTable, INITIAL_SIZE);
@@ -36,12 +57,17 @@ void setNull(Entry * table, int size)
  * Finds index for key and allocates memory for key, the key is then
  * inserted in the table.
 */
-void addEntry(char *key, char *value, HashTable * table)
+void addEntry(HashTable *table,char *key, char *value)
 {
+	if(findEntry(table,key)!= -1){
+		return;
+	}
+	
 	table->items++;
-	if (((float)table->items / table->size) > LOAD_FACTOR) {
+	if (((float)(table->items+table->tombstones) / table->size) > LOAD_FACTOR) {
 		table->entryTable = resize(table->entryTable, table->size);
 		table->size *= RESIZE_MULT;
+		table->tombstones = 0;
 	}
 
 	int index =
@@ -85,19 +111,26 @@ Entry *resize(Entry * table, int size)
 	setNull(newTable, newSize);
 	for (int i = 0; i < size; i++) {
 		if (table[i].key != NULL) {
-			index =
-			    nextOpen(newTable, hash(table[i].key) % newSize,
-				     newSize);
-			newTable[index].key = table[i].key;
-			newTable[index].value = table[i].value;
-			table[i].key = NULL;
-			table[i].value = NULL;
+			if ((strcmp(table[i].key,"TOMBSTONE")==0) && (table[i].value == NULL)){
+				free(table[i].key);
+				table[i].key = NULL; 
+			}
+			else{
+				index =
+					nextOpen(newTable, hash(table[i].key) % newSize,
+						newSize);
+				newTable[index].key = table[i].key;
+				newTable[index].value = table[i].value;
+				table[i].key = NULL;
+				table[i].value = NULL;
+			}
 		}
 	}
 	free(table);
 	table = NULL;
 	return newTable;
 }
+
 
 /**
  * Looks for the next available spot in array after specified index
@@ -123,12 +156,13 @@ void printEntrys(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			printf("%i %s , %s\n", i, table->entryTable[i].key,
+			printf("%i %s , %s\n",i, table->entryTable[i].key,
 			       table->entryTable[i].value);
+		
 		} else if (table->entryTable[i].key == NULL) {
 			printf("%i NULL\n", i);
-		}
-
+	}
+		
 	}
 }
 
@@ -180,10 +214,16 @@ void destroyTable(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			free(table->entryTable[i].key);
-			free(table->entryTable[i].value);
-			table->entryTable[i].key = NULL;
-			table->entryTable[i].value = NULL;
+			if ((strcmp(table->entryTable[i].key,"TOMBSTONE")==0) && (table->entryTable[i].value == NULL)){
+				free(table->entryTable[i].key);
+				table->entryTable[i].key = NULL; 
+			}
+			else{
+				free(table->entryTable[i].key);
+				free(table->entryTable[i].value);
+				table->entryTable[i].key = NULL;
+				table->entryTable[i].value = NULL;
+			}
 		}
 	}
 	free(table->entryTable);
@@ -236,9 +276,11 @@ int removeEntry(HashTable * table, char *key)
 	} else {
 		free(table->entryTable[index].key);
 		free(table->entryTable[index].value);
-		table->entryTable[index].key = NULL;
 		table->entryTable[index].value = NULL;
+		table->entryTable[index].key = malloc(10);
+		strcpy(table->entryTable[index].key,"TOMBSTONE"); 
 		table->items--;
+		table->tombstones++;
 		return index;
 	}
 }
