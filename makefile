@@ -23,7 +23,7 @@ memCheck: test_dataStructure
 
 tar:
 	make clean
-	tar -czvf ../dataStructure.tar.gz -C .. dataStructure
+	tar -czvf ../lab01_CrushBate.tar.gz -C .. CMPT360Lab1
 
 clean:
 	rm -f *~ *.o test_dataStructure

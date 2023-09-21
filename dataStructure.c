@@ -23,7 +23,6 @@
 #define INITIAL_SIZE 5
 #define LOAD_FACTOR 0.70
 #define RESIZE_MULT 2
-#define MAX_INPUT_SIZE 8
 
 /**
  * Allocates memory for Hashtable and initializes members of HashTable
@@ -36,7 +35,7 @@ HashTable *createTable()
 	checkNull(table);
 	table->size = INITIAL_SIZE;
 	table->items = 0;
-	table->tombstones= 0;
+	table->tombstones = 0;
 	table->entryTable = malloc(sizeof(Entry) * INITIAL_SIZE);
 	checkNull(table->entryTable);
 	setNull(table->entryTable, INITIAL_SIZE);
@@ -53,18 +52,20 @@ void setNull(Entry * table, int size)
 		.key = NULL,.value = NULL};
 	}
 }
+
 /**
  * Finds index for key and allocates memory for key, the key is then
  * inserted in the table.
 */
-void addEntry(HashTable *table,char *key, char *value)
+void addEntry(HashTable * table, char *key, char *value)
 {
-	if(findEntry(table,key)!= -1){
+	if (findEntry(table, key) != -1) {
 		return;
 	}
-	
+
 	table->items++;
-	if (((float)(table->items+table->tombstones) / table->size) > LOAD_FACTOR) {
+	if (((float)(table->items + table->tombstones) / table->size) >
+	    LOAD_FACTOR) {
 		table->entryTable = resize(table->entryTable, table->size);
 		table->size *= RESIZE_MULT;
 		table->tombstones = 0;
@@ -90,8 +91,8 @@ unsigned int hash(char *str)
 {
 	unsigned int hash = 0;
 	unsigned int i = 0;
-
-	for (i = 0; i < strlen(str); str++, i++) {
+	unsigned int length = strlen(str);
+	for (i = 0; i < length; str++, i++) {
 		hash = (*str) + (hash << 6) + (hash << 16) - hash;
 	}
 
@@ -111,14 +112,15 @@ Entry *resize(Entry * table, int size)
 	setNull(newTable, newSize);
 	for (int i = 0; i < size; i++) {
 		if (table[i].key != NULL) {
-			if ((strcmp(table[i].key,"TOMBSTONE")==0) && (table[i].value == NULL)){
+			if ((strcmp(table[i].key, "TOMBSTONE") == 0)
+			    && (table[i].value == NULL)) {
 				free(table[i].key);
-				table[i].key = NULL; 
-			}
-			else{
+				table[i].key = NULL;
+			} else {
 				index =
-					nextOpen(newTable, hash(table[i].key) % newSize,
-						newSize);
+				    nextOpen(newTable,
+					     hash(table[i].key) % newSize,
+					     newSize);
 				newTable[index].key = table[i].key;
 				newTable[index].value = table[i].value;
 				table[i].key = NULL;
@@ -130,7 +132,6 @@ Entry *resize(Entry * table, int size)
 	table = NULL;
 	return newTable;
 }
-
 
 /**
  * Looks for the next available spot in array after specified index
@@ -156,13 +157,13 @@ void printEntrys(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			printf("%i %s , %s\n",i, table->entryTable[i].key,
+			printf("%i %s , %s\n", i, table->entryTable[i].key,
 			       table->entryTable[i].value);
-		
+
 		} else if (table->entryTable[i].key == NULL) {
 			printf("%i NULL\n", i);
-	}
-		
+		}
+
 	}
 }
 
@@ -173,9 +174,9 @@ void printEntry(HashTable * table, char *key)
 {
 	int index = findEntry(table, key);
 	if (index == -1) {
-		printf("%s does not exist.", key);
+		printf("%s does not exist.\n", key);
 	} else {
-		printf("%s, %s", key, table->entryTable[index].value);
+		printf("%s, %s\n", key, table->entryTable[index].value);
 	}
 }
 
@@ -214,11 +215,11 @@ void destroyTable(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			if ((strcmp(table->entryTable[i].key,"TOMBSTONE")==0) && (table->entryTable[i].value == NULL)){
+			if ((strcmp(table->entryTable[i].key, "TOMBSTONE") == 0)
+			    && (table->entryTable[i].value == NULL)) {
 				free(table->entryTable[i].key);
-				table->entryTable[i].key = NULL; 
-			}
-			else{
+				table->entryTable[i].key = NULL;
+			} else {
 				free(table->entryTable[i].key);
 				free(table->entryTable[i].value);
 				table->entryTable[i].key = NULL;
@@ -233,7 +234,7 @@ void destroyTable(HashTable * table)
 }
 
 /**
- * Gets the index of a specific key in the array, returns NULL if key does
+ * Gets the value of a specific key in the array, returns NULL if key does
  * not exist
 */
 char *getEntry(HashTable * table, char *key)
@@ -278,7 +279,7 @@ int removeEntry(HashTable * table, char *key)
 		free(table->entryTable[index].value);
 		table->entryTable[index].value = NULL;
 		table->entryTable[index].key = malloc(10);
-		strcpy(table->entryTable[index].key,"TOMBSTONE"); 
+		strcpy(table->entryTable[index].key, "TOMBSTONE");
 		table->items--;
 		table->tombstones++;
 		return index;
