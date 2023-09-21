@@ -3,14 +3,19 @@
 #include <stdlib.h>
 #include "xxsh.h"
 
+#define MAX_LENGTH 256
+
 int main(void){
     return 0;
 }
 
 void mainLoop(){
-    char buffer[256];
+    char buffer[MAX_LENGTH];
+    if(fgets(buffer,MAX_LENGTH,stdin)!=NULL){
+        printf(buffer);
+    }
 }
 
 char *parse(char *input){
-
+    
 }
