@@ -13,6 +13,12 @@ test_dataStructure.o: test_dataStructure.c
 dataStructure.o: dataStructure.c dataStructure.h 
 	$(CC) $(CFLAGS) -c dataStructure.c
 
+xxsh: xxsh.o 
+	$(CC) $(CFLAGS) $^ -o $@
+
+xxsh.o: xxsh.c xxsh.h 
+	$(CC) $(CFLAGS) -c xxsh.c
+
 .PHONY:
 
 test: memCheck
