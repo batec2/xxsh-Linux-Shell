@@ -12,8 +12,32 @@ int main(void){
 
 void mainLoop(){
     char buffer[MAX_LENGTH];
-    if(fgets(buffer,MAX_LENGTH,stdin)!=NULL){
-        puts(buffer);
+    char *token;
+    while((printf("$xxsh>>")>0)&&(fgets(buffer,MAX_LENGTH,stdin)!=NULL)){
+        printf("$xxsh>>");
+        token = strtok(buffer," \n");
+        if(token == NULL){
+            return;
+        }
+        if(strcmp(token,"export")==0){
+            printf("%s\n",strtok(NULL," \n"));
+        }
+        else if(strcmp(token,"env")==0){
+            printf("%s\n",strtok(NULL," \n"));
+        }
+        else if(strcmp(token,"history")==0){
+            printf("%s\n",strtok(NULL," \n"));
+        }
+        else if(strcmp(token,"quit")==0){
+            printf("%s\n",strtok(NULL," \n"));
+        }
+        else if(strcmp(token,"exit")==0){
+            printf("%s\n",strtok(NULL," \n"));
+            return;
+        }
+        else{
+            printf("Not a valid command\n");
+        }
     }
 }
 
