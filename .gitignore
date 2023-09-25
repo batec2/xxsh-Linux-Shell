@@ -1,2 +1,3 @@
-dataStructure.o
+*.o
 dataStructure
+test_dataStructure
