@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "xxsh.h"
 
-#define MAX_LENGTH 15
+#define MAX_LENGTH 50
 
 int main(void){
     mainLoop();
@@ -24,7 +24,8 @@ void mainLoop(){
             continue;
         }
         if(strcmp(token,"export")==0){
-            strtok(NULL," \n");
+            token = strtok(NULL," \n");
+            parse(token);
             printf("$xxsh>>Export\n");
         }
         else if(strcmp(token,"env")==0){
@@ -52,7 +53,26 @@ void mainLoop(){
 }
 
 char *parse(char *input){
-    return input;    
+     char *token;
+     int value;
+     if(input!=NULL){
+        token = strtok(input,"=");
+        if(token!=NULL){
+            printf("%s\n",token);
+            value = atoi(strtok(NULL,"\n"));
+            if(value!=0){
+                printf("%i\n",value);
+                return NULL;
+            }
+            return NULL;
+        }
+        else{
+            return NULL;
+        }
+     }
+     else{
+        return NULL;
+     }
 }
 
 void clearBuffer(){
