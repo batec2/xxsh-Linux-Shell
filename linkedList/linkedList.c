@@ -46,7 +46,6 @@ Item *add(char *value, LinkedList *list)
     
     if (!list->first)
     {
-        printf("Adding first item to list\n");
         item->previous= NULL;
         list->first = item;
     }
@@ -115,7 +114,6 @@ int delete_item(char *value, LinkedList *list)
  * @param list LinkedList to print.
  */
 void print_list(LinkedList *list){
-    printf("\nLinked List Items:\n");
     for (Item *item = list->first; item != NULL; item = item->next)
         printf("%s\n", item->value);
     printf("\n");
