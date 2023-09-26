@@ -36,12 +36,19 @@ typedef struct LinkedList{
 */
 LinkedList *initialize();
 
+/* Search for an item in the list.
+ * @param value to search for.
+ * @param list LinkedList to search.
+ * @return pointer to the Item.
+ */
+Item *search(char *value, LinkedList *list);
+
 /* Add an item to the list.
  * @param value string to insert into list.
  * @param list LinkedList to insert value into.
- * @return -1 if failure, else 0.
+ * @return the address of the new item or NULL.
  */
-int add(char *value, LinkedList *list);
+Item *add(char *value, LinkedList *list);
 
 /* Remove an item from the list
  * @param value string to remove.
@@ -55,6 +62,14 @@ int delete_item(char *value, LinkedList *list);
  */
 void print_list(LinkedList *list);
 
+/* Prints the last item in the list.
+ * @param list LinkedList to print item from.
+ */
+void print_last(LinkedList *list);
 
+/* Destroy the linked list and free all memory.
+ * @param list the LinkedList to destroy.
+ */
+void destroy_list(LinkedList *list);
 
 #endif //LINKED_LIST
