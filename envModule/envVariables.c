@@ -1,7 +1,9 @@
 #include "envVariables.h"
 
-HashTable *initEnvVars(){
-    HashTable *table = createTable();
+PRIVATE HashTable *table = NULL;
+
+void initEnvVars(){
+    table = createTable();
     addEntry(table,"CC","Default");
     addEntry(table,"EDITOR","Default");
     addEntry(table,"HOME","Default");
@@ -12,29 +14,32 @@ HashTable *initEnvVars(){
     addEntry(table,"SHELL","Default");
     addEntry(table,"HISTSIZE","5");
     addEntry(table,"USER","Default");
-    return table;
 }
 
-void printVar(HashTable *table){
+void printVar(){
     printEntrys(table);
 }
 
-char *getUser(HashTable *table){
-    return getEntry(table,"EDITOR");
+char *getUser(){
+    return getEntry(table,"USER");
 }
 
-char *getHost(HashTable *table){
+char *getHost(){
     return getEntry(table,"HOST");
 }
 
-char *getPath(HashTable *table){
+char *getPath(){
     return getEntry(table,"PATH");
 }
 
-int checkVar(HashTable *table,char *key){
+char *getEnv( char *key){
+    return getEntry(table,"key");
+}
+
+int checkVar(char *key){
     return findEntry(table,key);
 }
 
-void setVar(HashTable *table,char *key,char *value){
+void setVar(char *key,char *value){
     setEntry(table,key,value);
 }
