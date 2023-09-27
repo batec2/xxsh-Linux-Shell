@@ -1,9 +1,10 @@
 CC= gcc
-CFLAGS= -Wall -g -pedantic -std=c99 
+CFLAGS= -Wall -g -pedantic -std=c11
 LDFLAGS= -lm
 
-test_history: history.o test_history.o ../linkedList/linkedList.o ../hashTable/dataStructure.o
+test: history.o test_history.o ../linkedList/linkedList.o ../hashTable/dataStructure.o
 	$(CC) $(CFLAGS) $^ -o $@
+	./test
 
 test_history.o: test_history.c 
 	$(CC) $(CFLAGS) -c test_history.c
