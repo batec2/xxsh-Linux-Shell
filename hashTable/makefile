@@ -1,11 +1,12 @@
 CC= gcc
-CFLAGS= -Wall -g -pedantic -std=c99 
+CFLAGS= -Wall -g -pedantic -std=c11
 LDFLAGS= -lm
 
-all: test_dataStructure
+all: test
 
-test_dataStructure: dataStructure.o test_dataStructure.o
+test: dataStructure.o test_dataStructure.o
 	$(CC) $(CFLAGS) $^ -o $@
+	./test
 
 test_dataStructure.o: test_dataStructure.c
 	$(CC) $(CFLAGS) -c test_dataStructure.c
@@ -15,15 +16,12 @@ dataStructure.o: dataStructure.c dataStructure.h
 
 .PHONY:
 
-test: memCheck
-	./test_dataStructure
-
-memCheck: test_dataStructure
-	valgrind -s --leak-check=yes ./test_dataStructure
+memCheck: test
+	valgrind -s --leak-check=yes ./test
 
 tar:
 	make clean
 	tar -czvf ../lab01_CrushBate.tar.gz -C .. CMPT360Lab1
 
 clean:
-	rm -f *~ *.o test_dataStructure
+	rm -f *~ *.o test

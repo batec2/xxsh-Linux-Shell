@@ -4,7 +4,7 @@
 
 int main(void){
     HashTable *table = initEnvVars();
-
+    initialize_history(table);
     mainLoop(table);
     return 0;
 }
