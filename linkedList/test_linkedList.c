@@ -36,6 +36,10 @@ int main()
     // Verify only item can be deleted
     test(delete_item("Hello Mars", list) == 1, "Deleting only item");
 
+    print_list(list);
+    // Test deleteing the first item
+    test(delete_first(list) == 1, "Deleting first item in list");
+
     printf("Testing printing of empty list. This is a manual test. There should be"
             " no items printed.");
     print_list(list);
