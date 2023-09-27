@@ -20,11 +20,8 @@ linkedList.o:
 
 .PHONY:
 
-test: memCheck
-	./test_history
-
 memCheck: test_history
-	valgrind -s --leak-check=yes ./test_history
+	valgrind -s --leak-check=yes ./test
 
 clean:
-	rm -f *~ *.o test_history
+	rm -f *~ *.o test
