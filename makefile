@@ -35,3 +35,8 @@ tar:
 
 clean:
 	rm -f *~ *.o xxsh
+	make clean -C ./envModule/
+	make clean -C ./hashTable/
+	make clean -C ./history/
+	make clean -C ./linkedList/
+	make clean -C ./xxshModule/
