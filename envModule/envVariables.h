@@ -6,40 +6,47 @@
  * @param 
  * @return HashTable pointer with  
  */
-HashTable *initEnvVars();
+void initEnvVars();
 
 /* 
  * @param 
  */
-void setVar(HashTable *table, char *key, char *value);
+void setVar( char *key, char *value);
 /* 
  * @param 
  * @return 
  */
-void printVar(HashTable *table);
+void printVar();
 /* 
  * @param 
  * @return 
  */
-char *getUser(HashTable *table);
+char *getUser();
 /* 
  * @param 
  * @return 
  */
-char *getHost(HashTable *table);
+char *getHost();
 /* 
  * @param 
  * @return 
  */
-char *getPath(HashTable *table);
+char *getPath();
+
 /* 
  * @param 
  * @return 
  */
-void setVar(HashTable *table,char *key, char *value);
+char *getEnv(char *key);
+
 /* 
  * @param 
  * @return 
  */
-int checkVar(HashTable *table,char *key);
+void setVar(char *key, char *value);
+/* 
+ * @param 
+ * @return 
+ */
+int checkVar(char *key);
 #endif ENV_VARIABLES
