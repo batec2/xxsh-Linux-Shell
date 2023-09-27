@@ -16,5 +16,7 @@ int main()
     printf("Printing history contents\n");
     history();
 
+    destroy_history();
+
     printf("Testing complete for history module\n\n");
 }
