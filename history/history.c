@@ -29,7 +29,7 @@ void add_history(char *cmd)
     } 
 
     if (history_ll == NULL)
-        history_ll = initialize();
+        printf("ERROR: history not initialized\n");
     add(cmd, history_ll);
 }
 
