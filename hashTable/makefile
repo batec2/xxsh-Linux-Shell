@@ -6,7 +6,6 @@ all: test
 
 test: dataStructure.o test_dataStructure.o
 	$(CC) $(CFLAGS) $^ -o $@
-	./test
 
 test_dataStructure.o: test_dataStructure.c
 	$(CC) $(CFLAGS) -c test_dataStructure.c

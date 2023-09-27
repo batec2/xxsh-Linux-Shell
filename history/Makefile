@@ -2,7 +2,7 @@ CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
 LDFLAGS= -lm
 
-test: history.o test_history.o ../linkedList/linkedList.o ../envModule/envVariables.o
+test: history.o test_history.o ../linkedList/linkedList.o ../envModule/envVariables.o ../hashTable/dataStructure.o
 	$(CC) $(CFLAGS) $^ -o $@
 	./test
 
@@ -17,6 +17,9 @@ envVariables.o:
 
 linkedList.o:
 	make -C ../linkedList/
+
+dataStructure.o:
+	make -C ../hashTable/
 
 .PHONY:
 
