@@ -1,10 +1,4 @@
 *.o
-dataStructure
-<<<<<<< HEAD
-test_*
 xxsh
 xxshModule/xxsh
-=======
 test
-xxsh
->>>>>>> 19e26ed557cef4f736d3245b08579bb0a2176912
