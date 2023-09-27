@@ -57,6 +57,12 @@ Item *add(char *value, LinkedList *list);
  */
 int delete_item(char *value, LinkedList *list);
 
+/* Remove the first (oldest) item from the list
+ * @param list LinkedList to remove item from.
+ * @return -1 if failure, else 0.
+ */
+int delete_first(LinkedList *list);
+
 /* Prints all items in the list.
  * @param list LinkedList to print.
  */

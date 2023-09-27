@@ -107,6 +107,22 @@ int delete_item(char *value, LinkedList *list)
 
     // free item
     free(item);
+    list->size--;
+    return 1;
+}
+
+/* Remove the first (oldest) item from the list
+ * @param list LinkedList to remove item from.
+ * @return -1 if failure, else 0.
+ */
+int delete_first(LinkedList *list)
+{
+    if (list->size < 1)
+        return 1;
+    Item *item = list->first;
+    list->first = item->next;
+    free(item);
+    list->size--;
     return 1;
 }
 
