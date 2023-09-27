@@ -1,52 +1,67 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "xxsh.h"
 
 #define MAX_LENGTH 50
 
 int main(void){
-    mainLoop();
+    HashTable *table = initEnvVars();
+    mainLoop(table);
     return 0;
 }
 
-void mainLoop(){
+void mainLoop(HashTable *table){
     char buffer[MAX_LENGTH];
     char *token;
-    while((printf("$xxsh>>")>0)&&(fgets(buffer,MAX_LENGTH,stdin)!=NULL)){
+    char *token2;
+    char *token3;
+    while((printf("%s@%s:%s>>",getUser(table),getHost(table),getPath(table))>0)
+            &&(fgets(buffer,MAX_LENGTH,stdin)!=NULL)){
+        
         /*Clearing strdin*/
         if(buffer[strlen(buffer)-1] != '\n'){
             clearBuffer();
-            //printf("True\n");
         }
+
         token = strtok(buffer,"  \n");
         if(token == NULL){
             continue;
         }
+
+        token2 = strtok(NULL,"= \n");
+        if(token2 != NULL){
+            token3 = strtok(NULL,"\n");
+        }
         if(strcmp(token,"export")==0){
-            token = strtok(NULL," \n");
-            parse(token);
-            printf("$xxsh>>Export\n");
+            if((token2!=NULL)&&(token2!=NULL)&&(checkVar(table,token2)>=0)){
+                
+            }
+ 
         }
         else if(strcmp(token,"env")==0){
-            strtok(NULL," \n");
-            printf("$xxsh>>env\n");
+            if(token2==NULL){
+                printVar(table);
+            }
         }
         else if(strcmp(token,"history")==0){
-            strtok(NULL," \n");
-            printf("$xxsh>>history\n");
+            
         }
         else if(strcmp(token,"quit")==0){
-            strtok(NULL," \n");
-            printf("$xxsh>>quit\n");
+            if(token2==NULL){
+                destroyTable(table);
+                break;
+            }
+      
         }
         else if(strcmp(token,"exit")==0){
-            strtok(NULL," \n");
-            printf("$xxsh>>exit\n");
-            return;
+            if(token2==NULL){
+                destroyTable(table);
+                break;
+            }
         }
         else{
-            printf("$xxsh>>Not a valid command\n");
+            printf("%s@%s:%s>>Not a valid command",
+            getUser(table),
+            getHost(table),
+            getPath(table));
         }
         
     }
