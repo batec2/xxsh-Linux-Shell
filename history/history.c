@@ -13,6 +13,7 @@ PRIVATE HashTable *hash_table = NULL;
  */
 void initialize_history(HashTable *hash)
 {
+    history_ll = initialize();
     hash_table = hash;
 }
 
@@ -21,15 +22,19 @@ void initialize_history(HashTable *hash)
  */
 void add_history(char *cmd)
 {
+    printf("HERE\n");
     // Check if history is full
-    if (atoi(getEntry(hash_table, "HISTSIZE")) >= history_ll->size)
+    if (history_ll == NULL){
+        printf("ERROR: history not initialized\n");
+        return;
+    }
+    if (history_ll->size >= atoi(getEntry(hash_table, "HISTSIZE")))
     {
+        printf("GETS HERE\n");
         // Need to remove the first entry
         delete_first(history_ll);
     } 
 
-    if (history_ll == NULL)
-        printf("ERROR: history not initialized\n");
     add(cmd, history_ll);
 }
 

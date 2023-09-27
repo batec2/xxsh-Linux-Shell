@@ -1,29 +1,37 @@
 CC= gcc
-CFLAGS= -Wall -g -pedantic -std=c99 
+CFLAGS= -Wall -g -pedantic -std=c11
 LDFLAGS= -lm
 
-all: test_dataStructure
+all: xxsh
 
-test_dataStructure: dataStructure.o test_dataStructure.o
+xxsh: xxsh.o dataStructure.o envVariables.o linkedList.o history.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-test_dataStructure.o: test_dataStructure.c
-	$(CC) $(CFLAGS) -c test_dataStructure.c
+xxsh.o: ./xxshModule/xxsh.c ./xxshModule/xxsh.h ./envModule/envVariables.h ./history/history.h
+	$(CC) $(CFLAGS) -c ./xxshModule/xxsh.c
 
-dataStructure.o: dataStructure.c dataStructure.h 
-	$(CC) $(CFLAGS) -c dataStructure.c
+dataStructure.o: ./hashTable/dataStructure.c ./hashTable/dataStructure.h 
+	$(CC) $(CFLAGS) -c ./hashTable/dataStructure.c
+
+envVariables.o: ./envModule/envVariables.c ./envModule/envVariables.h ./hashTable/dataStructure.h 
+	$(CC) $(CFLAGS) -c ./envModule/envVariables.c
+
+linkedList.o: ./linkedList/linkedList.c ./linkedList/linkedList.h
+	$(CC) $(CFLAGS) -c ./linkedList/linkedList.c
+
+history.o: ./history/history.c ./history/history.h ./linkedList/linkedList.h
+	$(CC) $(CFLAGS) -c ./history/history.c
 
 .PHONY:
 
 test: memCheck
-	./test_dataStructure
 
-memCheck: test_dataStructure
-	valgrind -s --leak-check=yes ./test_dataStructure
+memCheck: xxsh
+	valgrind -s --leak-check=yes ./xxsh
 
 tar:
 	make clean
 	tar -czvf ../lab01_CrushBate.tar.gz -C .. CMPT360Lab1
 
 clean:
-	rm -f *~ *.o test_dataStructure
+	rm -f *~ *.o xxsh

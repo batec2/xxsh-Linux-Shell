@@ -1,4 +1,4 @@
 *.o
-dataStructure
-test
 xxsh
+xxshModule/xxsh
+test
