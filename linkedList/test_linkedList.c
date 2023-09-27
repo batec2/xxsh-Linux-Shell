@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "linkedList.h"
-#include "../test/testUtils.h"
+#include "../testUtils/testUtils.h"
 
 int main()
 {
