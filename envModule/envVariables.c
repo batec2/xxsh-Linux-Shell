@@ -32,8 +32,8 @@ char *getPath(){
     return getEntry(table,"PATH");
 }
 
-char *getEnv( char *key){
-    return getEntry(table,"key");
+char *getEnv(char *key){
+    return getEntry(table,key);
 }
 
 int checkVar(char *key){
