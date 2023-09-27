@@ -1,3 +1,4 @@
 *.o
 dataStructure
-test_*
+test
+xxsh

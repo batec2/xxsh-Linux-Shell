@@ -2,8 +2,9 @@ CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c99 
 LDFLAGS= -lm
 
-test_linkedList: linkedList.o test_linkedList.o ../test/testUtils.o
+test: linkedList.o test_linkedList.o ../test/testUtils.o
 	$(CC) $(CFLAGS) $^ -o $@
+	./test
 
 test_linkedList.o: test_linkedList.c
 	$(CC) $(CFLAGS) -c test_linkedList.c 
