@@ -5,32 +5,19 @@
 
 // Shells only have one instance of history so this is fine as a global.
 PRIVATE LinkedList *history_ll = NULL;
-// Keep a pointer to the hash table that we can use to check the HISTSIZE entry.
-PRIVATE HashTable *hash_table = NULL;
-
-/* Initialize history
- * @param hasha pointer to the hash table to get hist_size.
- */
-void initialize_history(HashTable *hash)
-{
-    history_ll = initialize();
-    hash_table = hash;
-}
 
 /* Add a command to history.
  * @param cmd a string representing the command to add.
  */
 void add_history(char *cmd)
 {
-    printf("HERE\n");
     // Check if history is full
     if (history_ll == NULL){
-        printf("ERROR: history not initialized\n");
-        return;
+        history_ll = initialize();
     }
-    if (history_ll->size >= atoi(getEntry(hash_table, "HISTSIZE")))
+
+    if (history_ll->size >= atoi(getEnv("HISTSIZE")))
     {
-        printf("GETS HERE\n");
         // Need to remove the first entry
         delete_first(history_ll);
     } 
@@ -46,3 +33,8 @@ void history()
     print_list(history_ll);
 }
         
+/* destroys the history */
+void destroy_history()
+{
+    destroy_list(history_ll);
+}
