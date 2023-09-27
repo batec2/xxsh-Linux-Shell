@@ -15,10 +15,6 @@ HashTable *initEnvVars(){
     return table;
 }
 
-void setVar(HashTable *table, char *key, char *value){
-    setEntry(table,key,value);
-}
-
 void printVar(HashTable *table){
     printEntrys(table);
 }

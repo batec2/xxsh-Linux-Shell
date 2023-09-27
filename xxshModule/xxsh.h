@@ -8,7 +8,7 @@
 #include "../history/history.h"
 
 void mainLoop(HashTable *table);
-char *parse(char *input);
+void parse(HashTable *table,char *key,char *value);
 void clearBuffer();
 
 #endif
