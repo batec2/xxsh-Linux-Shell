@@ -43,3 +43,7 @@ int checkVar(char *key){
 void setVar(char *key,char *value){
     setEntry(table,key,value);
 }
+
+void destroyEnv(){
+    destroyTable(table);
+}

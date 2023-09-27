@@ -7,8 +7,20 @@
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
 
+/* 
+ * @param 
+ * @return 
+ */
 void mainLoop(HashTable *table);
+/* 
+ * @param 
+ * @return 
+ */
 void parse(HashTable *table,char *key,char *value);
+/* 
+ * @param 
+ * @return 
+ */
 void clearBuffer();
 
 #endif

@@ -2,6 +2,8 @@
 #define ENV_VARIABLES
 
 #include "../hashTable/dataStructure.h"
+
+#define PRIVATE static
 /* 
  * @param 
  * @return HashTable pointer with  
@@ -49,4 +51,9 @@ void setVar(char *key, char *value);
  * @return 
  */
 int checkVar(char *key);
-#endif ENV_VARIABLES
+/* 
+ * @param 
+ * @return 
+ */
+void destroyEnv();
+#endif /*ENV_VARIABLES*/
