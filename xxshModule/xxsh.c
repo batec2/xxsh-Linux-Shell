@@ -3,19 +3,18 @@
 #define MAX_LENGTH 50
 
 int main(void){
-    HashTable *table = initEnvVars();
-    initialize_history();
-    mainLoop(table);
+    initEnvVars();
+    mainLoop();
     return 0;
 }
 
-void mainLoop(HashTable *table){
+void mainLoop(){
     char buffer[MAX_LENGTH];
     char buffer2[MAX_LENGTH];
     char *token;
     char *token2;
     char *token3;
-    while((printf("%s@%s:%s>> ",getUser(table),getHost(table),getPath(table))>0)
+    while((printf("%s@%s:%s>> ",getUser(),getHost(),getPath())>0)
             &&(fgets(buffer,MAX_LENGTH,stdin)!=NULL)){
         /*Clearing strdin*/
         if(buffer[strlen(buffer)-1] != '\n'){
@@ -33,14 +32,14 @@ void mainLoop(HashTable *table){
                 token3 = strtok(NULL,"\n");
             }
             if((token2!=NULL)&&(token3!=NULL)){
-                parse(table,token2,token3);
+                parse(token2,token3);
             }
         }
         /*env needs only env as input*/
         else if(strcmp(token,"env")==0){
             token2 = strtok(NULL,"\n");
             if(token2==NULL){
-                printVar(table);
+                printVar();
             }
         }
         /*history needs only history as input*/
@@ -54,7 +53,7 @@ void mainLoop(HashTable *table){
         else if(strcmp(token,"quit")==0){
             token2 = strtok(NULL,"\n");
             if(token2==NULL){
-                destroyTable();
+                destroyEnv();
                 break;
             }
       
@@ -63,7 +62,7 @@ void mainLoop(HashTable *table){
         else if(strcmp(token,"exit")==0){
             token2 = strtok(NULL,"\n");
             if(token2==NULL){
-                destroyTable();
+                destroyEnv();
                 break;
             }
         }
@@ -77,7 +76,7 @@ void mainLoop(HashTable *table){
     }
 }
 
-void parse(HashTable *table,char *key,char *value){
+void parse(char *key,char *value){
     if(checkVar(key)<0){
         return;
     }

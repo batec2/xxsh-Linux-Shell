@@ -11,12 +11,12 @@
  * @param 
  * @return 
  */
-void mainLoop(HashTable *table);
+void mainLoop();
 /* 
  * @param 
  * @return 
  */
-void parse(HashTable *table,char *key,char *value);
+void parse(char *key,char *value);
 /* 
  * @param 
  * @return 

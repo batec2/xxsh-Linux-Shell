@@ -4,23 +4,23 @@ LDFLAGS= -lm
 
 all: xxsh
 
-xxsh: xxsh.o dataStructure.o envVariables.o linkedList.o history.o
+xxsh: ./xxshModule/xxsh.o ./hashTable/dataStructure.o ./envModule/envVariables.o ./linkedList/linkedList.o ./history/history.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-xxsh.o: ./xxshModule/xxsh.c ./xxshModule/xxsh.h ./envModule/envVariables.h ./history/history.h
-	$(CC) $(CFLAGS) -c ./xxshModule/xxsh.c
+xxsh.o:
+	make -C ./xxshModule/
 
-dataStructure.o: ./hashTable/dataStructure.c ./hashTable/dataStructure.h 
-	$(CC) $(CFLAGS) -c ./hashTable/dataStructure.c
+envVariables.o:
+	make -C ./envModule/
 
-envVariables.o: ./envModule/envVariables.c ./envModule/envVariables.h ./hashTable/dataStructure.h 
-	$(CC) $(CFLAGS) -c ./envModule/envVariables.c
+linkedList.o:
+	make -C ./linkedList/
 
-linkedList.o: ./linkedList/linkedList.c ./linkedList/linkedList.h
-	$(CC) $(CFLAGS) -c ./linkedList/linkedList.c
+dataStructure.o:
+	make -C ./hashTable/
 
-history.o: ./history/history.c ./history/history.h ./linkedList/linkedList.h
-	$(CC) $(CFLAGS) -c ./history/history.c
+history.o: 
+	make -C ./history/
 
 .PHONY:
 
