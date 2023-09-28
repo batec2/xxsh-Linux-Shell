@@ -32,9 +32,9 @@ void setNull(Entry *table,int size);
 
 /**
  * Arguments:HashTable*,char*,char*
- * Returns:
+ * Returns: the index of the new entry or -1 if it already exists
 */
-void addEntry(HashTable *table,char *key, char *value);
+int addEntry(HashTable *table,char *key, char *value);
 
 /**
  * Arguments: char*

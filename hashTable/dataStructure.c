@@ -57,10 +57,10 @@ void setNull(Entry * table, int size)
  * Finds index for key and allocates memory for key, the key is then
  * inserted in the table.
 */
-void addEntry(HashTable * table, char *key, char *value)
+int addEntry(HashTable * table, char *key, char *value)
 {
 	if (findEntry(table, key) != -1) {
-		return;
+		return -1;
 	}
 
 	table->items++;
@@ -80,6 +80,7 @@ void addEntry(HashTable * table, char *key, char *value)
 	table->entryTable[index].value = malloc(strlen(value) + 1);
 	checkNull(table->entryTable[index].value);
 	strcpy(table->entryTable[index].value, value);
+    return index;
 }
 
 /**
@@ -254,15 +255,14 @@ char *getEntry(HashTable * table, char *key)
 int setEntry(HashTable * table, char *key, char *value)
 {
 	int index = findEntry(table, key);
-	if (index == -1) {
-		return index;
-	} else {
-		table->entryTable[index].value =
-		    realloc(table->entryTable[index].value,
-			    (strlen(value) + 1));
-		strcpy(table->entryTable[index].value, value);
-		return index;
-	}
+	if (index == -1) 
+        return  addEntry(table, key, value);
+	
+    table->entryTable[index].value =
+        realloc(table->entryTable[index].value,
+            (strlen(value) + 1));
+    strcpy(table->entryTable[index].value, value);
+    return index;
 }
 
 /**

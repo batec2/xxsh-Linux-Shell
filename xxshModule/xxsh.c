@@ -77,9 +77,6 @@ void mainLoop(){
 }
 
 void parse(char *key,char *value){
-    if(checkVar(key)<0){
-        return;
-    }
     if(strcmp(key,"HISTSIZE")==0){
         if(atoi(value)<=0){
             return;
