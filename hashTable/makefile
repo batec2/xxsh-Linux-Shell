@@ -4,17 +4,18 @@ LDFLAGS= -lm
 
 all: test
 
-test: dataStructure.o test_dataStructure.o
-	$(CC) $(CFLAGS) $^ -o $@
-
 test_dataStructure.o: test_dataStructure.c
 	$(CC) $(CFLAGS) -c test_dataStructure.c
 
 dataStructure.o: dataStructure.c dataStructure.h 
 	$(CC) $(CFLAGS) -c dataStructure.c
 
-.PHONY:
+.PHONY: test
+test: dataStructure.o test_dataStructure.o
+	$(CC) $(CFLAGS) $^ -o $@
+	./test
 
+.PHONY:
 memCheck: test
 	valgrind -s --leak-check=yes ./test
 

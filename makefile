@@ -8,6 +8,7 @@ xxsh: ./xxshModule/xxsh.o ./hashTable/dataStructure.o ./envModule/envVariables.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 xxsh.o:
+	# Recursive make: https://www.gnu.org/software/make/manual/html_node/Recursion.html
 	make -C ./xxshModule/
 
 envVariables.o:
@@ -24,7 +25,11 @@ history.o:
 
 .PHONY:
 
-test: memCheck
+test: xxsh
+	make test -C ./hashTable/
+	make test -C ./history/
+	make test -C ./linkedList/
+	./test.sh
 
 memCheck: xxsh
 	valgrind -s --leak-check=yes ./xxsh
