@@ -40,7 +40,7 @@ Item *add(char *value, LinkedList *list)
 {
     // Create a new item and assign the value
     Item *item = (Item*) malloc(sizeof(Item));
-    item->value = malloc(strlen(value));
+    item->value = malloc(strlen(value)+1);
     strcpy(item->value, value);
     // Add item to the end of the list and increment list counter
     
@@ -121,7 +121,10 @@ int delete_first(LinkedList *list)
         return 1;
     Item *item = list->first;
     list->first = item->next;
+    free(item->value);
+    item->value = NULL;
     free(item);
+    item = NULL;
     list->size--;
     return 1;
 }
@@ -152,6 +155,8 @@ void destroy_list(LinkedList *list)
     {
         Item *cache = item->next;
         list->first = cache;
+        free(item->value);
+        item->value = NULL;
         free(item);
         item = cache;
     }
