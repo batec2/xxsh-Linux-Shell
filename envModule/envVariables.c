@@ -1,7 +1,9 @@
 #include "envVariables.h"
 
-HashTable *initEnvVars(){
-    HashTable *table = createTable();
+PRIVATE HashTable *table = NULL;
+//initiates the table
+void initEnvVars(){
+    table = createTable();
     addEntry(table,"CC","Default");
     addEntry(table,"EDITOR","Default");
     addEntry(table,"HOME","Default");
@@ -12,29 +14,36 @@ HashTable *initEnvVars(){
     addEntry(table,"SHELL","Default");
     addEntry(table,"HISTSIZE","5");
     addEntry(table,"USER","Default");
-    return table;
 }
-
-void printVar(HashTable *table){
+//prints all values in the table
+void printVar(){
     printEntrys(table);
 }
-
-char *getUser(HashTable *table){
-    return getEntry(table,"EDITOR");
+//gets the current value of USER
+char *getUser(){
+    return getEntry(table,"USER");
 }
-
-char *getHost(HashTable *table){
+//gets the current value of HOST
+char *getHost(){
     return getEntry(table,"HOST");
 }
-
-char *getPath(HashTable *table){
+//gets the current value of PATH
+char *getPath(){
     return getEntry(table,"PATH");
 }
-
-int checkVar(HashTable *table,char *key){
+//gets the value of the key from the table
+char *getEnv(char *key){
+    return getEntry(table,key);
+}
+//checks if key exists in the tables
+int checkVar(char *key){
     return findEntry(table,key);
 }
-
-void setVar(HashTable *table,char *key,char *value){
+//Sets the value of a env variable
+void setVar(char *key,char *value){
     setEntry(table,key,value);
+}
+//frees all memory associated with the table
+void destroyEnv(){
+    destroyTable(table);
 }

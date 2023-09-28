@@ -4,10 +4,7 @@ LDFLAGS= -lm
 
 all: xxsh
 
-xxsh: xxsh.o 
-	$(CC) $(CFLAGS) $^ -o $@
-
-xxsh.o: xxsh.c xxsh.h 
+xxsh.o: xxsh.c xxsh.h ../envModule/envVariables.h ../history/history.h
 	$(CC) $(CFLAGS) -c xxsh.c
 
 .PHONY:

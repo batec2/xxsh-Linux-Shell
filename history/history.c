@@ -16,7 +16,8 @@ void add_history(char *cmd)
         history_ll = initialize();
     }
 
-    if (history_ll->size >= atoi(getEnv("HISTSIZE")))
+    // trim list
+    while (history_ll->size >= atoi(getEnv("HISTSIZE")))
     {
         // Need to remove the first entry
         delete_first(history_ll);
