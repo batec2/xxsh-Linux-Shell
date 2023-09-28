@@ -7,7 +7,7 @@ int main(void){
     mainLoop();
     return 0;
 }
-
+/*Main user input loop*/
 void mainLoop(){
     char buffer[MAX_LENGTH];
     char buffer2[MAX_LENGTH];
@@ -16,11 +16,11 @@ void mainLoop(){
     char *token3;
     while((printf("%s@%s:%s>> ",getUser(),getHost(),getPath())>0)
             &&(fgets(buffer,MAX_LENGTH,stdin)!=NULL)){
-        /*Clearing strdin*/
+        /*Clearing stdin*/
         if(buffer[strlen(buffer)-1] != '\n'){
             clearBuffer();
         }
-        strcpy(buffer2,buffer);
+        strcpy(buffer2,buffer);//creates copy of command for insert into history
         token = strtok(buffer,"  \n");
         if(token == NULL){
             continue;
@@ -28,6 +28,7 @@ void mainLoop(){
         /*export needs valid key/value*/
         if(strcmp(token,"export")==0){
             token2 = strtok(NULL,"=");
+            //Input needs in form of ENVAR=VALUE
             if(token2 != NULL){
                 token3 = strtok(NULL,"\n");
             }
@@ -54,6 +55,7 @@ void mainLoop(){
             token2 = strtok(NULL,"\n");
             if(token2==NULL){
                 destroyEnv();
+                destroy_history();
                 break;
             }
       
@@ -63,6 +65,7 @@ void mainLoop(){
             token2 = strtok(NULL,"\n");
             if(token2==NULL){
                 destroyEnv();
+                destroy_history();
                 break;
             }
         }
