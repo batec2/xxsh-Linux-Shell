@@ -20,10 +20,6 @@
 */
 #include "dataStructure.h"
 
-#define INITIAL_SIZE 5
-#define LOAD_FACTOR 0.70
-#define RESIZE_MULT 2
-
 /**
  * Allocates memory for Hashtable and initializes members of HashTable
  * Struct. Allocates memory for array that holds entries of hashtable initial
@@ -59,11 +55,13 @@ void setNull(Entry * table, int size)
 */
 int addEntry(HashTable * table, char *key, char *value)
 {
+	//does nothing if key is already inside the table
 	if (findEntry(table, key) != -1) {
 		return -1;
 	}
 
 	table->items++;
+	//Resizes table if tombstones and items become too much
 	if (((float)(table->items + table->tombstones) / table->size) >
 	    LOAD_FACTOR) {
 		table->entryTable = resize(table->entryTable, table->size);
@@ -71,6 +69,7 @@ int addEntry(HashTable * table, char *key, char *value)
 		table->tombstones = 0;
 	}
 
+	//Key and value are malloced for and entered
 	int index =
 	    nextOpen(table->entryTable, (hash(key) % table->size), table->size);
 	table->entryTable[index].key = malloc(strlen(key) + 1);
@@ -80,7 +79,7 @@ int addEntry(HashTable * table, char *key, char *value)
 	table->entryTable[index].value = malloc(strlen(value) + 1);
 	checkNull(table->entryTable[index].value);
 	strcpy(table->entryTable[index].value, value);
-    return index;
+	return index;
 }
 
 /**
@@ -108,16 +107,19 @@ Entry *resize(Entry * table, int size)
 {
 	int newSize = size * RESIZE_MULT;
 	int index = 0;
+	//Creates new table and initalizes all entries to NULL
 	Entry *newTable = malloc(newSize * sizeof(Entry));
 	checkNull(newTable);
 	setNull(newTable, newSize);
+	//Keys are rehashed and key/value pair pointers are passed to new table
 	for (int i = 0; i < size; i++) {
 		if (table[i].key != NULL) {
+			//Tombstones freed seperatly to avoid call free on null value
 			if ((strcmp(table[i].key, "TOMBSTONE") == 0)
 			    && (table[i].value == NULL)) {
 				free(table[i].key);
 				table[i].key = NULL;
-			} else {
+			} else {//key values are hashed and passed to new table
 				index =
 				    nextOpen(newTable,
 					     hash(table[i].key) % newSize,
@@ -160,11 +162,7 @@ void printEntrys(HashTable * table)
 		if (table->entryTable[i].key != NULL) {
 			printf("%i %s , %s\n", i, table->entryTable[i].key,
 			       table->entryTable[i].value);
-
-		} else if (table->entryTable[i].key == NULL) {
-			printf("%i NULL\n", i);
-		}
-
+		} 
 	}
 }
 
@@ -192,14 +190,17 @@ int findEntry(HashTable * table, char *key)
 	    && (strcmp(table->entryTable[index].key, key) == 0)) {
 		return index;
 	} else {
+		//Linear probing to find the next NULL
 		while ((table->entryTable[index].key != NULL)
 		       && (strcmp(table->entryTable[index].key, key) != 0)) {
+			//if probing hits the end of the table goes back to start
 			if (index == (table->size - 1)) {
 				index = 0;
 			} else {
 				index++;
 			}
 		}
+		//if loops finishes key must either have been found or not
 		if ((table->entryTable[index].key == NULL)) {
 			return -1;
 		} else {
