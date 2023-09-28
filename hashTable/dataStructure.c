@@ -256,15 +256,14 @@ char *getEntry(HashTable * table, char *key)
 int setEntry(HashTable * table, char *key, char *value)
 {
 	int index = findEntry(table, key);
-	if (index == -1) {
-		return index;
-	} else {
-		table->entryTable[index].value =
-		    realloc(table->entryTable[index].value,
-			    (strlen(value) + 1));
-		strcpy(table->entryTable[index].value, value);
-		return index;
-	}
+	if (index == -1) 
+        return  addEntry(table, key, value);
+	
+    table->entryTable[index].value =
+        realloc(table->entryTable[index].value,
+            (strlen(value) + 1));
+    strcpy(table->entryTable[index].value, value);
+    return index;
 }
 
 /**
