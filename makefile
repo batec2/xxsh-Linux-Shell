@@ -29,6 +29,7 @@ test: xxsh
 	make test -C ./hashTable/
 	make test -C ./history/
 	make test -C ./linkedList/
+	make test -C ./envModule/
 	./test.sh
 
 memCheck: xxsh
