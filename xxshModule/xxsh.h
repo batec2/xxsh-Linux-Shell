@@ -18,7 +18,7 @@ void mainLoop();
  * @param String representing Env variable
  * @param String representing users input
  */
-void parse(char *key,char *value);
+void parse(char *key, char *value);
 /** 
  *Clears StdIn buffer of leftover characters
  */
