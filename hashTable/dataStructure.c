@@ -159,7 +159,7 @@ void printEntrys(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			printf("%i %s , %s\n", i, table->entryTable[i].key,
+			printf("%s , %s\n", table->entryTable[i].key,
 			       table->entryTable[i].value);
 		}
 	}
