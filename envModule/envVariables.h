@@ -53,4 +53,4 @@ int checkVar(char *key);
  * Frees all mememory allocated to environment variable hashtable
  */
 void destroyEnv();
-#endif /*ENV_VARIABLES*/
+#endif				/*ENV_VARIABLES */

@@ -20,4 +20,4 @@ void history();
 /* destroys the history */
 void destroy_history();
 
-#endif /* HISTORY */
+#endif				/* HISTORY */

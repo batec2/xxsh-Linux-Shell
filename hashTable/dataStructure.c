@@ -68,7 +68,6 @@ int addEntry(HashTable * table, char *key, char *value)
 		table->size *= RESIZE_MULT;
 		table->tombstones = 0;
 	}
-
 	//Key and value are malloced for and entered
 	int index =
 	    nextOpen(table->entryTable, (hash(key) % table->size), table->size);
@@ -119,7 +118,7 @@ Entry *resize(Entry * table, int size)
 			    && (table[i].value == NULL)) {
 				free(table[i].key);
 				table[i].key = NULL;
-			} else {//key values are hashed and passed to new table
+			} else {	//key values are hashed and passed to new table
 				index =
 				    nextOpen(newTable,
 					     hash(table[i].key) % newSize,
@@ -162,7 +161,7 @@ void printEntrys(HashTable * table)
 		if (table->entryTable[i].key != NULL) {
 			printf("%i %s , %s\n", i, table->entryTable[i].key,
 			       table->entryTable[i].value);
-		} 
+		}
 	}
 }
 
@@ -256,14 +255,13 @@ char *getEntry(HashTable * table, char *key)
 int setEntry(HashTable * table, char *key, char *value)
 {
 	int index = findEntry(table, key);
-	if (index == -1) 
-        return  addEntry(table, key, value);
-	
-    table->entryTable[index].value =
-        realloc(table->entryTable[index].value,
-            (strlen(value) + 1));
-    strcpy(table->entryTable[index].value, value);
-    return index;
+	if (index == -1)
+		return addEntry(table, key, value);
+
+	table->entryTable[index].value =
+	    realloc(table->entryTable[index].value, (strlen(value) + 1));
+	strcpy(table->entryTable[index].value, value);
+	return index;
 }
 
 /**

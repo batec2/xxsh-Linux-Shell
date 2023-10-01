@@ -37,7 +37,7 @@ memCheck: xxsh
 
 tar:
 	make clean
-	tar -czvf ../lab01_CrushBate.tar.gz -C .. CMPT360Lab1
+	tar -czvf ../lab02_CrushBate_DakotaDoolaege.tar.gz -C .. CMPT360Lab1
 
 clean:
 	rm -f *~ *.o xxsh
@@ -46,3 +46,4 @@ clean:
 	make clean -C ./history/
 	make clean -C ./linkedList/
 	make clean -C ./xxshModule/
+	make clean -C ./testUtils/
