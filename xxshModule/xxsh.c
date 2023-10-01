@@ -95,7 +95,7 @@ void parse(char *key, char *value)
 
 void clearBuffer()
 {
-	char c;
+	char c =' ';
 	while ((c = getchar() != '\n' && c != EOF)) {
 	}
 }
