@@ -3,15 +3,14 @@
 
 int main(void)
 {
-	initEnvVars();
-	printVar();
-	printf("Should be: Default->%s\n", getUser());
-	printf("Should be: Default->%s\n", getHost());
-	printf("Should be: Default->%s\n", getPath());
-	setVar("Test", "Test");
-	printf("Should be: Test->%s\n", getEnv("Test"));
-	printf("Should be: 0<%i\n", checkVar("Test"));
-	printf("Should be: 0>%i\n", checkVar("NoHere"));
-	destroyEnv();
-
+	init_env_vars();
+	print_var();
+	printf("Should be: Default->%s\n", get_user());
+	printf("Should be: Default->%s\n", get_host());
+	printf("Should be: Default->%s\n", get_path());
+	set_var("Test", "Test");
+	printf("Should be: Test->%s\n", get_env("Test"));
+	printf("Should be: 0<%i\n", check_var("Test"));
+	printf("Should be: 0>%i\n", check_var("NotHere"));
+	destroy_env();
 }

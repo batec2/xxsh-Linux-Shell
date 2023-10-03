@@ -7,27 +7,27 @@
 /**
  * Initializes the environment table and all the default environment variables
  */
-void initEnvVars();
+void init_env_vars();
 
 /** 
  * Prints all the environment variables
  */
-void printVar();
+void print_var();
 /** 
  * Gets the current value of the USER environment variable
  * @return the string value of USER
  */
-char *getUser();
+char *get_user();
 /** 
  * Gets the current value of the HOST environment variable
  * @return the string value of HOST
  */
-char *getHost();
+char *get_host();
 /** 
  * Gets the current value of the PATH environment variable
  * @return the string value of PATH
  */
-char *getPath();
+char *get_path();
 
 /** 
  * Gets the what the environment variable is currently set to
@@ -35,22 +35,22 @@ char *getPath();
  * @return Returns NULL if environment variable doesnt exists, else returns
  * the string value
  */
-char *getEnv(char *key);
+char *get_env(char *key);
 
 /** 
  * @param String name of environment variable
  * @param String value of environment variable
  * @return 
  */
-void setVar(char *key, char *value);
+void set_var(char *key, char *value);
 /** 
  * Checks if Environment variable already exists in table
  * @param String name of environment variable
  * @return returns the index of the variable, -1 if variable does not exist
  */
-int checkVar(char *key);
+int check_var(char *key);
 /** 
  * Frees all mememory allocated to environment variable hashtable
  */
-void destroyEnv();
+void destroy_env();
 #endif				/*ENV_VARIABLES */

@@ -25,23 +25,23 @@
  * Struct. Allocates memory for array that holds entries of hashtable initial
  * size is 5, all entries member variables are initalized to null
  */
-HashTable *createTable()
+HashTable *create_table()
 {
 	HashTable *table = malloc(sizeof(HashTable));
-	checkNull(table);
+	check_null(table);
 	table->size = INITIAL_SIZE;
 	table->items = 0;
 	table->tombstones = 0;
 	table->entryTable = malloc(sizeof(Entry) * INITIAL_SIZE);
-	checkNull(table->entryTable);
-	setNull(table->entryTable, INITIAL_SIZE);
+	check_null(table->entryTable);
+	set_null(table->entryTable, INITIAL_SIZE);
 	return table;
 }
 
 /*
  * Initalizes all the member variables of array items to NULL
  */
-void setNull(Entry * table, int size)
+void set_null(Entry * table, int size)
 {
 	for (int i = 0; i < size; i++) {
 		table[i] = (Entry) {
@@ -53,10 +53,10 @@ void setNull(Entry * table, int size)
  * Finds index for key and allocates memory for key, the key is then
  * inserted in the table.
 */
-int addEntry(HashTable * table, char *key, char *value)
+int add_entry(HashTable * table, char *key, char *value)
 {
 	//does nothing if key is already inside the table
-	if (findEntry(table, key) != -1) {
+	if (find_entry(table, key) != -1) {
 		return -1;
 	}
 
@@ -70,13 +70,13 @@ int addEntry(HashTable * table, char *key, char *value)
 	}
 	//Key and value are malloced for and entered
 	int index =
-	    nextOpen(table->entryTable, (hash(key) % table->size), table->size);
+	    next_open(table->entryTable, (hash(key) % table->size), table->size);
 	table->entryTable[index].key = malloc(strlen(key) + 1);
-	checkNull(table->entryTable[index].key);
+	check_null(table->entryTable[index].key);
 	strcpy(table->entryTable[index].key, key);
 
 	table->entryTable[index].value = malloc(strlen(value) + 1);
-	checkNull(table->entryTable[index].value);
+	check_null(table->entryTable[index].value);
 	strcpy(table->entryTable[index].value, value);
 	return index;
 }
@@ -104,12 +104,12 @@ unsigned int hash(char *str)
 */
 Entry *resize(Entry * table, int size)
 {
-	int newSize = size * RESIZE_MULT;
+	int new_size = size * RESIZE_MULT;
 	int index = 0;
 	//Creates new table and initalizes all entries to NULL
-	Entry *newTable = malloc(newSize * sizeof(Entry));
-	checkNull(newTable);
-	setNull(newTable, newSize);
+	Entry *new_table = malloc(new_size * sizeof(Entry));
+	check_null(new_table);
+	set_null(new_table, new_size);
 	//Keys are rehashed and key/value pair pointers are passed to new table
 	for (int i = 0; i < size; i++) {
 		if (table[i].key != NULL) {
@@ -120,11 +120,11 @@ Entry *resize(Entry * table, int size)
 				table[i].key = NULL;
 			} else {	//key values are hashed and passed to new table
 				index =
-				    nextOpen(newTable,
-					     hash(table[i].key) % newSize,
-					     newSize);
-				newTable[index].key = table[i].key;
-				newTable[index].value = table[i].value;
+				    next_open(new_table,
+					     hash(table[i].key) % new_size,
+					     new_size);
+				new_table[index].key = table[i].key;
+				new_table[index].value = table[i].value;
 				table[i].key = NULL;
 				table[i].value = NULL;
 			}
@@ -132,14 +132,14 @@ Entry *resize(Entry * table, int size)
 	}
 	free(table);
 	table = NULL;
-	return newTable;
+	return new_table;
 }
 
 /**
  * Looks for the next available spot in array after specified index
  * and returns index number
 */
-int nextOpen(Entry * table, int index, int size)
+int next_open(Entry * table, int index, int size)
 {
 	while (table[index].key != NULL) {
 		if (index == (size - 1)) {
@@ -155,7 +155,7 @@ int nextOpen(Entry * table, int index, int size)
  * Prints all key/value pairs in hash table, empty spots in table are
  * printed out as NULL
 */
-void printEntrys(HashTable * table)
+void print_entrys(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
@@ -168,9 +168,9 @@ void printEntrys(HashTable * table)
 /**
  * Prints the key/value pair of a specified key in array
 */
-void printEntry(HashTable * table, char *key)
+void print_entry(HashTable * table, char *key)
 {
-	int index = findEntry(table, key);
+	int index = find_entry(table, key);
 	if (index == -1) {
 		printf("%s does not exist.\n", key);
 	} else {
@@ -182,7 +182,7 @@ void printEntry(HashTable * table, char *key)
  * Finds specified key in array and returns it's index if found, -1 is 
  * returned if key does not exist
 */
-int findEntry(HashTable * table, char *key)
+int find_entry(HashTable * table, char *key)
 {
 	int index = hash(key) % table->size;
 	if ((table->entryTable[index].key != NULL)
@@ -212,7 +212,7 @@ int findEntry(HashTable * table, char *key)
  * Frees all memory allocated to hash table including all entries and 
  * sets pointers to NULL
 */
-void destroyTable(HashTable * table)
+void destroy_table(HashTable * table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
@@ -238,9 +238,9 @@ void destroyTable(HashTable * table)
  * Gets the value of a specific key in the array, returns NULL if key does
  * not exist
 */
-char *getEntry(HashTable * table, char *key)
+char *get_entry(HashTable * table, char *key)
 {
-	int index = findEntry(table, key);
+	int index = find_entry(table, key);
 	if (index == -1) {
 		return NULL;
 	} else {
@@ -252,11 +252,11 @@ char *getEntry(HashTable * table, char *key)
  * Sets the value of specific existing key in array, returns -1 if key is not
  * in the table, otherwise returns the index of key
 */
-int setEntry(HashTable * table, char *key, char *value)
+int set_entry(HashTable * table, char *key, char *value)
 {
-	int index = findEntry(table, key);
+	int index = find_entry(table, key);
 	if (index == -1)
-		return addEntry(table, key, value);
+		return add_entry(table, key, value);
 
 	table->entryTable[index].value =
 	    realloc(table->entryTable[index].value, (strlen(value) + 1));
@@ -268,9 +268,9 @@ int setEntry(HashTable * table, char *key, char *value)
  * Remove's key and value in table, frees allocated memory and sets pointers
  * to NULL
 */
-int removeEntry(HashTable * table, char *key)
+int remove_entry(HashTable * table, char *key)
 {
-	int index = findEntry(table, key);
+	int index = find_entry(table, key);
 	if (index == -1) {
 		return index;
 	} else {
@@ -288,7 +288,7 @@ int removeEntry(HashTable * table, char *key)
 /**
  * checks if a pointer is NULL and exits program if true
 */
-void checkNull(void *check)
+void check_null(void *check)
 {
 	if (check == NULL) {
 		printf("Malloc Failed!");

@@ -11,7 +11,7 @@
  * Main program loop that takes in user input and calls corresponding 
  * functions
  */
-void mainLoop();
+void main_loop();
 /**
  * Checks if input strings are valid, and changes corresponding value
  * if key is valid.
@@ -22,6 +22,6 @@ void parse(char *key, char *value);
 /** 
  *Clears StdIn buffer of leftover characters
  */
-void clearBuffer();
+void clear_buffer();
 
 #endif

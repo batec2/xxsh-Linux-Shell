@@ -1,11 +1,10 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11 
-LDFLAGS= -lm
 
 all: xxsh
 
 xxsh.o: xxsh.c xxsh.h ../envModule/envVariables.h ../history/history.h
-	$(CC) $(CFLAGS) -c xxsh.c
+	$(CC) $(CFLAGS) -c $<
 
 .PHONY:
 

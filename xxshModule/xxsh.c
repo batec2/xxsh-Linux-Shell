@@ -4,24 +4,24 @@
 
 int main(void)
 {
-	initEnvVars();
-	mainLoop();
+	init_env_vars();
+	main_loop();
 	return 0;
 }
 
 /*Main user input loop*/
-void mainLoop()
+void main_loop()
 {
 	char buffer[MAX_LENGTH];
 	char buffer2[MAX_LENGTH];
 	char *token;
 	char *token2;
 	char *token3;
-	while ((printf("%s@%s:%s>> ", getUser(), getHost(), getPath()) > 0)
+	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_path()) > 0)
 	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
 		/*Clearing stdin */
 		if (buffer[strlen(buffer) - 1] != '\n') {
-			clearBuffer();
+			clear_buffer();
 		}
 		strcpy(buffer2, buffer);	//creates copy of command for insert into history
 		token = strtok(buffer, "  \n");
@@ -43,7 +43,7 @@ void mainLoop()
 		else if (strcmp(token, "env") == 0) {
 			token2 = strtok(NULL, "\n");
 			if (token2 == NULL) {
-				printVar();
+				print_var();
 			}
 		}
 		/*history needs only history as input */
@@ -57,7 +57,7 @@ void mainLoop()
 		else if (strcmp(token, "quit") == 0) {
 			token2 = strtok(NULL, "\n");
 			if (token2 == NULL) {
-				destroyEnv();
+				destroy_env();
 				destroy_history();
 				break;
 			}
@@ -67,13 +67,13 @@ void mainLoop()
 		else if (strcmp(token, "exit") == 0) {
 			token2 = strtok(NULL, "\n");
 			if (token2 == NULL) {
-				destroyEnv();
+				destroy_env();
 				destroy_history();
 				break;
 			}
 		} else {
 			printf("%s@%s:%s>> Not a valid command\n",
-			       getUser(), getHost(), getPath());
+			       get_user(), get_host(), get_path());
 		}
 		add_history(buffer2);
 	}
@@ -85,15 +85,15 @@ void parse(char *key, char *value)
 		if (atoi(value) <= 0) {
 			return;
 		}
-		setVar(key, value);
+		set_var(key, value);
 	}
 	/*any env other than history */
 	else {
-		setVar(key, value);
+		set_var(key, value);
 	}
 }
 
-void clearBuffer()
+void clear_buffer()
 {
 	char c =' ';
 	while ((c = getchar() != '\n' && c != EOF)) {
