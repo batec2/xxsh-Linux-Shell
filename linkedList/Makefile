@@ -1,12 +1,11 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
-LDFLAGS= -lm
 
 test_linkedList.o: test_linkedList.c
-	$(CC) $(CFLAGS) -c test_linkedList.c 
+	$(CC) $(CFLAGS) -c $<
 
 linkedList.o: linkedList.c linkedList.h 
-	$(CC) $(CFLAGS) -c linkedList.c
+	$(CC) $(CFLAGS) -c $<
 
 testUtils.o:
 	make -C ../test/

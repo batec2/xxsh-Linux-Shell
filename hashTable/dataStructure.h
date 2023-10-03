@@ -26,14 +26,14 @@ typedef struct HashTable {
  * Initilizes the hashtable with an initial size of INITIAL_SIZE
  * @return returns pointer to empty hashtable
 */
-HashTable *createTable();
+HashTable *create_table();
 
 /**
  * Instantiates all values of table to null
  * @param Pointer to hash table
  * @param int size of hashtable
 */
-void setNull(Entry * table, int size);
+void set_null(Entry * table, int size);
 
 /**
  * Inserts an entry into the table, does not insert or update if key is
@@ -43,7 +43,7 @@ void setNull(Entry * table, int size);
  * @param String of value of key
  * @return Returns -1 if key is already in table, otherwise returns index
 */
-int addEntry(HashTable * table, char *key, char *value);
+int add_entry(HashTable * table, char *key, char *value);
 
 /**
  * Uses a hash found online and hashes the input string into a an unsigned int
@@ -66,20 +66,20 @@ Entry *resize(Entry * table, int size);
  * @param int size of the table 
  * @return Returns the next index after the entered index that is NULL
 */
-int nextOpen(Entry * table, int index, int size);
+int next_open(Entry * table, int index, int size);
 
 /**
  * Prints all entries that are not NULL in the table
  * @param Pointer to hashtable
 */
-void printEntrys(HashTable * table);
+void print_entrys(HashTable * table);
 
 /**
  * Prints a the value of corresponding key from the table
  * @param Pointer to table
  * @param String of key to be found
 */
-void printEntry(HashTable * table, char *key);
+void print_entry(HashTable * table, char *key);
 
 /**
  * Finds the index of a key within the table
@@ -88,13 +88,13 @@ void printEntry(HashTable * table, char *key);
  * @return returns -1 if key is not found, otherwise the index of the key in
  * the table
 */
-int findEntry(HashTable * table, char *key);
+int find_entry(HashTable * table, char *key);
 
 /**
  * Free's all memory allocated to key/values and entries within the table
  * @param Pointer to hashtable
 */
-void destroyTable(HashTable * table);
+void destroy_table(HashTable * table);
 
 /**
  * Gets the value of a key from the table
@@ -103,7 +103,7 @@ void destroyTable(HashTable * table);
  * @return Returns the string value of the key in the table,
  *  if the key is not in the table NULL is returned
 */
-char *getEntry(HashTable * table, char *key);
+char *get_entry(HashTable * table, char *key);
 
 /**
  * Sets the value of the matching key in the hashtable
@@ -113,7 +113,7 @@ char *getEntry(HashTable * table, char *key);
  * @return Returns -1 if the key is not in the table, the index of key
  * otherwise. Nothing is done if key is not in table
 */
-int setEntry(HashTable * table, char *key, char *value);
+int set_entry(HashTable * table, char *key, char *value);
 
 /**
  * Removes matching key from hashtable
@@ -122,13 +122,13 @@ int setEntry(HashTable * table, char *key, char *value);
  * @return Returns -1 if the key is not in the table, the index of key
  * otherwise.
 */
-int removeEntry(HashTable * table, char *key);
+int remove_entry(HashTable * table, char *key);
 
 /**
  * Pass in pointer and checks if it is a null pointer, exits with EXIT_FAILURE
  * if pointer is null
  * @param Pointer void pointer
 */
-void checkNull(void *check);
+void check_null(void *check);
 
 #endif				/*DATA_STRUCTURE */

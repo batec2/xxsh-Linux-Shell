@@ -1,14 +1,13 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
-LDFLAGS= -lm
 
 all: test
 
 test_dataStructure.o: test_dataStructure.c
-	$(CC) $(CFLAGS) -c test_dataStructure.c
+	$(CC) $(CFLAGS) -c $<
 
 dataStructure.o: dataStructure.c dataStructure.h 
-	$(CC) $(CFLAGS) -c dataStructure.c
+	$(CC) $(CFLAGS) -c $<
 
 .PHONY: test
 test: dataStructure.o test_dataStructure.o

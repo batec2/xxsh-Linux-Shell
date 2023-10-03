@@ -2,65 +2,65 @@
 
 PRIVATE HashTable *table = NULL;
 //initiates the table
-void initEnvVars()
+void init_env_vars()
 {
-	table = createTable();
-	addEntry(table, "CC", "Default");
-	addEntry(table, "EDITOR", "Default");
-	addEntry(table, "HOME", "Default");
-	addEntry(table, "OLDPWD", "Default");
-	addEntry(table, "HOST", "Default");
-	addEntry(table, "PATH", "Default");
-	addEntry(table, "PWD", "Default");
-	addEntry(table, "SHELL", "Default");
-	addEntry(table, "HISTSIZE", "5");
-	addEntry(table, "USER", "Default");
+	table = create_table();
+	add_entry(table, "CC", "Default");
+	add_entry(table, "EDITOR", "Default");
+	add_entry(table, "HOME", "Default");
+	add_entry(table, "OLDPWD", "Default");
+	add_entry(table, "HOST", "Default");
+	add_entry(table, "PATH", "Default");
+	add_entry(table, "PWD", "Default");
+	add_entry(table, "SHELL", "Default");
+	add_entry(table, "HISTSIZE", "5");
+	add_entry(table, "USER", "Default");
 }
 
 //prints all values in the table
-void printVar()
+void print_var()
 {
-	printEntrys(table);
+	print_entrys(table);
 }
 
 //gets the current value of USER
-char *getUser()
+char *get_user()
 {
-	return getEntry(table, "USER");
+	return get_entry(table, "USER");
 }
 
 //gets the current value of HOST
-char *getHost()
+char *get_host()
 {
-	return getEntry(table, "HOST");
+	return get_entry(table, "HOST");
 }
 
 //gets the current value of PATH
-char *getPath()
+char *get_path()
 {
-	return getEntry(table, "PATH");
+	return get_entry(table, "PATH");
 }
 
 //gets the value of the key from the table
-char *getEnv(char *key)
+char *get_env(char *key)
 {
-	return getEntry(table, key);
+	return get_entry(table, key);
 }
 
 //checks if key exists in the tables
-int checkVar(char *key)
+int check_var(char *key)
 {
-	return findEntry(table, key);
+	return find_entry(table, key);
 }
 
 //Sets the value of a env variable
-void setVar(char *key, char *value)
+void set_var(char *key, char *value)
 {
-	setEntry(table, key, value);
+	set_entry(table, key, value);
 }
 
 //frees all memory associated with the table
-void destroyEnv()
+void destroy_env()
 {
-	destroyTable(table);
+	destroy_table(table);
 }

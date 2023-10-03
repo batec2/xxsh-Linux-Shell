@@ -1,6 +1,5 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
-LDFLAGS= -lm
 
 all: xxsh
 

@@ -1,12 +1,12 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
 
-test_envVariables.o: envVariables.o
-	$(CC) $(CFLAGS) -c test_envVariables.c
+test_envVariables.o: test_envVariables.c
+	$(CC) $(CFLAGS) -c $<
 
 
 envVariables.o: envVariables.c envVariables.h ../hashTable/dataStructure.h
-	$(CC) $(CFLAGS) -c envVariables.c
+	$(CC) $(CFLAGS) -c $<
 
 hashTable.o:
 	make -C ../hashTable/

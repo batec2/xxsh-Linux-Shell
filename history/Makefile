@@ -1,12 +1,11 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
-LDFLAGS= -lm
 
 test_history.o: test_history.c 
-	$(CC) $(CFLAGS) -c test_history.c
+	$(CC) $(CFLAGS) -c $<
 
 history.o: history.c history.h
-	$(CC) $(CFLAGS) -c history.c
+	$(CC) $(CFLAGS) -c $<
 
 envVariables.o:
 	make -C ../envVariables/
