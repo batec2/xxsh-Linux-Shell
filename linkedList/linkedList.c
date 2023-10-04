@@ -1,5 +1,5 @@
-/* linkedlist.c contains function implementations for the doubly linked list data
- structure.
+/* linkedlist.c contains function implementations for the doubly linked list
+ * data structure.
  */
 
 #include "linkedList.h"
