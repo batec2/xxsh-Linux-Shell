@@ -1,6 +1,12 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
 
+MODULES = history.o
+MODULES += test_history.o
+MODULES += ../linkedList/linkedList.o
+MODULES += ../envModule/envVariables.o 
+MODULES += ../hashTable/dataStructure.o
+
 test_history.o: test_history.c 
 	$(CC) $(CFLAGS) -c $<
 
@@ -17,7 +23,7 @@ dataStructure.o:
 	make -C ../hashTable/
 
 .PHONY: test
-test: history.o test_history.o ../linkedList/linkedList.o ../envModule/envVariables.o ../hashTable/dataStructure.o
+test: $(MODULES)
 	$(CC) $(CFLAGS) $^ -o $@
 	./test
 
