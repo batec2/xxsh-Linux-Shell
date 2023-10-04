@@ -1,13 +1,21 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
 
+MODULES = ./xxshModule/xxsh.o
+MODULES += ./hashTable/dataStructure.o
+MODULES += ./envModule/envVariables.o 
+MODULES += ./linkedList/linkedList.o
+MODULES += ./linkedList/linkedList.o 
+MODULES += ./history/history.o
+
 all: xxsh
 
-xxsh: ./xxshModule/xxsh.o ./hashTable/dataStructure.o ./envModule/envVariables.o ./linkedList/linkedList.o ./history/history.o
+xxsh: $(MODULES)
 	$(CC) $(CFLAGS) $^ -o $@
 
 xxsh.o:
-	# Recursive make: https://www.gnu.org/software/make/manual/html_node/Recursion.html
+	# Recursive make: 
+	# https://www.gnu.org/software/make/manual/html_node/Recursion.html
 	make -C ./xxshModule/
 
 envVariables.o:
