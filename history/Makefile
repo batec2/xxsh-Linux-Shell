@@ -1,9 +1,7 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
 
-MODULES = history.o
-MODULES += test_history.o
-MODULES += ../linkedList/linkedList.o
+MODULES = ../linkedList/linkedList.o
 MODULES += ../envModule/envVariables.o 
 MODULES += ../hashTable/dataStructure.o
 
@@ -23,7 +21,7 @@ dataStructure.o:
 	make -C ../hashTable/
 
 .PHONY: test
-test: $(MODULES)
+test: history.o test_history.o $(MODULES)
 	$(CC) $(CFLAGS) $^ -o $@
 	./test
 
