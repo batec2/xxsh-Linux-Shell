@@ -13,11 +13,14 @@ int main()
 
     printf("Testing program search...\n");
     char *path = NULL;
-    if(!get_program("ls", path))
+    if(!get_program("ls", &path))
         printf("Failed to get the path for ls\n");
     else
-        printf("PASS: Found path: %s", path);
-    free(path);
+    {
+        printf("PASS: Found path: %s\n", path);
+        free(path);
+    }
+        
 
         
 

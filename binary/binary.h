@@ -13,5 +13,5 @@
  * @param path pointer to string that will hold the path
  * @return 1 if found, 0 if not found
  */
-int get_program(char *program, char *path);
+int get_program(char *program, char** path);
 

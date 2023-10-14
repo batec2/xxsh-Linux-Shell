@@ -9,7 +9,7 @@
  * @param path pointer to string that will hold the path
  * @return 1 if found, 0 if not found
  */
-int get_program(char  *program, char* path)
+int get_program(char  *program, char** path)
 {
     // Get the PATH environment variable
     char *path_env = get_path();
@@ -27,11 +27,14 @@ int get_program(char  *program, char* path)
     while ((dir = readdir(directory)) != NULL)
     {
         printf("binary: %s\n", dir->d_name);
+        if (strcmp(dir->d_name, program) == 0)
+        {
+            *path = (char*) malloc(strlen(path_env)+strlen(dir->d_name)+1);;
+            strcpy(*path, path_env);
+            strcat(*path, "/");
+            strcat(*path, dir->d_name);
+            return 1;
+        }
     }
-
-        
-
-    // Return when match is found
-
     return 0;
 }
