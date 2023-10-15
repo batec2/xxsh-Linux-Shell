@@ -9,6 +9,10 @@
 
 #define PRIVATE static
 
+/**
+ * 
+*/
+void init_list();
 /* Add a command to history.
  * @param cmd a string representing the command to add.
  */
@@ -20,4 +24,15 @@ void history();
 /* destroys the history */
 void destroy_history();
 
+/**
+ * @param value String to be found in history
+ * @return if string is found it is returned, else NULL
+*/
+char *get_history(char *value);
+
+/**
+ * gets the last command to be entered
+ * @return the most recent item in history
+*/
+char *get_last();
 #endif				/* HISTORY */

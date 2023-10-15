@@ -155,3 +155,8 @@ void destroy_list(LinkedList * list)
 	free(list);
 	list = NULL;
 }
+
+/*gets first item in list*/
+char *get_first(LinkedList *list){
+	return list->first->value;
+}

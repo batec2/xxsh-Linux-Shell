@@ -26,4 +26,7 @@ void parse(char *key, char *value);
  */
 void clear_buffer();
 
+int arg_cmd(char *token,char *token2,char *token3);
+int no_arg_cmd(char *token);
+
 #endif
