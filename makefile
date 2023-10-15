@@ -44,7 +44,7 @@ test: xxsh
 	./test.sh
 
 memCheck: xxsh
-	valgrind -s --leak-check=yes ./xxsh
+	valgrind -s --leak-check=yes --show-leak-kinds=all ./xxsh
 
 tar:
 	make clean

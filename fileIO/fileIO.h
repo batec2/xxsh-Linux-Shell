@@ -19,4 +19,5 @@ FILE *open_file(char *file_name,char *mode);
 */
 void print_file(FILE * file);
 
+
 #endif				/*FILE_IO */

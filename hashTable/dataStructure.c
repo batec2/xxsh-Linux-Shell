@@ -161,12 +161,12 @@ void print_entrys(HashTable * table,FILE *file)
 		if (table->entryTable[i].key != NULL) {
 			if(file!=NULL)
 			{
-				fprintf(file,"%s , %s\n", table->entryTable[i].key,
+				fprintf(file,"%s,%s\n", table->entryTable[i].key,
 					table->entryTable[i].value);
 			}
 			else
 			{
-				printf("%s , %s\n", table->entryTable[i].key,
+				printf("%s,%s\n", table->entryTable[i].key,
 					table->entryTable[i].value);
 			}
 		}
@@ -182,7 +182,7 @@ void print_entry(HashTable * table, char *key)
 	if (index == -1) {
 		printf("%s does not exist.\n", key);
 	} else {
-		printf("%s, %s\n", key, table->entryTable[index].value);
+		printf("%s,%s\n", key, table->entryTable[index].value);
 	}
 }
 

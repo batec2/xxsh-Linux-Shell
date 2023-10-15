@@ -2,6 +2,7 @@
 
 /**
  * Opens files
+ * I just realized this basically does the same thing as fopen
 */
 FILE *open_file(char *file_name,char *mode)
 {
@@ -25,5 +26,8 @@ void print_file(FILE * file)
 	}
 	fclose(file);
 }
+
+
+
 
 

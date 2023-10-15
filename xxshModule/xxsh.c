@@ -17,11 +17,8 @@ void main_loop()
 	char *token;
 	char *token2;
 	char *token3;
-	FILE *env_file;
-
-	if()
-
-
+	check_env(FILE_NAME);
+	read_env(FILE_NAME);
 	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_path()) > 0)
 	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
 		/*Clearing stdin */
@@ -29,6 +26,7 @@ void main_loop()
 			clear_buffer();
 		}
 		strcpy(buffer2, buffer);	//creates copy of command for insert into history
+		add_history(buffer2);
 		token = strtok(buffer, "  \n");
 		if (token == NULL) {
 			continue;
@@ -82,7 +80,6 @@ void main_loop()
 			printf("%s@%s:%s>> Not a valid command\n",
 			       get_user(), get_host(), get_path());
 		}
-		add_history(buffer2);
 	}
 }
 
