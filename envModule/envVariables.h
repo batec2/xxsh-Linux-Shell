@@ -3,7 +3,7 @@
 
 #include "../hashTable/dataStructure.h"
 #include "../fileIO/fileIO.h"
-
+#define MAX_COUNT 256
 #define PRIVATE static
 /**
  * Initializes the environment table and all the default environment variables
@@ -39,6 +39,7 @@ char *get_path();
 char *get_env(char *key);
 
 /** 
+ * 
  * @param String name of environment variable
  * @param String value of environment variable
  * @return 
@@ -64,4 +65,6 @@ void write_env(char *file_name);
  * @param file file to be checked and or written to
 */
 void check_env(char *file_name);
+
+void read_env(char *file_name);
 #endif				/*ENV_VARIABLES */

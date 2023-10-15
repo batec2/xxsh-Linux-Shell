@@ -92,6 +92,13 @@ void check_env(char *file_name){
 }
 
 void read_env(char *file_name){
-	//FILE *file = open_file(file_name);
+	char buffer[MAX_COUNT];
+	char *token,*token2;
+	FILE *file = open_file(file_name,"r");
+	while(fgets(buffer,MAX_COUNT,file)!=NULL){
+		token = strtok(buffer,",\n");
+		token2 = strtok(NULL,"\n");
+		set_var(token,token2);
+	}
 }
 

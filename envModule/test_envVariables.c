@@ -4,6 +4,8 @@
 int main(void)
 {
 	init_env_vars();
+	check_env("test.txt");
+	read_env("test.txt");
 	print_var();
 	printf("Should be: Default->%s\n", get_user());
 	printf("Should be: Default->%s\n", get_host());
@@ -12,6 +14,5 @@ int main(void)
 	printf("Should be: Test->%s\n", get_env("Test"));
 	printf("Should be: 0<%i\n", check_var("Test"));
 	printf("Should be: 0>%i\n", check_var("NotHere"));
-	write_env("test.txt");
 	destroy_env();
 }
