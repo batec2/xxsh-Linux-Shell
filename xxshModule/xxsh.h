@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
+#define FILE_NAME "env_variables.txt"
+
 
 /**
  * Main program loop that takes in user input and calls corresponding 

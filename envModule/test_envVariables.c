@@ -12,5 +12,6 @@ int main(void)
 	printf("Should be: Test->%s\n", get_env("Test"));
 	printf("Should be: 0<%i\n", check_var("Test"));
 	printf("Should be: 0>%i\n", check_var("NotHere"));
+	write_env("test.txt");
 	destroy_env();
 }

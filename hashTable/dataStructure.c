@@ -155,12 +155,20 @@ int next_open(Entry * table, int index, int size)
  * Prints all key/value pairs in hash table, empty spots in table are
  * printed out as NULL
 */
-void print_entrys(HashTable * table)
-{
+void print_entrys(HashTable * table,FILE *file)
+{	
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			printf("%s , %s\n", table->entryTable[i].key,
-			       table->entryTable[i].value);
+			if(file!=NULL)
+			{
+				fprintf(file,"%s , %s\n", table->entryTable[i].key,
+					table->entryTable[i].value);
+			}
+			else
+			{
+				printf("%s , %s\n", table->entryTable[i].key,
+					table->entryTable[i].value);
+			}
 		}
 	}
 }

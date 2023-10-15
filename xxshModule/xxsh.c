@@ -17,6 +17,11 @@ void main_loop()
 	char *token;
 	char *token2;
 	char *token3;
+	FILE *env_file;
+
+	if()
+
+
 	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_path()) > 0)
 	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
 		/*Clearing stdin */
@@ -57,6 +62,7 @@ void main_loop()
 		else if (strcmp(token, "quit") == 0) {
 			token2 = strtok(NULL, "\n");
 			if (token2 == NULL) {
+				write_env(FILE_NAME);
 				destroy_env();
 				destroy_history();
 				break;
@@ -67,6 +73,7 @@ void main_loop()
 		else if (strcmp(token, "exit") == 0) {
 			token2 = strtok(NULL, "\n");
 			if (token2 == NULL) {
+				write_env(FILE_NAME);
 				destroy_env();
 				destroy_history();
 				break;

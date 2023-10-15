@@ -20,7 +20,12 @@ void init_env_vars()
 //prints all values in the table
 void print_var()
 {
-	print_entrys(table);
+	print_entrys(table,NULL);
+}
+
+void write_var(FILE *file)
+{
+	print_entrys(table,file);
 }
 
 //gets the current value of USER
@@ -64,3 +69,11 @@ void destroy_env()
 {
 	destroy_table(table);
 }
+
+//writes env vars to file
+FILE *write_env(char *file_name){
+	FILE *out_file = open_file(file_name,"w");
+	print_entrys(table,out_file);
+	return out_file;
+}
+

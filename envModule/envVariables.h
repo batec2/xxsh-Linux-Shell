@@ -2,6 +2,7 @@
 #define ENV_VARIABLES
 
 #include "../hashTable/dataStructure.h"
+#include "../fileIO/fileIO.h"
 
 #define PRIVATE static
 /**
@@ -53,4 +54,9 @@ int check_var(char *key);
  * Frees all mememory allocated to environment variable hashtable
  */
 void destroy_env();
+/**
+ * @param file file for env vars to be written to
+ * @return Returns FILE pointer to newly created file
+*/
+FILE *write_env(char *file_name);
 #endif				/*ENV_VARIABLES */

@@ -71,8 +71,9 @@ int next_open(Entry * table, int index, int size);
 /**
  * Prints all entries that are not NULL in the table
  * @param Pointer to hashtable
+ * @param file optional param, if null prints to stdout, else prints to file
 */
-void print_entrys(HashTable * table);
+void print_entrys(HashTable * table,FILE *file);
 
 /**
  * Prints a the value of corresponding key from the table
