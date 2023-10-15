@@ -71,9 +71,27 @@ void destroy_env()
 }
 
 //writes env vars to file
-FILE *write_env(char *file_name){
+void write_env(char *file_name){
 	FILE *out_file = open_file(file_name,"w");
 	print_entrys(table,out_file);
-	return out_file;
+	fclose(out_file);
+}
+
+/**
+ * Checks if file exists, if it doesnt, creates the file if and writes default
+ * environment variables
+*/
+void check_env(char *file_name){
+    FILE *file = open_file(file_name,"r");
+    if(file==NULL){
+        write_env(file_name);
+    }
+    else{
+        fclose(file);
+    }
+}
+
+void read_env(char *file_name){
+	//FILE *file = open_file(file_name);
 }
 

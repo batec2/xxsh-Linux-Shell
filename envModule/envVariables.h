@@ -55,8 +55,13 @@ int check_var(char *key);
  */
 void destroy_env();
 /**
+ * env vars are written to file
  * @param file file for env vars to be written to
- * @return Returns FILE pointer to newly created file
 */
-FILE *write_env(char *file_name);
+void write_env(char *file_name);
+/**
+ * Checks if file exists, if not a new file is made and env are written to it
+ * @param file file to be checked and or written to
+*/
+void check_env(char *file_name);
 #endif				/*ENV_VARIABLES */
