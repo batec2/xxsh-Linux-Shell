@@ -100,5 +100,6 @@ void read_env(char *file_name){
 		token2 = strtok(NULL,"\n");
 		set_var(token,token2);
 	}
+	fclose(file);
 }
 
