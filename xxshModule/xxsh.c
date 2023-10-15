@@ -19,16 +19,31 @@ void main_loop(char *input)
 	char buffer2[MAX_LENGTH];
 	char *token,*token2,*token3;
 	char *bang_cmd;
-	int bang_check = 0;
 	int check = 0;
 
-	while ((bang_check==1)||((printf("%s@%s:%s>> ",
-							 get_user(), get_host(), get_path()) > 0)
-	       					&& (fgets(buffer, MAX_LENGTH, stdin) != NULL))) {
+	while ((printf("%s@%s:%s>> ",get_user(), get_host(), get_path()) > 0)
+	       					&& (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
 		
 		/*Clearing stdin */
 		if ((buffer[strlen(buffer) - 1] != '\n')&&(buffer[0]!='\0')) {
 			clear_buffer();
+		}
+
+		if(buffer[0]=='!'){
+			if(buffer[1]=='!'){
+				if(history_empty()==1){
+					continue;
+				}
+				else{
+					strcpy(buffer,get_last());
+				}
+			}
+			else if(buffer[1]=='\n'){
+				strcpy(buffer2, buffer);
+				add_history(buffer2);
+				continue;
+			}
+			printf("This is a banger\n");
 		}
 
 		//Adds command to history
@@ -62,17 +77,6 @@ void main_loop(char *input)
 	}
 }
 
-/*
-if(buffer[0]=='!'){
-	if(buffer[1]=='!'){
-		printf("%s\n",get_last());
-	}
-	bang_check=1;
-	//bang_cmd = malloc(strlen[token])
-	printf("This is a banger\n");
-	memset(buffer, '\0', MAX_LENGTH);
-}
-*/
 
 void parse(char *key, char *value)
 {

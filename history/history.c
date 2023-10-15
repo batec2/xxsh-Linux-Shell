@@ -18,6 +18,9 @@ void init_list(){
  */
 void add_history(char *cmd)
 {
+	if(cmd[0]=='\n'){
+		return;
+	}
 	// trim list
 	while (history_ll->size >= atoi(get_env("HISTSIZE"))) {
 		// Need to remove the first entry
@@ -49,4 +52,8 @@ char *get_history(char *value){
 /*Gets latest command from history*/
 char *get_last(){
 	return get_first(history_ll);
+}
+
+int history_empty(){
+	return is_empty(history_ll);
 }

@@ -35,4 +35,6 @@ char *get_history(char *value);
  * @return the most recent item in history
 */
 char *get_last();
+
+int history_empty();
 #endif				/* HISTORY */

@@ -160,3 +160,7 @@ void destroy_list(LinkedList * list)
 char *get_first(LinkedList *list){
 	return list->first->value;
 }
+
+int is_empty(LinkedList *list){
+	return list->size==0;
+}

@@ -83,4 +83,6 @@ void destroy_list(LinkedList * list);
  * @param list linked list
 */
 char *get_first(LinkedList * list);
+
+int is_empty(LinkedList *list);
 #endif				//LINKED_LIST
