@@ -13,7 +13,7 @@ env
 5
 history
 export
-export HISTSIZE=2
+export HISTSIZE=5
 history
 exit
 HERE

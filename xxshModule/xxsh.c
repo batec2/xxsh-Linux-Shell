@@ -4,6 +4,9 @@
 
 int main(void)
 {
+	char test[100] = "export HISTSIZE=100\n";
+	char **list = read_flags(test);
+	printf("%s\n",strtok("stuff"," "));
 	init_env_vars();
 	init_list();
 	check_env(FILE_NAME);
@@ -17,8 +20,8 @@ void main_loop(char *input)
 {
 	char buffer[MAX_LENGTH];
 	char buffer2[MAX_LENGTH];
+	char **cmd_args;
 	char *token,*token2,*token3;
-	char *bang_cmd;
 	int check = 0;
 
 	while ((printf("%s@%s:%s>> ",get_user(), get_host(), get_path()) > 0)
@@ -27,6 +30,9 @@ void main_loop(char *input)
 		/*Clearing stdin */
 		if ((buffer[strlen(buffer) - 1] != '\n')&&(buffer[0]!='\0')) {
 			clear_buffer();
+		}
+		else{
+			buffer[strlen(buffer) - 1] = '\n';
 		}
 
 		if(buffer[0]=='!'){
@@ -46,12 +52,14 @@ void main_loop(char *input)
 			token = strtok(buffer+1,"\n");
 			strcpy(buffer,get_history(token));
 		}
+		
 
 		//Adds command to history
 		strcpy(buffer2, buffer);
 		add_history(buffer2);
 
-		token = strtok(buffer, "  \n");
+		//token = strtok(buffer, "  \n");
+		cmd_args = read_flags(buffer);
 		//no input
 		if (token == NULL) {
 			continue;
@@ -128,4 +136,25 @@ int no_arg_cmd(char *token){
 		return -1;	
 	}
 	return 0;
+}
+
+/**
+ * command and parses flags
+*/
+char **read_flags(char *input){
+	
+	char **flag_list = malloc(sizeof(char *));
+	char *token;
+	int counter = 1;
+	token = strtok(input, " ");
+	do {
+		if(counter != 1){
+			flag_list = (char **)realloc(flag_list,(sizeof(char *)*counter));//malloc for the size of a string	
+		}
+		flag_list[(counter-1)] = malloc(strlen(token)+1);
+		strcpy(flag_list[(counter-1)],token);
+		counter++;
+	} while ((token = strtok(NULL, " "))!=NULL);
+	
+	return flag_list;
 }

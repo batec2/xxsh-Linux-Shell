@@ -8,6 +8,7 @@ MODULES += ./linkedList/linkedList.o
 MODULES += ./linkedList/linkedList.o 
 MODULES += ./history/history.o
 MODULES += ./fileIO/fileIO.o
+MODULES += ./binary/binary.o
 
 all: xxsh
 
@@ -34,6 +35,9 @@ history.o:
 fileIO.o: 
 	make -C ./fileIO/
 
+binary.o:
+	make -C ./binary/
+
 .PHONY:
 
 test: xxsh
@@ -59,3 +63,4 @@ clean:
 	make clean -C ./xxshModule/
 	make clean -C ./testUtils/
 	make clean -C ./fileIO/
+	make clean -C ./binary/

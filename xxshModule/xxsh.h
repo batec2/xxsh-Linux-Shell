@@ -6,8 +6,13 @@
 #include <stdlib.h>
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
+#include "../binary/binary.h"
 #define FILE_NAME "env_variables.txt"
-
+/* Struct for list items */
+typedef struct command {
+    int size;
+	char **args_cmd;
+} command;
 
 /**
  * Main program loop that takes in user input and calls corresponding 
@@ -28,5 +33,6 @@ void clear_buffer();
 
 int arg_cmd(char *token,char *token2,char *token3);
 int no_arg_cmd(char *token);
+char **read_flags(char *input);
 
 #endif

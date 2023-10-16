@@ -3,7 +3,7 @@ CFLAGS= -Wall -g -pedantic -std=c11
 
 all: xxsh
 
-xxsh.o: xxsh.c xxsh.h ../envModule/envVariables.h ../history/history.h
+xxsh.o: xxsh.c xxsh.h ../envModule/envVariables.h ../history/history.h ../binary/binary.h
 	$(CC) $(CFLAGS) -c $<
 
 .PHONY:
