@@ -78,4 +78,11 @@ void print_last(LinkedList * list);
  */
 void destroy_list(LinkedList * list);
 
+/**
+ * Gets the first item in linked list
+ * @param list linked list
+*/
+char *get_first(LinkedList * list);
+
+int is_empty(LinkedList *list);
 #endif				//LINKED_LIST

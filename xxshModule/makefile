@@ -10,7 +10,7 @@ xxsh.o: xxsh.c xxsh.h ../envModule/envVariables.h ../history/history.h
 
 test:
 
-memCheck: test_dataStructure
+memCheck: xxsh test_dataStructure
 	valgrind -s --leak-check=yes ./xxsh
 
 clean:

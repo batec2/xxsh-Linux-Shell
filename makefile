@@ -7,6 +7,7 @@ MODULES += ./envModule/envVariables.o
 MODULES += ./linkedList/linkedList.o
 MODULES += ./linkedList/linkedList.o 
 MODULES += ./history/history.o
+MODULES += ./fileIO/fileIO.o
 
 all: xxsh
 
@@ -29,6 +30,9 @@ dataStructure.o:
 
 history.o: 
 	make -C ./history/
+	
+fileIO.o: 
+	make -C ./fileIO/
 
 .PHONY:
 
@@ -40,7 +44,7 @@ test: xxsh
 	./test.sh
 
 memCheck: xxsh
-	valgrind -s --leak-check=yes ./xxsh
+	valgrind -s --leak-check=yes --show-leak-kinds=all ./xxsh
 
 tar:
 	make clean
@@ -54,3 +58,4 @@ clean:
 	make clean -C ./linkedList/
 	make clean -C ./xxshModule/
 	make clean -C ./testUtils/
+	make clean -C ./fileIO/

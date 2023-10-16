@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
+#define FILE_NAME "env_variables.txt"
+
 
 /**
  * Main program loop that takes in user input and calls corresponding 
@@ -23,5 +25,8 @@ void parse(char *key, char *value);
  *Clears StdIn buffer of leftover characters
  */
 void clear_buffer();
+
+int arg_cmd(char *token,char *token2,char *token3);
+int no_arg_cmd(char *token);
 
 #endif
