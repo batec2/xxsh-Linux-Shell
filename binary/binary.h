@@ -4,6 +4,10 @@
  */
 
 #include <dirent.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "../envModule/envVariables.h"
 
@@ -15,3 +19,15 @@
  */
 int get_program(char *program, char** path);
 
+/* Checks if a command ends with an & which indicates to run it in the
+ * background
+ * @param args
+ * returns 1 if it is to run in the background or 0 if foreground
+ */
+int run_background(char **args);
+
+/* Runs a command
+ * @param  args list of arguments
+ * @return the exit status of the command
+ */
+int run_cmd(char **args);

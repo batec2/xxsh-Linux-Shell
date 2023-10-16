@@ -17,11 +17,17 @@ int main()
         printf("Failed to get the path for ls\n");
     else
     {
-        printf("PASS: Found path: %s\n", path);
+        printf("PASS: Found path: %s\n\n", path);
         free(path);
     }
         
 
+    char *arg_array[] = {"ls", "-a", "-l", "/home/dakota/bin", NULL};
+    run_cmd(arg_array);
+
+    printf("\n\n");
+    char *arg_array2[] = {"ls", "-a", "-l", "/home/dakota/bin", "&", NULL};
+    run_cmd(arg_array2);
         
 
 }
