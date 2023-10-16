@@ -85,9 +85,17 @@ int run_cmd(char **args)
         printf("Running: %s\n", path);
         if (run_background(args))
         {
-            printf("Running in background\n");
-            // Strip &
-            execv(path, args);
+            pid_t pid2 = fork();
+            if(pid2 > 0)
+            {
+                exit(0); // Middle process
+            }
+            else
+            {
+                printf("Running in background\n");
+                execv(path, args);
+                exit(0);
+            }
         }
         else
         {

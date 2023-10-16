@@ -26,8 +26,7 @@ int main()
     run_cmd(arg_array);
 
     printf("\n\n");
-    char *arg_array2[] = {"ls", "-a", "-l", "/home/dakota/bin", "&", NULL};
-    run_cmd(arg_array2);
-        
-
+    char *arg_array3[] = {"xmessage", "Hello, world", "&", NULL};
+    run_cmd(arg_array3);
+    printf("hello, I've returned before xmessage!\n");
 }
