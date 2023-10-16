@@ -43,7 +43,8 @@ void main_loop(char *input)
 				add_history(buffer2);
 				continue;
 			}
-			printf("This is a banger\n");
+			token = strtok(buffer+1,"\n");
+			strcpy(buffer,get_history(token));
 		}
 
 		//Adds command to history

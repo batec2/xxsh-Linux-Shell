@@ -85,4 +85,6 @@ void destroy_list(LinkedList * list);
 char *get_first(LinkedList * list);
 
 int is_empty(LinkedList *list);
+
+Item *search_n(char *value, LinkedList * list);
 #endif				//LINKED_LIST

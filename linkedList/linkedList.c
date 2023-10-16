@@ -30,6 +30,19 @@ Item *search(char *value, LinkedList * list)
 	return NULL;
 }
 
+/* Search for an item in the list.
+ * @param value to search for.
+ * @param list LinkedList to search.
+ * @return pointer to the Item.
+ */
+Item *search_n(char *value, LinkedList * list)
+{
+	for (Item * item = list->first; item != NULL; item = item->next)
+		if (strncmp(value, item->value,strlen(value)) == 0)
+			return item;
+	return NULL;
+}
+
 /* Add an item to the list.
  * @param value string to insert into list.
  * @param list LinkedList to insert value into.

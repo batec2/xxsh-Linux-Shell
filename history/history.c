@@ -45,8 +45,12 @@ void destroy_history()
 }
 
 /*gets a value from history*/
-char *get_history(char *value){
-	return search(value,history_ll)->value;
+char *get_history(char *inValue){
+	Item *item = search_n(inValue,history_ll);
+	if(item == NULL){
+		return NULL;
+	}
+	return item->value;
 }
 
 /*Gets latest command from history*/
