@@ -34,12 +34,8 @@ void clear_buffer();
 /**
  * 
 */
-int mult_arg_cmd(command *cmd);
+int arg_cmd(command *cmd);
 
-/**
- * 
-*/
-int no_arg_cmd(command *cmd);
 /**
  * 
 */

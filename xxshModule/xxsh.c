@@ -64,16 +64,11 @@ void main_loop(char *input)
 		add_history(buffer2);
 
 		read_flags(buffer,cmd_args);
-		//two or more inputs
-		if(cmd_args->size>1){
-			check = mult_arg_cmd(cmd_args);
-		}
-		//one input
-		else{
-			if((check = no_arg_cmd(cmd_args))==-1){
-				break;
-			};
-		}
+
+		if((check = arg_cmd(cmd_args))==-1){
+			break;
+		};
+		
 		if(check == 0){
 			printf("%s@%s:%s>> Not a valid command\n",
 			get_user(), get_host(), get_path());
@@ -111,35 +106,38 @@ void clear_buffer()
 	}
 }
 
-int mult_arg_cmd(command *cmd){
+int arg_cmd(command *cmd){
 	/*export needs valid key/value */
-	if (strcmp(cmd->args_list[0], "export") == 0) {
+	if (strcmp(cmd->args_list[0], "export") == 0 &&
+			cmd->size==2) {
 		parse(cmd->args_list[1]);
 		return 1;
 	}
-	return 0;
-}
 
-int no_arg_cmd(command *cmd){
 	/*env needs only env as input */
-	if (strcmp(cmd->args_list[0], "env") == 0) {
+	if (strcmp(cmd->args_list[0], "env") == 0 &&
+			cmd->size==1) {
 		print_var();
 		return 1;
 	}
 	/*history needs only history as input */
-	else if (strcmp(cmd->args_list[0], "history") == 0) {
+	else if (strcmp(cmd->args_list[0], "history") == 0 &&
+			cmd->size==1) {
 		history();
 		return 1;
 	}
 	/*exit need exit/quit as input */
-	else if (strcmp(cmd->args_list[0], "exit") == 0 || 
-			strcmp(cmd->args_list[0], "quit") == 0) {
+	else if ((strcmp(cmd->args_list[0], "exit") == 0 || 
+			strcmp(cmd->args_list[0], "quit") == 0) && cmd->size==1) {
 		write_env(FILE_NAME);
 		destroy_env();
 		destroy_history();
 		free_command(cmd);
 		free(cmd);
 		return -1;	
+	}
+	else{
+		/*PUT BINARY HERE*/
 	}
 	return 0;
 }
