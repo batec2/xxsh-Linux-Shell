@@ -13,30 +13,37 @@
 int get_program(char  *program, char** path)
 {
     // Get the PATH environment variable
-    char *path_env = get_path();
-    printf("path: %s\n", path_env);
+    char *tmp = get_path();
+    char *path_env = malloc(strlen(tmp));;
+    strcpy(path_env, tmp);
 
-    // TODO: add support for ; in PATH
     // Iterate over the values in PATH (separated by semicolons)
-    DIR *directory = opendir(path_env);
-    if (directory == NULL)
+    char *dir_path = strtok(path_env, ";");
+    while( dir_path != NULL)
     {
-        printf("Unable to find directory: %s\n", path_env);
-        return 0;
-    }
-    struct dirent *dir;
-    while ((dir = readdir(directory)) != NULL)
-    {
-        printf("binary: %s\n", dir->d_name);
-        if (strcmp(dir->d_name, program) == 0)
+        DIR *directory = opendir(dir_path);
+        if (directory == NULL)
         {
-            *path = (char*) malloc(strlen(path_env)+strlen(dir->d_name)+1);;
-            strcpy(*path, path_env);
-            strcat(*path, "/");
-            strcat(*path, dir->d_name);
-            return 1;
+            printf("Unable to find directory: %s\n", dir_path);
+            return 0;
         }
+        struct dirent *dir;
+        // Search for matching binary in directory
+        while ((dir = readdir(directory)) != NULL)
+        {
+            if (strcmp(dir->d_name, program) == 0)
+            {
+                *path = (char*) malloc(strlen(dir_path)+strlen(dir->d_name)+1);;
+                strcpy(*path, dir_path);
+                strcat(*path, "/");
+                strcat(*path, dir->d_name);
+                free(path_env);
+                return 1;
+            }
+        }
+        dir_path = strtok(NULL, ";");
     }
+    free(path_env);
     return 0;
 }
 
@@ -50,6 +57,7 @@ int run_background(char **args)
     int i = 0;
     while(args[i] != NULL)
     {
+        // If the command ends with a & then run in background
         if (strcmp(args[i], "&") == 0)
         {
             // Nullify the & (always at the end)
@@ -82,7 +90,6 @@ int run_cmd(char **args)
             printf("Failed to find the program: %s\n", args[0]);
             exit(1);
         }
-        printf("Running: %s\n", path);
         if (run_background(args))
         {
             pid_t pid2 = fork();
@@ -92,20 +99,17 @@ int run_cmd(char **args)
             }
             else
             {
-                printf("Running in background\n");
                 execv(path, args);
                 exit(0);
             }
         }
         else
         {
-            printf("Running in foreground\n");
             execv(path, args);
         }
         exit(0);
     }
     free(path);
-
     return 0;
 }
 
