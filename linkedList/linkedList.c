@@ -140,7 +140,7 @@ int delete_first(LinkedList * list)
 void print_list(LinkedList * list)
 {
 	for (Item * item = list->first; item != NULL; item = item->next)
-		printf("%s", item->value);
+		printf("%s\n", item->value);
 }
 
 /* Prints the last item in the list.

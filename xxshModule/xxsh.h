@@ -11,7 +11,7 @@
 /* Struct for list items */
 typedef struct command {
     int size;
-	char **args_cmd;
+	char **args_list;
 } command;
 
 /**
@@ -25,14 +25,29 @@ void main_loop();
  * @param String representing Env variable
  * @param String representing users input
  */
-void parse(char *key, char *value);
+void parse(char *args);
 /** 
  *Clears StdIn buffer of leftover characters
  */
 void clear_buffer();
 
-int arg_cmd(char *token,char *token2,char *token3);
-int no_arg_cmd(char *token);
-char **read_flags(char *input);
+/**
+ * 
+*/
+int mult_arg_cmd(command *cmd);
+
+/**
+ * 
+*/
+int no_arg_cmd(command *cmd);
+/**
+ * 
+*/
+void read_flags(char *input,command *cmd);
+
+/**
+ * 
+*/
+void free_command(command *cmd);
 
 #endif
