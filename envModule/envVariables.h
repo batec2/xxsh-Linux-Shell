@@ -66,5 +66,9 @@ void write_env(char *file_name);
 */
 void check_env(char *file_name);
 
+/**
+ * Takes env  variables from list and sets into hashmap
+ * @param file_name
+*/
 void read_env(char *file_name);
 #endif				/*ENV_VARIABLES */

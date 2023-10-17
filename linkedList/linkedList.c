@@ -30,7 +30,7 @@ Item *search(char *value, LinkedList * list)
 	return NULL;
 }
 
-/* Search for an item in the list.
+/* Search for an item in the list, will get get the first item that matchs
  * @param value to search for.
  * @param list LinkedList to search.
  * @return pointer to the Item.
@@ -174,6 +174,7 @@ char *get_first(LinkedList *list){
 	return list->first->value;
 }
 
+/*checks if list is empty*/
 int is_empty(LinkedList *list){
 	return list->size==0;
 }

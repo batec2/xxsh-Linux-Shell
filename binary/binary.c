@@ -78,16 +78,17 @@ int run_cmd(char **args)
     char *path = NULL;
     pid_t pid;
     pid = fork();
+    int status = 0;
     if(pid >0)
     {
-        wait(NULL);
+        wait(&status);
     }
     else
     {
         char *path = NULL;
         if (!get_program(args[0],  &path))
         {
-            printf("Failed to find the program: %s\n", args[0]);
+            //printf("Failed to find the program: %s\n", args[0]);
             exit(1);
         }
         if (run_background(args))
@@ -110,6 +111,7 @@ int run_cmd(char **args)
         exit(0);
     }
     free(path);
-    return 0;
+    //printf("%i",status);
+    return status==0?1:0;
 }
 

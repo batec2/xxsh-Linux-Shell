@@ -11,7 +11,7 @@
 /* Struct for list items */
 typedef struct command {
     int size;
-	char **args_list;
+	char **args_list;//command and arguments
 } command;
 
 /**
@@ -32,17 +32,19 @@ void parse(char *args);
 void clear_buffer();
 
 /**
- * 
+ * Takes command and runs commands with arguments
+ * @param command struct with list of arguments
 */
 int arg_cmd(command *cmd);
 
 /**
- * 
+ * parses input and puts arguments into a list
+ * @param command struct with list of arguments
 */
 void read_flags(char *input,command *cmd);
 
 /**
- * 
+ * @param command struct with list of arguments
 */
 void free_command(command *cmd);
 

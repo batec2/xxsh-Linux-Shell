@@ -36,5 +36,9 @@ char *get_history(char *value);
 */
 char *get_last();
 
+/**
+ * checks if history is empty
+ * @return returns 1 if the list is empty 0 if it isnt
+*/
 int history_empty();
 #endif				/* HISTORY */

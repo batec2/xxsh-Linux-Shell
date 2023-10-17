@@ -58,6 +58,7 @@ char *get_last(){
 	return get_first(history_ll);
 }
 
+/*checks if history list is emtpy*/
 int history_empty(){
 	return is_empty(history_ll);
 }

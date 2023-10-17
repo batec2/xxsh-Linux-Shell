@@ -84,7 +84,19 @@ void destroy_list(LinkedList * list);
 */
 char *get_first(LinkedList * list);
 
+/**
+ * checks if linked list is empty
+ * @param list linked list
+ * @return returns 1 if the list is empty 0 if it isnt
+*/
 int is_empty(LinkedList *list);
 
+/**
+ *  gets the first item matching the letters in value, does not have
+ * to be same length
+ * @param value to search for.
+ * @param list LinkedList to search.
+ * @return pointer to the Item.
+ */
 Item *search_n(char *value, LinkedList * list);
 #endif				//LINKED_LIST

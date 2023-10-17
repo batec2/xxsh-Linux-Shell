@@ -10,7 +10,7 @@ int main()
     printf("Testing the binary module...\n\n");
     
     init_env_vars();
-    set_var("PATH", "/home/dakota/Downloads;/home/dakota/bin");
+    set_var("PATH", "/usr/bin/bin;/usr/bin/bin");
 
     char *path = NULL;
     test(get_program("ls", &path) == 1, "searching path for program");

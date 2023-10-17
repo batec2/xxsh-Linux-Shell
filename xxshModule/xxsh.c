@@ -36,6 +36,7 @@ void main_loop(char *input)
 			continue;
 		}
 		
+		/*bang operator !! for last command ! for last matching after the bang*/
 		if(buffer[0]=='!'){
 			if(buffer[1]=='!'){
 				if(history_empty()==1){
@@ -50,15 +51,15 @@ void main_loop(char *input)
 				add_history(buffer2);
 				continue;
 			}
-			token = get_history(strtok(buffer+1,"\0"));
-			if(token==NULL){
-				continue;
+			else{
+				token = get_history(buffer+1);
+				if(token==NULL){
+					continue;
+				}
+				strcpy(buffer,token);	
 			}
-			strcpy(buffer,token);
 		}
 		
-		
-
 		//Adds command to history
 		strcpy(buffer2, buffer);
 		add_history(buffer2);
@@ -78,7 +79,7 @@ void main_loop(char *input)
 	}
 }
 
-
+/*Parses the commands for export*/
 void parse(char *args)
 {
 	char *key,*value;
@@ -99,6 +100,7 @@ void parse(char *args)
 	}
 }
 
+/*Clears stdin*/
 void clear_buffer()
 {
 	char c =' ';
@@ -106,6 +108,7 @@ void clear_buffer()
 	}
 }
 
+/*gets cmd lists and runs commands*/
 int arg_cmd(command *cmd){
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 &&
@@ -136,8 +139,9 @@ int arg_cmd(command *cmd){
 		free(cmd);
 		return -1;	
 	}
+	/*checks if command exists in bin*/
 	else{
-		/*PUT BINARY HERE*/
+		return run_cmd(cmd->args_list);
 	}
 	return 0;
 }
@@ -163,6 +167,7 @@ void read_flags(char *input,command *cmd){
 	cmd->size = counter;
 }
 
+/*frees memory for the cmd struct*/
 void free_command(command *cmd){
 	for(int i = 0;i<cmd->size;i++){
 		free(cmd->args_list[i]);

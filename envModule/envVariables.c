@@ -91,6 +91,9 @@ void check_env(char *file_name){
     }
 }
 
+/**
+ * Takes env variables from file and sets them in hashmap
+*/
 void read_env(char *file_name){
 	char buffer[MAX_COUNT];
 	char *token,*token2;
