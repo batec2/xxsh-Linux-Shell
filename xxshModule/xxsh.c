@@ -112,26 +112,26 @@ void clear_buffer()
 int arg_cmd(command *cmd){
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 &&
-			cmd->size==2) {
+			cmd->size==3) {
 		parse(cmd->args_list[1]);
 		return 1;
 	}
 
 	/*env needs only env as input */
 	if (strcmp(cmd->args_list[0], "env") == 0 &&
-			cmd->size==1) {
+			cmd->size==2) {
 		print_var();
 		return 1;
 	}
 	/*history needs only history as input */
 	else if (strcmp(cmd->args_list[0], "history") == 0 &&
-			cmd->size==1) {
+			cmd->size==2) {
 		history();
 		return 1;
 	}
 	/*exit need exit/quit as input */
 	else if ((strcmp(cmd->args_list[0], "exit") == 0 || 
-			strcmp(cmd->args_list[0], "quit") == 0) && cmd->size==1) {
+			strcmp(cmd->args_list[0], "quit") == 0) && cmd->size==2) {
 		write_env(FILE_NAME);
 		destroy_env();
 		destroy_history();
@@ -163,6 +163,11 @@ void read_flags(char *input,command *cmd){
 		strcpy(flag_list[(counter)],token);
 		counter++;
 	} while ((token = strtok(NULL, " "))!=NULL);
+	
+	flag_list = (char **)realloc(flag_list,(sizeof(char *)*(counter+1)));
+	flag_list[counter] = NULL;
+	counter ++;
+
 	cmd->args_list = flag_list;
 	cmd->size = counter;
 }
@@ -170,7 +175,9 @@ void read_flags(char *input,command *cmd){
 /*frees memory for the cmd struct*/
 void free_command(command *cmd){
 	for(int i = 0;i<cmd->size;i++){
-		free(cmd->args_list[i]);
+		if(cmd->args_list[i]!=NULL){
+			free(cmd->args_list[i]);
+		}
 		cmd->args_list[i]=NULL;
 	}
 	free(cmd->args_list);

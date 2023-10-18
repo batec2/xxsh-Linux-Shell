@@ -48,4 +48,4 @@ void read_flags(char *input,command *cmd);
 */
 void free_command(command *cmd);
 
-#endif
+#endif /*XXSH*/
