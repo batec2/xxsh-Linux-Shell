@@ -15,6 +15,8 @@ void init_env_vars()
 	add_entry(table, "SHELL", "Default");
 	add_entry(table, "HISTSIZE", "5");
 	add_entry(table, "USER", "Default");
+	check_env(FILE_N);
+	read_env(FILE_N);
 }
 
 //prints all values in the table
