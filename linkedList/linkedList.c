@@ -58,15 +58,15 @@ Item *add(char *value, LinkedList * list)
 
 	if (!list->first) {
 		item->previous = NULL;
-		list->last = item;
+		list->first = item;
 	}
-	Item *second_item = list->first;
-	if (second_item) {
-		second_item->previous = item;
-		item->next = second_item;
+	Item *last_item = list->last;
+	if (last_item) {
+		last_item->next = item;
+		item->previous = last_item;
 	}
-	item->previous = NULL;
-	list->first = item;
+	item->next = NULL;
+	list->last = item;
 	list->size++;
 
 	//TODO: Add failure checks
@@ -172,7 +172,7 @@ void destroy_list(LinkedList * list)
 /*gets first item in list*/
 char *get_first(LinkedList * list)
 {
-	return list->first->value;
+	return list->last->value;
 }
 
 /*checks if list is empty*/
