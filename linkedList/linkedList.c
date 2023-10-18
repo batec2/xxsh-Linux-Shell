@@ -37,7 +37,7 @@ Item *search(char *value, LinkedList * list)
  */
 Item *search_n(char *value, LinkedList * list)
 {
-	for (Item * item = list->first; item != NULL; item = item->next)
+	for (Item * item = list->last; item != NULL; item = item->previous)
 		if (strncmp(value, item->value,strlen(value)) == 0)
 			return item;
 	return NULL;
