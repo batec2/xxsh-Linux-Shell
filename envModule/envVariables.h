@@ -1,6 +1,6 @@
 #ifndef ENV_VARIABLES
 #define ENV_VARIABLES
-#define FILE_N "env_variables.txt"
+#define FILE_N "config.txt"
 #include "../hashTable/dataStructure.h"
 #include "../fileIO/fileIO.h"
 #define MAX_COUNT 256

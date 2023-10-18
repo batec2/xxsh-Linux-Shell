@@ -1,10 +1,13 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11
 
+ENV = envVariables.c envVariables.h
+ENVO = envVariables.o test_envVariables.o
+
 test_envVariables.o: test_envVariables.c
 	$(CC) $(CFLAGS) -c $<
 
-envVariables.o: envVariables.c envVariables.h ../hashTable/dataStructure.h ../fileIO/fileIO.h
+envVariables.o: $(ENV) ../hashTable/dataStructure.h ../fileIO/fileIO.h
 	$(CC) $(CFLAGS) -c $<
 
 hashTable.o:
@@ -15,7 +18,7 @@ fileIO.o:
 
 .PHONY:
 
-test: envVariables.o test_envVariables.o ../hashTable/dataStructure.o ../fileIO/fileIO.o
+test: $(ENVO) ../hashTable/dataStructure.o ../fileIO/fileIO.o
 	$(CC) $(CFLAGS) $^ -o $@
 	./test
 

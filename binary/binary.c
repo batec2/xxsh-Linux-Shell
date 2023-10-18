@@ -117,6 +117,6 @@ int run_cmd(char **args)
         exit(0);
     }
     free(path);
-    return status==0?1:0;
+    return status;
 }
 

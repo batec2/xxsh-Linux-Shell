@@ -7,7 +7,8 @@
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
 #include "../binary/binary.h"
-#define FILE_NAME "env_variables.txt"
+#define FILE_NAME "config.txt"
+
 /* Struct for list items */
 typedef struct command {
     int size;

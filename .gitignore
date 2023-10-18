@@ -5,4 +5,4 @@ test
 .vscode
 .idea
 test.txt
-env_variables.txt
+config.txt

@@ -1,6 +1,6 @@
 #include "xxsh.h"
 
-#define MAX_LENGTH 50
+#define MAX_LENGTH 256
 
 int main(void)
 {
