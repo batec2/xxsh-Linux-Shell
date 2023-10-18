@@ -6,8 +6,6 @@ int main(void)
 {
 	init_env_vars();
 	init_list();
-	check_env(FILE_NAME);
-	read_env(FILE_NAME);
 	main_loop();
 	return 0;
 }
