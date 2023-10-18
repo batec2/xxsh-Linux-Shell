@@ -10,13 +10,14 @@ int main()
     printf("Testing the binary module...\n\n");
     
     init_env_vars();
-    set_var("PATH", "/usr/bin/bin;/usr/bin/bin");
+    
+    //set_var("PATH", "/home/dakota/Downloads;/home/dakota/bin");
 
     char *path = NULL;
     test(get_program("ls", &path) == 1, "searching path for program");
     free(path);
 
-    char *arg_array[] = {"ls", "-a", "-l", "/home/dakota/bin", NULL};
+    char *arg_array[] = {"ls", "-a", "-l", "/user/bin/bin", NULL};
 
     test(run_background(arg_array) == 0, "checking for foreground command");
 

@@ -12,19 +12,21 @@
  */
 int get_program(char  *program, char** path)
 {
+    DIR * directory = NULL;
     // Get the PATH environment variable
     char *tmp = get_path();
-    char *path_env = malloc(strlen(tmp));;
+    char *path_env = malloc(strlen(tmp)+1);;
     strcpy(path_env, tmp);
 
     // Iterate over the values in PATH (separated by semicolons)
     char *dir_path = strtok(path_env, ";");
     while( dir_path != NULL)
     {
-        DIR *directory = opendir(dir_path);
+        directory = opendir(dir_path);
         if (directory == NULL)
         {
             printf("Unable to find directory: %s\n", dir_path);
+            //closedir(directory);
             return 0;
         }
         struct dirent *dir;
@@ -33,17 +35,20 @@ int get_program(char  *program, char** path)
         {
             if (strcmp(dir->d_name, program) == 0)
             {
-                *path = (char*) malloc(strlen(dir_path)+strlen(dir->d_name)+1);;
+                *path = (char*) malloc(strlen(dir_path)+strlen(dir->d_name)+2);;
                 strcpy(*path, dir_path);
-                strcat(*path, "/");
+                strcat(*path, "/");//this + null term =2
                 strcat(*path, dir->d_name);
                 free(path_env);
+                path_env=NULL;
+                closedir(directory);
                 return 1;
             }
         }
         dir_path = strtok(NULL, ";");
     }
     free(path_env);
+    closedir(directory);
     return 0;
 }
 
@@ -75,22 +80,23 @@ int run_background(char **args)
  */
 int run_cmd(char **args)
 {
-    char *path = NULL;
     pid_t pid;
-    pid = fork();
     int status = 0;
+    char *path = NULL;
+
+    /*checks if program is in path*/
+    if (!get_program(args[0],  &path))
+    {
+        return(0);
+    }
+    pid = fork();
     if(pid >0)
     {
-        wait(&status);
+        wait(&status); //parent is waiting
     }
     else
     {
-        char *path = NULL;
-        if (!get_program(args[0],  &path))
-        {
-            //printf("Failed to find the program: %s\n", args[0]);
-            exit(1);
-        }
+        //char *path = NULL;
         if (run_background(args))
         {
             pid_t pid2 = fork();
@@ -111,7 +117,6 @@ int run_cmd(char **args)
         exit(0);
     }
     free(path);
-    //printf("%i",status);
     return status==0?1:0;
 }
 

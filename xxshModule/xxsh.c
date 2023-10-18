@@ -141,6 +141,7 @@ int arg_cmd(command *cmd){
 	}
 	/*checks if command exists in bin*/
 	else{
+		//return 0;
 		return run_cmd(cmd->args_list);
 	}
 	return 0;

@@ -267,7 +267,7 @@ int set_entry(HashTable * table, char *key, char *value)
 		return add_entry(table, key, value);
 
 	table->entryTable[index].value =
-	    realloc(table->entryTable[index].value, (strlen(value) + 1));
+	    (char *)realloc(table->entryTable[index].value, (strlen(value) + 1));
 	strcpy(table->entryTable[index].value, value);
 	return index;
 }
