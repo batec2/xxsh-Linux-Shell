@@ -76,12 +76,11 @@ int run_background(char **args)
 
 /* Runs a command
  * @param  args list of arguments
- * @return the exit status of the command 
+ * @return 1 on success and 0 on fail 
  */
 int run_cmd(char **args)
 {
     pid_t pid;
-    int status = 0;
     char *path = NULL;
 
     /*checks if program is in path*/
@@ -92,7 +91,7 @@ int run_cmd(char **args)
     pid = fork();
     if(pid >0)
     {
-        wait(&status); //parent is waiting
+        wait(NULL); //parent is waiting
     }
     else
     {
@@ -117,6 +116,6 @@ int run_cmd(char **args)
         exit(0);
     }
     free(path);
-    return status==0?1:0;
+    return 1;
 }
 
