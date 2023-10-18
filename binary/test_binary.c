@@ -10,6 +10,8 @@ int main()
     printf("Testing the binary module...\n\n");
     
     init_env_vars();
+    check_env(FILE_NAME);
+    read_env(FILE_NAME);
     set_var("PATH", "/usr/bin/bin;/usr/bin/bin");
 
     char *path = NULL;
