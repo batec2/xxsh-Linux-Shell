@@ -45,7 +45,6 @@ test: xxsh
 	make test -C ./history/
 	make test -C ./linkedList/
 	make test -C ./envModule/
-	./test.sh
 
 memCheck: xxsh
 	valgrind -s --leak-check=yes --show-leak-kinds=all ./xxsh

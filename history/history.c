@@ -9,7 +9,8 @@ PRIVATE LinkedList *history_ll = NULL;
 /**
  * 
 */
-void init_list(){
+void init_list()
+{
 	history_ll = initialize();
 }
 
@@ -18,7 +19,7 @@ void init_list(){
  */
 void add_history(char *cmd)
 {
-	if(cmd[0]=='\n'){
+	if (cmd[0] == '\n') {
 		return;
 	}
 	// trim list
@@ -45,20 +46,23 @@ void destroy_history()
 }
 
 /*gets a value from history*/
-char *get_history(char *inValue){
-	Item *item = search_n(inValue,history_ll);
-	if(item == NULL){
+char *get_history(char *inValue)
+{
+	Item *item = search_n(inValue, history_ll);
+	if (item == NULL) {
 		return NULL;
 	}
 	return item->value;
 }
 
 /*Gets latest command from history*/
-char *get_last(){
+char *get_last()
+{
 	return get_first(history_ll);
 }
 
 /*checks if history list is emtpy*/
-int history_empty(){
+int history_empty()
+{
 	return is_empty(history_ll);
 }

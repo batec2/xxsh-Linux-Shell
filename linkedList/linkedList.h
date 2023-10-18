@@ -89,7 +89,7 @@ char *get_first(LinkedList * list);
  * @param list linked list
  * @return returns 1 if the list is empty 0 if it isnt
 */
-int is_empty(LinkedList *list);
+int is_empty(LinkedList * list);
 
 /**
  *  gets the first item matching the letters in value, does not have

@@ -38,7 +38,7 @@ Item *search(char *value, LinkedList * list)
 Item *search_n(char *value, LinkedList * list)
 {
 	for (Item * item = list->first; item != NULL; item = item->next)
-		if (strncmp(value, item->value,strlen(value)) == 0)
+		if (strncmp(value, item->value, strlen(value)) == 0)
 			return item;
 	return NULL;
 }
@@ -58,15 +58,15 @@ Item *add(char *value, LinkedList * list)
 
 	if (!list->first) {
 		item->previous = NULL;
-		list->first = item;
+		list->last = item;
 	}
-	Item *last_item = list->last;
-	if (last_item) {
-		last_item->next = item;
-		item->previous = last_item;
+	Item *second_item = list->first;
+	if (second_item) {
+		second_item->previous = item;
+		item->next = second_item;
 	}
-	item->next = NULL;
-	list->last = item;
+	item->previous = NULL;
+	list->first = item;
 	list->size++;
 
 	//TODO: Add failure checks
@@ -170,11 +170,13 @@ void destroy_list(LinkedList * list)
 }
 
 /*gets first item in list*/
-char *get_first(LinkedList *list){
+char *get_first(LinkedList * list)
+{
 	return list->first->value;
 }
 
 /*checks if list is empty*/
-int is_empty(LinkedList *list){
-	return list->size==0;
+int is_empty(LinkedList * list)
+{
+	return list->size == 0;
 }
