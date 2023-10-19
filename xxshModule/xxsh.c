@@ -65,8 +65,7 @@ void main_loop(char *input)
 		};
 
 		if (check == 0) {
-			printf("%s@%s:%s>> Not a valid command\n",
-			       get_user(), get_host(), get_path());
+			printf("Not a valid command\n");
 		}
 		free_command(cmd_args);
 
