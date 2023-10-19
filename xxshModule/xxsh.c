@@ -49,6 +49,7 @@ void main_loop(char *input)
 				token = get_history(buffer + 1);
 				//mprintf("")
 				if (token == NULL) {
+					prinft("Command not found\n");
 					continue;
 				}
 				strcpy(buffer, token);
@@ -65,8 +66,7 @@ void main_loop(char *input)
 		};
 
 		if (check == 0) {
-			printf("%s@%s:%s>> Not a valid command\n",
-			       get_user(), get_host(), get_path());
+			printf("xxsh>>Does not accept!\n");
 		}
 		free_command(cmd_args);
 

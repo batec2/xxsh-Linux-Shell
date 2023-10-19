@@ -95,6 +95,7 @@ int run_cmd(char **args)
 			if (pid2 > 0) {
 				exit(0);	// Middle process
 			} else {
+				destroy_env();
 				execv(path, args);
 				exit(0);
 			}
