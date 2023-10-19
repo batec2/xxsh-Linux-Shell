@@ -19,7 +19,7 @@ void main_loop(char *input)
 	char *token;
 	int check = 0;
 
-	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_path()) > 0)
+	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD")) > 0)
 	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
 
 		/*Clearing stdin */
