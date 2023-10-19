@@ -66,7 +66,7 @@ void main_loop(char *input)
 		};
 
 		if (check == 0) {
-			printf("xxsh>>Does not accept!\n");
+			printf("Not a valid command\n");
 		}
 		free_command(cmd_args);
 
