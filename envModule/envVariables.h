@@ -1,8 +1,9 @@
 #ifndef ENV_VARIABLES
 #define ENV_VARIABLES
-
+#define FILE_N "config.txt"
 #include "../hashTable/dataStructure.h"
-
+#include "../fileIO/fileIO.h"
+#define MAX_COUNT 256
 #define PRIVATE static
 /**
  * Initializes the environment table and all the default environment variables
@@ -38,6 +39,7 @@ char *get_path();
 char *get_env(char *key);
 
 /** 
+ * 
  * @param String name of environment variable
  * @param String value of environment variable
  * @return 
@@ -53,4 +55,20 @@ int check_var(char *key);
  * Frees all mememory allocated to environment variable hashtable
  */
 void destroy_env();
+/**
+ * env vars are written to file
+ * @param file file for env vars to be written to
+*/
+void write_env(char *file_name);
+/**
+ * Checks if file exists, if not a new file is made and env are written to it
+ * @param file file to be checked and or written to
+*/
+void check_env(char *file_name);
+
+/**
+ * Takes env  variables from list and sets into hashmap
+ * @param file_name
+*/
+void read_env(char *file_name);
 #endif				/*ENV_VARIABLES */

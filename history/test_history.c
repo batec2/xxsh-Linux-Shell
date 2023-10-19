@@ -5,6 +5,7 @@
 int main()
 {
 	init_env_vars();
+	init_list();
 	printf("Startings history module tests\n\n");
 
 	/*Test adding items to history. This is a manual test */

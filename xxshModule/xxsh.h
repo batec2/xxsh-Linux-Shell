@@ -6,6 +6,14 @@
 #include <stdlib.h>
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
+#include "../binary/binary.h"
+#define FILE_NAME "config.txt"
+
+/* Struct for list items */
+typedef struct command {
+	int size;
+	char **args_list;	//command and arguments
+} command;
 
 /**
  * Main program loop that takes in user input and calls corresponding 
@@ -18,10 +26,27 @@ void main_loop();
  * @param String representing Env variable
  * @param String representing users input
  */
-void parse(char *key, char *value);
+void parse(char *args);
 /** 
  *Clears StdIn buffer of leftover characters
  */
 void clear_buffer();
 
-#endif
+/**
+ * Takes command and runs commands with arguments
+ * @param command struct with list of arguments
+*/
+int arg_cmd(command * cmd);
+
+/**
+ * parses input and puts arguments into a list
+ * @param command struct with list of arguments
+*/
+void read_flags(char *input, command * cmd);
+
+/**
+ * @param command struct with list of arguments
+*/
+void free_command(command * cmd);
+
+#endif /*XXSH*/

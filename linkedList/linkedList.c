@@ -30,6 +30,19 @@ Item *search(char *value, LinkedList * list)
 	return NULL;
 }
 
+/* Search for an item in the list, will get get the first item that matchs
+ * @param value to search for.
+ * @param list LinkedList to search.
+ * @return pointer to the Item.
+ */
+Item *search_n(char *value, LinkedList * list)
+{
+	for (Item * item = list->last; item != NULL; item = item->previous)
+		if (strncmp(value, item->value,strlen(value)) == 0)
+			return item;
+	return NULL;
+}
+
 /* Add an item to the list.
  * @param value string to insert into list.
  * @param list LinkedList to insert value into.
@@ -127,7 +140,7 @@ int delete_first(LinkedList * list)
 void print_list(LinkedList * list)
 {
 	for (Item * item = list->first; item != NULL; item = item->next)
-		printf("%s", item->value);
+		printf("%s\n", item->value);
 }
 
 /* Prints the last item in the list.
@@ -154,4 +167,16 @@ void destroy_list(LinkedList * list)
 	}
 	free(list);
 	list = NULL;
+}
+
+/*gets first item in list*/
+char *get_first(LinkedList * list)
+{
+	return list->last->value;
+}
+
+/*checks if list is empty*/
+int is_empty(LinkedList * list)
+{
+	return list->size == 0;
 }

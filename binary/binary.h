@@ -11,13 +11,12 @@
 
 #include "../envModule/envVariables.h"
 
-
 /* Gets the path to a specified executable
  * @param program name of program to search for
  * @param path pointer to string that will hold the path
  * @return 1 if found, 0 if not found
  */
-int get_program(char *program, char** path);
+int get_program(char *program, char **path);
 
 /* Checks if a command ends with an & which indicates to run it in the
  * background

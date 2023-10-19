@@ -4,6 +4,8 @@
 int main(void)
 {
 	init_env_vars();
+	check_env("test.txt");
+	read_env("test.txt");
 	print_var();
 	printf("Should be: Default->%s\n", get_user());
 	printf("Should be: Default->%s\n", get_host());

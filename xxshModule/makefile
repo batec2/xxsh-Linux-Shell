@@ -1,16 +1,19 @@
 CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11 
 
+XXSH = xxsh.c xxsh.h
+HEADERS = ../envModule/envVariables.h ../history/history.h ../binary/binary.h
+
 all: xxsh
 
-xxsh.o: xxsh.c xxsh.h ../envModule/envVariables.h ../history/history.h
+xxsh.o: $(XXSH) $(HEADERS)
 	$(CC) $(CFLAGS) -c $<
 
 .PHONY:
 
 test:
 
-memCheck: test_dataStructure
+memCheck: xxsh test_dataStructure
 	valgrind -s --leak-check=yes ./xxsh
 
 clean:

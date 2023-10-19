@@ -4,6 +4,7 @@ CFLAGS= -Wall -g -pedantic -std=c11
 MODULES = ../linkedList/linkedList.o
 MODULES += ../envModule/envVariables.o 
 MODULES += ../hashTable/dataStructure.o
+MODULES += ../fileIO/fileIO.o
 
 test_history.o: test_history.c 
 	$(CC) $(CFLAGS) -c $<
@@ -19,6 +20,9 @@ linkedList.o:
 
 dataStructure.o:
 	make -C ../hashTable/
+
+fileIO.o:
+	make -C ../fileIO/
 
 .PHONY: test
 test: history.o test_history.o $(MODULES)

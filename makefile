@@ -7,6 +7,8 @@ MODULES += ./envModule/envVariables.o
 MODULES += ./linkedList/linkedList.o
 MODULES += ./linkedList/linkedList.o 
 MODULES += ./history/history.o
+MODULES += ./fileIO/fileIO.o
+MODULES += ./binary/binary.o
 
 all: xxsh
 
@@ -29,6 +31,12 @@ dataStructure.o:
 
 history.o: 
 	make -C ./history/
+	
+fileIO.o: 
+	make -C ./fileIO/
+
+binary.o:
+	make -C ./binary/
 
 .PHONY:
 
@@ -37,20 +45,22 @@ test: xxsh
 	make test -C ./history/
 	make test -C ./linkedList/
 	make test -C ./envModule/
-	./test.sh
 
 memCheck: xxsh
-	valgrind -s --leak-check=yes ./xxsh
+	valgrind -s --leak-check=yes --show-leak-kinds=all ./xxsh
 
 tar:
 	make clean
-	tar -czvf ../lab02_CrushBate_DakotaDoolaege.tar.gz -C .. CMPT360Lab1
+	tar --exclude="lab5/.git*" -czvf ../lab05_CrushBate_DakotaDoolaege.tar.gz\
+	   	-C .. lab5
 
 clean:
-	rm -f *~ *.o xxsh
+	rm -f *~ *.o xxsh config.txt
 	make clean -C ./envModule/
 	make clean -C ./hashTable/
 	make clean -C ./history/
 	make clean -C ./linkedList/
 	make clean -C ./xxshModule/
 	make clean -C ./testUtils/
+	make clean -C ./fileIO/
+	make clean -C ./binary/
