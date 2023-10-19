@@ -51,10 +51,11 @@ memCheck: xxsh
 
 tar:
 	make clean
-	tar -czvf ../lab05_CrushBate_DakotaDoolaege.tar.gz -C .. CMPT360Lab
+	tar --exclude="lab5/.git*" -czvf ../lab05_CrushBate_DakotaDoolaege.tar.gz\
+	   	-C .. lab5
 
 clean:
-	rm -f *~ *.o xxsh
+	rm -f *~ *.o xxsh config.txt
 	make clean -C ./envModule/
 	make clean -C ./hashTable/
 	make clean -C ./history/

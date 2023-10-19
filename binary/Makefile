@@ -27,4 +27,4 @@ memCheck: test
 	valgrind -s --leak-check=yes ./test
 
 clean:
-	rm -f *~ *.o test
+	rm -f *~ *.o test config.txt
