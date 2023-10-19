@@ -48,6 +48,7 @@ int get_program(char  *program, char** path)
         dir_path = strtok(NULL, ";");
     }
     free(path_env);
+    path_env=NULL;
     closedir(directory);
     return 0;
 }
@@ -66,6 +67,7 @@ int run_background(char **args)
         if (strcmp(args[i], "&") == 0)
         {
             // Nullify the & (always at the end)
+            free(args[i]);
             args[i] = NULL;
             return 1;
         }
@@ -106,7 +108,6 @@ int run_cmd(char **args)
             else
             {
                 execv(path, args);
-                exit(0);
             }
         }
         else

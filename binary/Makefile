@@ -6,6 +6,7 @@ MODULES += test_binary.o
 MODULES += ../testUtils/testUtils.o 
 MODULES += ../envModule/envVariables.o
 MODULES += ../hashTable/dataStructure.o
+MODULES += ../fileIO/fileIO.o
 
 
 test_binary.o: test_binary.c 
