@@ -170,11 +170,13 @@ void destroy_list(LinkedList * list)
 }
 
 /*gets first item in list*/
-char *get_first(LinkedList *list){
-	return list->first->value;
+char *get_first(LinkedList * list)
+{
+	return list->last->value;
 }
 
 /*checks if list is empty*/
-int is_empty(LinkedList *list){
-	return list->size==0;
+int is_empty(LinkedList * list)
+{
+	return list->size == 0;
 }

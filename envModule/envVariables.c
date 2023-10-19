@@ -22,12 +22,12 @@ void init_env_vars()
 //prints all values in the table
 void print_var()
 {
-	print_entrys(table,NULL);
+	print_entrys(table, NULL);
 }
 
-void write_var(FILE *file)
+void write_var(FILE * file)
 {
-	print_entrys(table,file);
+	print_entrys(table, file);
 }
 
 //gets the current value of USER
@@ -73,9 +73,10 @@ void destroy_env()
 }
 
 //writes env vars to file
-void write_env(char *file_name){
-	FILE *out_file = open_file(file_name,"w");
-	print_entrys(table,out_file);
+void write_env(char *file_name)
+{
+	FILE *out_file = open_file(file_name, "w");
+	print_entrys(table, out_file);
 	fclose(out_file);
 }
 
@@ -83,28 +84,28 @@ void write_env(char *file_name){
  * Checks if file exists, if it doesnt, creates the file if and writes default
  * environment variables
 */
-void check_env(char *file_name){
-    FILE *file = open_file(file_name,"r");
-    if(file==NULL){
-        write_env(file_name);
-    }
-    else{
-        fclose(file);
-    }
+void check_env(char *file_name)
+{
+	FILE *file = open_file(file_name, "r");
+	if (file == NULL) {
+		write_env(file_name);
+	} else {
+		fclose(file);
+	}
 }
 
 /**
  * Takes env variables from file and sets them in hashmap
 */
-void read_env(char *file_name){
+void read_env(char *file_name)
+{
 	char buffer[MAX_COUNT];
-	char *token,*token2;
-	FILE *file = open_file(file_name,"r");
-	while(fgets(buffer,MAX_COUNT,file)!=NULL){
-		token = strtok(buffer,",\n");
-		token2 = strtok(NULL,"\n");
-		set_var(token,token2);
+	char *token, *token2;
+	FILE *file = open_file(file_name, "r");
+	while (fgets(buffer, MAX_COUNT, file) != NULL) {
+		token = strtok(buffer, ",\n");
+		token2 = strtok(NULL, "\n");
+		set_var(token, token2);
 	}
 	fclose(file);
 }
-

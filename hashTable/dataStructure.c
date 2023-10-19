@@ -70,7 +70,8 @@ int add_entry(HashTable * table, char *key, char *value)
 	}
 	//Key and value are malloced for and entered
 	int index =
-	    next_open(table->entryTable, (hash(key) % table->size), table->size);
+	    next_open(table->entryTable, (hash(key) % table->size),
+		      table->size);
 	table->entryTable[index].key = malloc(strlen(key) + 1);
 	check_null(table->entryTable[index].key);
 	strcpy(table->entryTable[index].key, key);
@@ -121,8 +122,8 @@ Entry *resize(Entry * table, int size)
 			} else {	//key values are hashed and passed to new table
 				index =
 				    next_open(new_table,
-					     hash(table[i].key) % new_size,
-					     new_size);
+					      hash(table[i].key) % new_size,
+					      new_size);
 				new_table[index].key = table[i].key;
 				new_table[index].value = table[i].value;
 				table[i].key = NULL;
@@ -155,19 +156,17 @@ int next_open(Entry * table, int index, int size)
  * Prints all key/value pairs in hash table, empty spots in table are
  * printed out as NULL
 */
-void print_entrys(HashTable * table,FILE *file)
-{	
+void print_entrys(HashTable * table, FILE * file)
+{
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
-			if(file!=NULL)
-			{
-				fprintf(file,"%s,%s\n", table->entryTable[i].key,
+			if (file != NULL) {
+				fprintf(file, "%s,%s\n",
+					table->entryTable[i].key,
 					table->entryTable[i].value);
-			}
-			else
-			{
+			} else {
 				printf("%s,%s\n", table->entryTable[i].key,
-					table->entryTable[i].value);
+				       table->entryTable[i].value);
 			}
 		}
 	}
@@ -267,7 +266,8 @@ int set_entry(HashTable * table, char *key, char *value)
 		return add_entry(table, key, value);
 
 	table->entryTable[index].value =
-	    (char *)realloc(table->entryTable[index].value, (strlen(value) + 1));
+	    (char *)realloc(table->entryTable[index].value,
+			    (strlen(value) + 1));
 	strcpy(table->entryTable[index].value, value);
 	return index;
 }

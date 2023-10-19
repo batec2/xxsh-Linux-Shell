@@ -19,58 +19,54 @@ void main_loop(char *input)
 	char *token;
 	int check = 0;
 
-	while ((printf("%s@%s:%s>> ",get_user(), get_host(), get_path()) > 0)
-	       					&& (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
-	
+	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_path()) > 0)
+	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
+
 		/*Clearing stdin */
-		if ((buffer[strlen(buffer) - 1] != '\n')&&(buffer[0]!='\0')) {
+		if ((buffer[strlen(buffer) - 1] != '\n') && (buffer[0] != '\0')) {
 			clear_buffer();
-		}
-		else{
-			buffer[strlen(buffer) - 1] = '\0';//removes \n
+		} else {
+			buffer[strlen(buffer) - 1] = '\0';	//removes \n
 		}
 		//no input
 		if (buffer[0] == '\0') {
 			continue;
 		}
-		
-		/*bang operator !! for last command ! for last matching after the bang*/
-		if(buffer[0]=='!'){
-			if(buffer[1]=='!'){
-				if(history_empty()==1){
+
+		/*bang operator !! for last command ! for last matching after the bang */
+		if (buffer[0] == '!') {
+			if (buffer[1] == '!') {
+				if (history_empty() == 1) {
 					continue;
+				} else {
+					strcpy(buffer, get_last());
 				}
-				else{
-					strcpy(buffer,get_last());
-				}
-			}
-			else if(buffer[1]=='\0'){
+			} else if (buffer[1] == '\0') {
 				strcpy(buffer2, buffer);
 				add_history(buffer2);
 				continue;
-			}
-			else{
-				token = get_history(buffer+1);
-				if(token==NULL){
+			} else {
+				token = get_history(buffer + 1);
+				//mprintf("")
+				if (token == NULL) {
 					continue;
 				}
-				strcpy(buffer,token);	
+				strcpy(buffer, token);
 			}
 		}
-		
 		//Adds command to history
 		strcpy(buffer2, buffer);
 		add_history(buffer2);
 
-		read_flags(buffer,cmd_args);
+		read_flags(buffer, cmd_args);
 
-		if((check = arg_cmd(cmd_args))==-1){
+		if ((check = arg_cmd(cmd_args)) == -1) {
 			break;
 		};
-		
-		if(check == 0){
+
+		if (check == 0) {
 			printf("%s@%s:%s>> Not a valid command\n",
-			get_user(), get_host(), get_path());
+			       get_user(), get_host(), get_path());
 		}
 		free_command(cmd_args);
 
@@ -80,10 +76,10 @@ void main_loop(char *input)
 /*Parses the commands for export*/
 void parse(char *args)
 {
-	char *key,*value;
-	key = strtok(args,"=");
-	value = strtok(NULL,"");
-	if(value ==NULL){
+	char *key, *value;
+	key = strtok(args, "=");
+	value = strtok(NULL, "");
+	if (value == NULL) {
 		return;
 	}
 	if (strcmp(key, "HISTSIZE") == 0) {
@@ -101,44 +97,42 @@ void parse(char *args)
 /*Clears stdin*/
 void clear_buffer()
 {
-	char c =' ';
+	char c = ' ';
 	while ((c = getchar() != '\n' && c != EOF)) {
 	}
 }
 
 /*gets cmd lists and runs commands*/
-int arg_cmd(command *cmd){
+int arg_cmd(command * cmd)
+{
 	/*export needs valid key/value */
-	if (strcmp(cmd->args_list[0], "export") == 0 &&
-			cmd->size==3) {
+	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
 		return 1;
 	}
 
 	/*env needs only env as input */
-	if (strcmp(cmd->args_list[0], "env") == 0 &&
-			cmd->size==2) {
+	if (strcmp(cmd->args_list[0], "env") == 0 && cmd->size == 2) {
 		print_var();
 		return 1;
 	}
 	/*history needs only history as input */
-	else if (strcmp(cmd->args_list[0], "history") == 0 &&
-			cmd->size==2) {
+	else if (strcmp(cmd->args_list[0], "history") == 0 && cmd->size == 2) {
 		history();
 		return 1;
 	}
 	/*exit need exit/quit as input */
-	else if ((strcmp(cmd->args_list[0], "exit") == 0 || 
-			strcmp(cmd->args_list[0], "quit") == 0) && cmd->size==2) {
+	else if ((strcmp(cmd->args_list[0], "exit") == 0 ||
+		  strcmp(cmd->args_list[0], "quit") == 0) && cmd->size == 2) {
 		write_env(FILE_NAME);
 		destroy_env();
 		destroy_history();
 		free_command(cmd);
 		free(cmd);
-		return -1;	
+		return -1;
 	}
-	/*checks if command exists in bin*/
-	else{
+	/*checks if command exists in bin */
+	else {
 		//return 0;
 		return run_cmd(cmd->args_list);
 	}
@@ -148,36 +142,40 @@ int arg_cmd(command *cmd){
 /**
  * command and parses flags
 */
-void read_flags(char *input,command *cmd){
+void read_flags(char *input, command * cmd)
+{
 	char **flag_list = malloc(sizeof(char *));
 	char *token;
 	int counter = 0;
 	token = strtok(input, " ");
 	do {
-		if(counter != 0){
+		if (counter != 0) {
 			flag_list = (char **)realloc(flag_list,
-						(sizeof(char *)*(counter+1)));
+						     (sizeof(char *) *
+						      (counter + 1)));
 		}
-		flag_list[(counter)] = malloc(strlen(token)+1);
-		strcpy(flag_list[(counter)],token);
+		flag_list[(counter)] = malloc(strlen(token) + 1);
+		strcpy(flag_list[(counter)], token);
 		counter++;
-	} while ((token = strtok(NULL, " "))!=NULL);
-	
-	flag_list = (char **)realloc(flag_list,(sizeof(char *)*(counter+1)));
+	} while ((token = strtok(NULL, " ")) != NULL);
+
+	flag_list =
+	    (char **)realloc(flag_list, (sizeof(char *) * (counter + 1)));
 	flag_list[counter] = NULL;
-	counter ++;
+	counter++;
 
 	cmd->args_list = flag_list;
 	cmd->size = counter;
 }
 
 /*frees memory for the cmd struct*/
-void free_command(command *cmd){
-	for(int i = 0;i<cmd->size;i++){
-		if(cmd->args_list[i]!=NULL){
+void free_command(command * cmd)
+{
+	for (int i = 0; i < cmd->size; i++) {
+		if (cmd->args_list[i] != NULL) {
 			free(cmd->args_list[i]);
 		}
-		cmd->args_list[i]=NULL;
+		cmd->args_list[i] = NULL;
 	}
 	free(cmd->args_list);
 	cmd->args_list = NULL;
