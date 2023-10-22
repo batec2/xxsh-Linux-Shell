@@ -55,7 +55,7 @@ tar:
 	   	-C .. lab5
 
 clean:
-	rm -f *~ *.o xxsh config.txt
+	rm -f *~ *.o xxsh
 	make clean -C ./envModule/
 	make clean -C ./hashTable/
 	make clean -C ./history/
