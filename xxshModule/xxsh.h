@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
 #include "../binary/binary.h"

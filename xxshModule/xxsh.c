@@ -104,6 +104,25 @@ void clear_buffer()
 /*gets cmd lists and runs commands*/
 int arg_cmd(command * cmd)
 {
+    // Check for redirection
+    int fd = open("output.txt", O_CREAT | O_WRONLY | O_TRUNC, 0774);
+    // back up stdout file descriptor
+    int stdout_backup = dup(STDOUT_FILENO);
+    // Closes STDOUT_FILENO (1) and then creates a new file descriptor
+    // with number = STDOUT_FILENO 1). Since printf writes output to stdout,
+    // it will now write to the duplicated file descriptor which actually 
+    // points to the output file.
+    if ((dup2(fd, STDOUT_FILENO)) == -1)
+    {
+        printf("Error while opening file descriptor\n");
+        return -1;
+    }
+    printf("hello!");
+    fflush(stdout);
+    // Switch FD 1 back to stdout
+    dup2(stdout_backup, STDOUT_FILENO);
+    close(fd);
+
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
