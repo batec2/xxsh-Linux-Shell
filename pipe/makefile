@@ -1,16 +1,12 @@
 CC= gcc
 CFLAGS= -Wall -pedantic -g -std=c11
 
-MODULES = pipe.o
+MODULES = test_pipe.o
+MODULES += pipe.o
 MODULES += ../binary/binary.o  
 MODULES += ../envModule/envVariables.o
 MODULES += ../hashTable/dataStructure.o
 MODULES += ../fileIO/fileIO.o
-
-
-
-pipe: $(MODULES)
-	$(CC) $(CFLAGS) $^ -o $@
 
 pipe.o: pipe.c pipe.h 
 	$(CC) $(CFLAGS) -c $<
@@ -27,4 +23,4 @@ memCheck: test
 	valgrind -s --leak-check=yes ./pipe_test
 
 clean:
-	rm -f *~ *.o test pipe
+	rm -f *~ *.o test config.txt
