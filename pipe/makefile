@@ -1,16 +1,15 @@
 CC= gcc
 CFLAGS= -Wall -pedantic -g -std=c11
 
-MODULES = binary.o 
-MODULES += test_binary.o 
-MODULES += ../testUtils/testUtils.o 
+MODULES = pipe.o
+MODULES += ../binary/binary.o  
 MODULES += ../envModule/envVariables.o
 MODULES += ../hashTable/dataStructure.o
 MODULES += ../fileIO/fileIO.o
 
 
 
-pipe: pipe.o 
+pipe: $(MODULES)
 	$(CC) $(CFLAGS) $^ -o $@
 
 pipe.o: pipe.c pipe.h 
