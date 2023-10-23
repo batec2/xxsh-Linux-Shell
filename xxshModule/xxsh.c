@@ -101,47 +101,83 @@ void clear_buffer()
 	}
 }
 
-/*gets cmd lists and runs commands*/
-int arg_cmd(command * cmd)
+/**
+ * Checks and sets up output redirection
+ * Looks for redirection symbols in the arg string. Sets up any that are
+ * found. Updates the command object to remove the redirection arguments.
+ * @param cmd command to check
+ * @return the file descriptor for stdout, 0 if no redirection and -1 on error.
+ */
+int check_output_redir(command * cmd)
 {
-    // Check for redirection
-    int fd = open("output.txt", O_CREAT | O_WRONLY | O_TRUNC, 0774);
-    // back up stdout file descriptor
-    int stdout_backup = dup(STDOUT_FILENO);
-    // Closes STDOUT_FILENO (1) and then creates a new file descriptor
-    // with number = STDOUT_FILENO 1). Since printf writes output to stdout,
-    // it will now write to the duplicated file descriptor which actually 
-    // points to the output file.
-    if ((dup2(fd, STDOUT_FILENO)) == -1)
+    // Search for output redirection in cmd string
+    for (int i = 0; i < cmd->size; i++)
     {
-        printf("Error while opening file descriptor\n");
-        return -1;
+        // Looks for redirection symbol and a following string
+        if (cmd->args_list[i] &&
+            (strcmp(cmd->args_list[i], ">") == 0) &&
+            cmd->args_list[i+1])
+        { 
+            printf("Got a redirect!\n");
+            int fd = open(cmd->args_list[i+1],
+                          O_CREAT | O_WRONLY | O_TRUNC,
+                          0774);
+            // back up stdout file descriptor
+            int stdout_backup = dup(STDOUT_FILENO);
+            // Closes STDOUT_FILENO (1) and then creates a new file descriptor
+            // with number = STDOUT_FILENO 1). Since printf writes output to
+            // stdout, it will now write to the duplicated file descriptor
+            // which actually points to the output file.
+            if ((dup2(fd, STDOUT_FILENO)) == -1)
+            {
+                printf("Error while opening file descriptor\n");
+                return -1;
+            }
+            close(fd);
+            // Trim off the last two command arguments
+            trim_command(cmd, i);
+            return stdout_backup;
+        }
     }
-    printf("hello!");
+    return 0;
+}
+
+/**
+ * Checks if stdout was redirected and reverts it
+ * @param: stdout_backup the backup of the fd or 0 if no redirection
+ */
+void revert_stdout(int stdout_backup)
+{
+    if (!stdout_backup)
+        return;
     fflush(stdout);
     // Switch FD 1 back to stdout
     dup2(stdout_backup, STDOUT_FILENO);
-    close(fd);
+}
+
+/*gets cmd lists and runs commands*/
+int arg_cmd(command * cmd)
+{
 	/*checks for pipe*/
 	if(is_pipe(cmd->args_list)!=-1){
 		return piping(cmd->args_list);
 	}
 
+    // Check for redirection
+    int stdout_backup = check_output_redir(cmd);
+    int status = 1;
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
-		return 1;
 	}
 
 	/*env needs only env as input */
 	if (strcmp(cmd->args_list[0], "env") == 0 && cmd->size == 2) {
 		print_var();
-		return 1;
 	}
 	/*history needs only history as input */
 	else if (strcmp(cmd->args_list[0], "history") == 0 && cmd->size == 2) {
 		history();
-		return 1;
 	}
 	/*exit need exit/quit as input */
 	else if ((strcmp(cmd->args_list[0], "exit") == 0 ||
@@ -151,14 +187,14 @@ int arg_cmd(command * cmd)
 		destroy_history();
 		free_command(cmd);
 		free(cmd);
-		return -1;
+		status = -1;
 	}
 	/*checks if command exists in bin */
 	else {
-		//return 0;
-		return run_cmd(cmd->args_list);
+		status = run_cmd(cmd->args_list);
 	}
-	return 0;
+    revert_stdout(stdout_backup);
+	return status;
 }
 
 /**
@@ -188,6 +224,22 @@ void read_flags(char *input, command * cmd)
 
 	cmd->args_list = flag_list;
 	cmd->size = counter;
+}
+
+/**
+ * trims the list of command arguments
+ * @param cmd struct holding list of command arguments
+ * @param pos position to start trim from
+ */
+void trim_command(command * cmd, int pos)
+{
+    while(cmd->args_list[pos])
+    {
+        free(cmd->args_list[pos]);
+		cmd->args_list[pos] = NULL;
+        cmd->size--;
+        pos++;
+	}
 }
 
 /*frees memory for the cmd struct*/

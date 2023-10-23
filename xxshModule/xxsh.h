@@ -38,6 +38,21 @@ void parse(char *args);
 void clear_buffer();
 
 /**
+ * Checks and sets up output redirection
+ * Looks for redirection symbols in the arg string. Sets up any that are
+ * found. Updates the command object to remove the redirection arguments.
+ * @param cmd command to check
+ * @return the file descriptor for stdout, 0 if no redirection and -1 on error.
+ */
+int check_output_redir(command * cmd);
+
+/**
+ * Checks if stdout was redirected and reverts it
+ * @param: stdout_backup the backup of the fd or 0 if no redirection
+ */
+void revert_stdout(int stdout_backup);
+
+/**
  * Takes command and runs commands with arguments
  * @param command struct with list of arguments
 */
@@ -48,6 +63,13 @@ int arg_cmd(command * cmd);
  * @param command struct with list of arguments
 */
 void read_flags(char *input, command * cmd);
+
+/**
+ * trims the list of command arguments
+ * @param cmd struct holding list of command arguments
+ * @param pos position to start trim from
+ */
+void trim_command(command * cmd, int pos);
 
 /**
  * @param command struct with list of arguments
