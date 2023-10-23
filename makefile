@@ -9,6 +9,7 @@ MODULES += ./linkedList/linkedList.o
 MODULES += ./history/history.o
 MODULES += ./fileIO/fileIO.o
 MODULES += ./binary/binary.o
+MODULES += ./pipe/pipe.o
 
 all: xxsh
 
@@ -45,6 +46,7 @@ test: xxsh
 	make test -C ./history/
 	make test -C ./linkedList/
 	make test -C ./envModule/
+	make test -C ./pipe/
 
 memCheck: xxsh
 	valgrind -s --leak-check=yes --show-leak-kinds=all ./xxsh
@@ -64,3 +66,4 @@ clean:
 	make clean -C ./testUtils/
 	make clean -C ./fileIO/
 	make clean -C ./binary/
+	make clean -C ./pipe/

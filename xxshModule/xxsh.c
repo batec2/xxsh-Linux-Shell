@@ -104,6 +104,11 @@ void clear_buffer()
 /*gets cmd lists and runs commands*/
 int arg_cmd(command * cmd)
 {
+	/*checks for pipe*/
+	if(is_pipe(cmd->args_list)!=-1){
+		return piping(cmd->args_list);
+	}
+
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
@@ -178,4 +183,17 @@ void free_command(command * cmd)
 	}
 	free(cmd->args_list);
 	cmd->args_list = NULL;
+}
+
+/*checks if there is pipe operator*/
+int is_pipe(char **args){
+	int i =0;
+	while(args[i] != NULL){
+		//if there is a pipe and it is not the last item
+		if(strcmp(args[i],"|")==0 && (args[i+1]!=NULL)){
+			return i;
+		}
+		i++;
+	}
+	return -1;
 }

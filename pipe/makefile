@@ -2,7 +2,7 @@ CC= gcc
 CFLAGS= -Wall -pedantic -g -std=c11
 
 MODULES = test_pipe.o
-MODULES += pipe.o
+MODULES += pipe.o 
 MODULES += ../binary/binary.o  
 MODULES += ../envModule/envVariables.o
 MODULES += ../hashTable/dataStructure.o
