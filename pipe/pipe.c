@@ -1,5 +1,6 @@
 #include "pipe.h"
 #include <stdio.h>
+#include <string.h>
 
 int piping(char **args,char **args2){
     int file_disc[2]; 
@@ -38,9 +39,22 @@ int piping(char **args,char **args2){
     return 0;
 }
 
+int check_pipe(char **args){
+    int i=0;
+    while(args[i]!=NULL){
+        if(strcmp(args[i],"|")==0){
+            printf("%i\n",i);
+        }
+        i++;
+    }
+    return 0;
+}
+
 
 int main(void){
     char *args[] = {"ping","-c","5","google.com",NULL};
     char *args2[] = {"grep","rtt",NULL};
     piping(args,args2);
+    char *test[]={"stuff","-s","-s","|","stuff","-s","-s""stuff","-s","-s","|",NULL};
+    check_pipe(test);
 }

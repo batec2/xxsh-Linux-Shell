@@ -160,7 +160,7 @@ void read_flags(char *input, command * cmd)
 
 	flag_list =
 	    (char **)realloc(flag_list, (sizeof(char *) * (counter + 1)));
-	flag_list[counter] = NULL;
+	flag_list[counter] = NULL;//adds null
 	counter++;
 
 	cmd->args_list = flag_list;
