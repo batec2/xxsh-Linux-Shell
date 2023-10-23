@@ -10,6 +10,8 @@
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
 #include "../binary/binary.h"
+#include "../pipe/pipe.h"
+
 #define FILE_NAME "config.txt"
 
 /* Struct for list items */
@@ -51,5 +53,12 @@ void read_flags(char *input, command * cmd);
  * @param command struct with list of arguments
 */
 void free_command(command * cmd);
+
+/**
+ * checks if there is a pipe operator in the input
+ * @param args List of strings
+ * @return returns index of pipe, -1 if no pipe
+*/
+int is_pipe(char **args);
 
 #endif /*XXSH*/
