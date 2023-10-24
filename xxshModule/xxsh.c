@@ -10,27 +10,74 @@ int main(void)
 	return 0;
 }
 
+/**
+ * Gets input using raw mode from stdin
+ * Using raw mode allows the shell to act on special inputs such as arrow
+ * keys without having to wait for an enter.
+ * @return the buffer with collected input
+ */
+char *get_input()
+{
+	static char buffer[MAX_LENGTH];
+	int space= MAX_LENGTH;
+	char c;
+	space = MAX_LENGTH;
+	// read in input and check for special characters like arrow keys
+	struct termios tty;
+	tcgetattr(STDIN_FILENO, &tty);
+	// Put terminal into raw mode so that input gets sent to our shell
+	// as soon as it is typed. This allows instant processing of arrows.
+	tty.c_lflag &= ~(ECHO | ICANON);
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty);
+	while(space && (c = getchar()) != '\n' && c != EOF)	
+	{
+		// special characters
+		if (c == '\033')
+		{
+			getchar();
+			switch(getchar())
+			{
+				// up arrow
+				case 'A':
+					printf("\ngot an up arrow\n");
+					buffer[0] = '\0';
+					return buffer;
+				// down arrow
+				case 'B':
+					printf("\ngot a down arrow\n");
+					buffer[0] = '\0';
+					return buffer;
+				default:
+					printf("Unknown special character entered\n");
+			}
+		}
+		else
+		{
+			buffer[MAX_LENGTH - space] = c;
+			space--;
+			printf("%c",c);
+		}
+	}
+	buffer[MAX_LENGTH - space] = '\0';
+	space--;
+	return buffer;
+}
+
 /*Main user input loop*/
 void main_loop(char *input)
 {
 	command *cmd_args = malloc(sizeof(command));
-	char buffer[MAX_LENGTH];
+	char *buffer;
 	char buffer2[MAX_LENGTH];
 	char *token;
 	int check = 0;
-
-	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD")) >
-		0)
-	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
-
-		/*Clearing stdin */
-		if ((buffer[strlen(buffer) - 1] != '\n') && (buffer[0] != '\0')) {
-			clear_buffer();
-		} else {
-			buffer[strlen(buffer) - 1] = '\0';	//removes \n
-		}
+	printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD"));
+	int status = 1;
+	while (status) {
+		buffer = get_input();
 		//no input
 		if (buffer[0] == '\0') {
+			printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD"));
 			continue;
 		}
 
@@ -70,7 +117,9 @@ void main_loop(char *input)
 		}
 		free_command(cmd_args);
 
+	printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD"));
 	}
+	printf("\n");
 }
 
 /*Parses the commands for export*/
