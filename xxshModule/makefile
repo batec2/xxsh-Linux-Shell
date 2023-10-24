@@ -2,7 +2,10 @@ CC= gcc
 CFLAGS= -Wall -g -pedantic -std=c11 
 
 XXSH = xxsh.c xxsh.h
-HEADERS = ../envModule/envVariables.h ../history/history.h ../binary/binary.h
+HEADERS = ../envModule/envVariables.h 
+HEADERS += ../history/history.h 
+HEADERS += ../binary/binary.h
+HEADERS += ../pipe/pipe/h
 
 all: xxsh
 

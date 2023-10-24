@@ -1,30 +1,26 @@
 CC= gcc
 CFLAGS= -Wall -pedantic -g -std=c11
 
-MODULES = binary.o 
-MODULES += test_binary.o 
-MODULES += ../testUtils/testUtils.o 
+MODULES = test_pipe.o
+MODULES += pipe.o 
+MODULES += ../binary/binary.o  
 MODULES += ../envModule/envVariables.o
 MODULES += ../hashTable/dataStructure.o
 MODULES += ../fileIO/fileIO.o
 
-
-test_binary.o: test_binary.c 
+pipe.o: pipe.c pipe.h 
 	$(CC) $(CFLAGS) -c $<
 
-binary.o: binary.c
+test_pipe.o: test_pipe.c 
 	$(CC) $(CFLAGS) -c $<
 
-testUtils.o:
-	make -C ../test/
-
-.PHONY: test
+.PHONY: 
 test: $(MODULES)
 	$(CC) $(CFLAGS) $^ -o $@
 	./test
 
 memCheck: test
-	valgrind -s --leak-check=yes ./test
+	valgrind -s --leak-check=yes ./pipe_test
 
 clean:
 	rm -f *~ *.o test config.txt
