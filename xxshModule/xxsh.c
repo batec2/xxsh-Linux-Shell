@@ -51,6 +51,19 @@ char *get_input()
 					printf("Unknown special character entered\n");
 			}
 		}
+		// backspace
+		else if (c == 127)
+		{
+			if ((MAX_LENGTH - space) > 0)
+			{
+				buffer[MAX_LENGTH - space-1] = '\0';
+				space++;
+				// redraw updated line using ANSI escape sequences for moving 
+				// the cursor backwards.
+				// https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x361.html
+				printf("\033[1D \033[1D");
+			}
+		}
 		else
 		{
 			buffer[MAX_LENGTH - space] = c;
@@ -60,6 +73,7 @@ char *get_input()
 	}
 	buffer[MAX_LENGTH - space] = '\0';
 	space--;
+	printf("\n");
 	return buffer;
 }
 
@@ -71,7 +85,7 @@ void main_loop(char *input)
 	char buffer2[MAX_LENGTH];
 	char *token;
 	int check = 0;
-	printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD"));
+	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
 	int status = 1;
 	while (status) {
 		buffer = get_input();
@@ -117,7 +131,7 @@ void main_loop(char *input)
 		}
 		free_command(cmd_args);
 
-	printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD"));
+	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
 	}
 	printf("\n");
 }
