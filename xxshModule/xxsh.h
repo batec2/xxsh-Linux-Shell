@@ -22,6 +22,22 @@ typedef struct command {
 } command;
 
 /**
+ * Prints out the prompt line
+ */
+void prompt();
+
+/**
+ * Redraws the prompt
+ */
+void reprompt();
+
+/**
+ * Update the buffer with a historic command
+ * @param command
+ */
+void replace_buffer();
+
+/**
  * Gets input using raw mode from stdin
  * Using raw mode allows the shell to act on special inputs such as arrow
  * keys without having to wait for an enter.

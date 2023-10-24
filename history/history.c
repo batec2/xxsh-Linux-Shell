@@ -29,6 +29,9 @@ void add_history(char *cmd)
 	}
 
 	add(cmd, history_ll);
+
+	// Reset the history scrolling
+	history_ll->current = NULL;
 }
 
 /* Prints the history contents.*/
@@ -66,3 +69,50 @@ int history_empty()
 {
 	return is_empty(history_ll);
 }
+
+/**
+ * Position tracking history scrolling. This function is used for the arrow key
+ * history scrolling implementation.
+ * @return the current history item
+ */
+char *scroll_up()
+{
+	// Ensure there is history to scroll
+	if (!history_ll->last)
+		return NULL;
+	// initiate a scroll if not already scrolling
+	if (!history_ll->current)
+	{
+		history_ll->current = history_ll->last;
+	}
+	// prevent scrolling past start of history
+	else if (history_ll->current->previous)
+	{
+		history_ll->current = history_ll->current->previous;
+	}
+	else
+	{
+		return NULL;
+	}
+
+	return history_ll->current->value;
+}
+
+/**
+ * Position tracking history scrolling. This function is used for the arrow key
+ * history scrolling implementation.
+ * @return the current history item
+ */
+char *scroll_down()
+{
+	// If not scrolling or at the end of history
+	if (!history_ll->current || !history_ll->current->next)
+	{
+		return NULL;
+	}
+
+	history_ll->current = history_ll->current->next;
+	return history_ll->current->value;;
+}
+
+

@@ -11,6 +11,23 @@ int main(void)
 }
 
 /**
+ * Prints out the prompt line
+ */
+void prompt()
+{
+	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
+}
+
+/**
+ * Redraws the prompt
+ */
+void reprompt()
+{
+	printf("\r\033[K");
+	prompt();
+}
+
+/**
  * Gets input using raw mode from stdin
  * Using raw mode allows the shell to act on special inputs such as arrow
  * keys without having to wait for an enter.
@@ -35,20 +52,39 @@ char *get_input()
 		if (c == '\033')
 		{
 			getchar();
+			char *cmd = NULL;
 			switch(getchar())
 			{
 				// up arrow
 				case 'A':
-					printf("\ngot an up arrow\n");
-					buffer[0] = '\0';
-					return buffer;
+					// Redraw tty input
+					if(!(cmd = scroll_up()))
+						continue;
+					reprompt();
+					printf("%s", cmd);
+					// Update buffer
+					strncpy(buffer, cmd, MAX_LENGTH);
+					space = MAX_LENGTH - strlen(cmd);
+					break;
 				// down arrow
 				case 'B':
-					printf("\ngot a down arrow\n");
-					buffer[0] = '\0';
-					return buffer;
+					// Redraw tty input
+					if(!(cmd = scroll_down()))
+					{
+						reprompt();
+						buffer[0] = '\0';
+						space = MAX_LENGTH;
+						continue;
+					}
+					reprompt();
+					printf("%s", cmd);
+					// Update buffer
+					strncpy(buffer, cmd, MAX_LENGTH);
+					space = MAX_LENGTH - strlen(cmd);
+					break;
 				default:
-					printf("Unknown special character entered\n");
+					printf("Unknown special character entered");
+					prompt();
 			}
 		}
 		// backspace
@@ -72,8 +108,8 @@ char *get_input()
 		}
 	}
 	buffer[MAX_LENGTH - space] = '\0';
-	space--;
 	printf("\n");
+	// TODO: Exit raw mode
 	return buffer;
 }
 
@@ -85,13 +121,13 @@ void main_loop(char *input)
 	char buffer2[MAX_LENGTH];
 	char *token;
 	int check = 0;
-	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
+	prompt();
 	int status = 1;
 	while (status) {
 		buffer = get_input();
 		//no input
 		if (buffer[0] == '\0') {
-			printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD"));
+			prompt();
 			continue;
 		}
 
@@ -131,7 +167,7 @@ void main_loop(char *input)
 		}
 		free_command(cmd_args);
 
-	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
+	prompt();
 	}
 	printf("\n");
 }
