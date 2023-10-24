@@ -210,13 +210,12 @@ void revert_redirects(int *backup_fds)
 /*gets cmd lists and runs commands*/
 int arg_cmd(command *cmd)
 {
+	int status = 1;
+	int *backup_fds = check_redirects(cmd);
 	/*checks for pipe */
 	if (is_pipe(cmd->args_list) != -1) {
-		return piping(cmd->args_list);
+		status = piping(cmd->args_list);
 	}
-	// Check for redirection
-	int *backup_fds = check_redirects(cmd);
-	int status = 1;
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
