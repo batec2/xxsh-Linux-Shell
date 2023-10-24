@@ -169,6 +169,8 @@ int *check_redirects(command *cmd)
 				return NULL;
 			// Trim off the last two command arguments
 			remove_args(cmd, i, 2);
+			// roll i back by one since we removed two entries
+			i--;
 		}
 		// stdout
 		if (cmd->args_list[i] &&
@@ -179,6 +181,8 @@ int *check_redirects(command *cmd)
 				return NULL;
 			// Trim off the last two command arguments
 			remove_args(cmd, i, 2);
+			// roll i back by one since we removed two entries
+			i--;
 		}
 	}
 	return backup_fds;
@@ -290,6 +294,11 @@ void remove_args(command *cmd, int pos, int count)
 	// shift remaining items
 	while (cmd->args_list[pos + count]) {
 		cmd->args_list[pos] = cmd->args_list[pos + count];
+		pos++;
+	}
+	// nullify remaining items since they've already been copied
+	while (cmd->args_list[pos]) {
+		cmd->args_list[pos] = NULL;
 		pos++;
 	}
 	// update size
