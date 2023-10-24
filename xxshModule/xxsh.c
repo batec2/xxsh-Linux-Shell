@@ -102,14 +102,39 @@ void clear_buffer()
 }
 
 /**
- * Checks and sets up output redirection
+ * Redirects stdout to a file
+ * @param file to redirect output to.
+ * @return the backed up stdout fd.
+ */
+int redirect_stdout(char* file)
+{
+    int fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0774);
+    // back up stdout file descriptor
+    int backup_fd = dup(STDOUT_FILENO);
+    // Closes STDOUT_FILENO (1) and then creates a new file descriptor
+    // with number = STDOUT_FILENO 1). Since printf writes output to
+    // stdout, it will now write to the duplicated file descriptor
+    // which actually points to the output file.
+    if ((dup2(fd, STDOUT_FILENO)) == -1)
+    {
+        printf("Error while opening file descriptor\n");
+        return 0;
+    }
+    close(fd);
+    return backup_fd;
+}
+
+/**
+ * Checks and sets up redirection for the command
  * Looks for redirection symbols in the arg string. Sets up any that are
  * found. Updates the command object to remove the redirection arguments.
  * @param cmd command to check
- * @return the file descriptor for stdout, 0 if no redirection and -1 on error.
+ * @return an array containing the file descriptors for stdout, stdout or
+ * 0 if no redirection and NULL on error.
  */
-int check_output_redir(command * cmd)
+int* check_redirects(command * cmd)
 {
+    static int backup_fds[2];
     // Search for output redirection in cmd string
     for (int i = 0; i < cmd->size; i++)
     {
@@ -118,41 +143,28 @@ int check_output_redir(command * cmd)
             (strcmp(cmd->args_list[i], ">") == 0) &&
             cmd->args_list[i+1])
         { 
-            printf("Got a redirect!\n");
-            int fd = open(cmd->args_list[i+1],
-                          O_CREAT | O_WRONLY | O_TRUNC,
-                          0774);
-            // back up stdout file descriptor
-            int stdout_backup = dup(STDOUT_FILENO);
-            // Closes STDOUT_FILENO (1) and then creates a new file descriptor
-            // with number = STDOUT_FILENO 1). Since printf writes output to
-            // stdout, it will now write to the duplicated file descriptor
-            // which actually points to the output file.
-            if ((dup2(fd, STDOUT_FILENO)) == -1)
-            {
-                printf("Error while opening file descriptor\n");
-                return -1;
-            }
-            close(fd);
+            if(!(backup_fds[1] = redirect_stdout(cmd->args_list[i+1])))
+                return NULL;
             // Trim off the last two command arguments
-            trim_command(cmd, i);
-            return stdout_backup;
+            remove_args(cmd, i, 2);
+            return backup_fds;
         }
     }
-    return 0;
+    return backup_fds;
 }
 
 /**
  * Checks if stdout was redirected and reverts it
- * @param: stdout_backup the backup of the fd or 0 if no redirection
+ * @param: backup_fds the backup of the stdout and stdin fds or 0 if no
+ * redirection. index 0 is stdin, index 1 is stdout.
  */
-void revert_stdout(int stdout_backup)
+void revert_redirects(int* backup_fds)
 {
-    if (!stdout_backup)
+    if (!backup_fds[0] && !backup_fds[1])
         return;
     fflush(stdout);
     // Switch FD 1 back to stdout
-    dup2(stdout_backup, STDOUT_FILENO);
+    dup2(backup_fds[1], STDOUT_FILENO);
 }
 
 /*gets cmd lists and runs commands*/
@@ -164,7 +176,7 @@ int arg_cmd(command * cmd)
 	}
 
     // Check for redirection
-    int stdout_backup = check_output_redir(cmd);
+    int* backup_fds = check_redirects(cmd);
     int status = 1;
 	/*export needs valid key/value */
 	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
@@ -193,7 +205,7 @@ int arg_cmd(command * cmd)
 	else {
 		status = run_cmd(cmd->args_list);
 	}
-    revert_stdout(stdout_backup);
+    revert_redirects(backup_fds);
 	return status;
 }
 
@@ -227,19 +239,29 @@ void read_flags(char *input, command * cmd)
 }
 
 /**
- * trims the list of command arguments
+ * Removes the items from the list of command arguments
  * @param cmd struct holding list of command arguments
- * @param pos position to start trim from
+ * @param pos position to start removing 
+ * @param count number of items to remove
  */
-void trim_command(command * cmd, int pos)
+void remove_args(command * cmd, int pos, int count)
 {
-    while(cmd->args_list[pos])
+    // deallocate items
+    for (int i = pos; i < pos+count; i++)
     {
-        free(cmd->args_list[pos]);
-		cmd->args_list[pos] = NULL;
-        cmd->size--;
+		if (cmd->args_list[i]) {
+			free(cmd->args_list[i]);
+            cmd->args_list[i] = NULL;
+		}
+	}
+    // shift remaining items
+    while(cmd->args_list[pos+count])
+    {
+		cmd->args_list[pos] = cmd->args_list[pos+count];
         pos++;
 	}
+    // update size
+    cmd->size -=count;
 }
 
 /*frees memory for the cmd struct*/
