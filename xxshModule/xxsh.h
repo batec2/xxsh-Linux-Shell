@@ -38,6 +38,20 @@ void parse(char *args);
 void clear_buffer();
 
 /**
+ * Redirects stdin from a file
+ * @param file to get stdin from.
+ * @return the backed up stdin fd.
+ */
+int redirect_stdin(char *file);
+
+/**
+ * Redirects stdout to a file
+ * @param file to redirect output to.
+ * @return the backed up stdout fd.
+ */
+int redirect_stdout(char *file);
+
+/**
  * Checks and sets up redirection for the command
  * Looks for redirection symbols in the arg string. Sets up any that are
  * found. Updates the command object to remove the redirection arguments.
@@ -45,13 +59,13 @@ void clear_buffer();
  * @return an array containing the file descriptors for stdout, stdout or
  * 0 if no redirection and NULL on error.
  */
-int* check_redirects(command * cmd);
+int *check_redirects(command * cmd);
 
 /**
  * Checks if stdout was redirected and reverts it
  * @param: stdout_backup the backup of the fd or 0 if no redirection
  */
-void revert_redirects(int* stdout_backup);
+void revert_redirects(int *stdout_backup);
 
 /**
  * Takes command and runs commands with arguments
