@@ -20,7 +20,7 @@ test: $(MODULES)
 	./test
 
 memCheck: test
-	valgrind -s --leak-check=yes ./pipe_test
+	valgrind -s --leak-check=yes ./test
 
 clean:
 	rm -f *~ *.o test config.txt

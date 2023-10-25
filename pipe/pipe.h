@@ -18,7 +18,7 @@ int check_pipe(char **args);
 /**
  * Pipes the first command into the second command
  * @param args array of strings(must terminate with NULL pointer)
- * @returns -1 if failed else returns 0
+ * @returns 0 if failed else returns 1
 */
 int piping(char **args);
 
