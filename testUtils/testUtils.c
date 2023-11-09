@@ -7,7 +7,7 @@
  */
 void PASS(char *desc)
 {
-    printf("PASS: %s\n\n", desc);
+	printf("PASS: %s\n\n", desc);
 }
 
 /* Prints out failure message.
@@ -15,8 +15,8 @@ void PASS(char *desc)
  */
 void FAIL(char *desc)
 {
-    printf("FAIL: %s\n\n", desc);
-    exit(1);
+	printf("FAIL: %s\n\n", desc);
+	exit(1);
 }
 
 /* Testing helper function.
@@ -27,8 +27,6 @@ void FAIL(char *desc)
  */
 void test(int result, char *desc)
 {
-    printf("TESTING: %s\n", desc);
-    result ? PASS(desc) : FAIL(desc);
+	printf("TESTING: %s\n", desc);
+	result ? PASS(desc) : FAIL(desc);
 }
-
-

@@ -22,7 +22,7 @@ LinkedList *initialize()
  * @param list LinkedList to search.
  * @return pointer to the Item.
  */
-Item *search(char *value, LinkedList * list)
+Item *search(char *value, LinkedList *list)
 {
 	for (Item * item = list->first; item != NULL; item = item->next)
 		if (strcmp(item->value, value) == 0)
@@ -35,10 +35,10 @@ Item *search(char *value, LinkedList * list)
  * @param list LinkedList to search.
  * @return pointer to the Item.
  */
-Item *search_n(char *value, LinkedList * list)
+Item *search_n(char *value, LinkedList *list)
 {
 	for (Item * item = list->last; item != NULL; item = item->previous)
-		if (strncmp(value, item->value,strlen(value)) == 0)
+		if (strncmp(value, item->value, strlen(value)) == 0)
 			return item;
 	return NULL;
 }
@@ -48,7 +48,7 @@ Item *search_n(char *value, LinkedList * list)
  * @param list LinkedList to insert value into.
  * @return the address of the new item or NULL.
  */
-Item *add(char *value, LinkedList * list)
+Item *add(char *value, LinkedList *list)
 {
 	// Create a new item and assign the value
 	Item *item = (Item *) malloc(sizeof(Item));
@@ -78,7 +78,7 @@ Item *add(char *value, LinkedList * list)
  * @param list LinkedList to remove item from.
  * @return 0 if failure, else 1.
  */
-int delete_item(char *value, LinkedList * list)
+int delete_item(char *value, LinkedList *list)
 {
 	Item *item = NULL;
 	// Search for the item in the list
@@ -120,7 +120,7 @@ int delete_item(char *value, LinkedList * list)
  * @param list LinkedList to remove item from.
  * @return -1 if failure, else 0.
  */
-int delete_first(LinkedList * list)
+int delete_first(LinkedList *list)
 {
 	if (list->size < 1)
 		return 1;
@@ -137,7 +137,7 @@ int delete_first(LinkedList * list)
 /* Prints all items in the list.
  * @param list LinkedList to print.
  */
-void print_list(LinkedList * list)
+void print_list(LinkedList *list)
 {
 	for (Item * item = list->first; item != NULL; item = item->next)
 		printf("%s\n", item->value);
@@ -146,7 +146,7 @@ void print_list(LinkedList * list)
 /* Prints the last item in the list.
  * @param list LinkedList to print item from.
  */
-void print_last(LinkedList * list)
+void print_last(LinkedList *list)
 {
 	printf("%s\n", list->last->value);
 }
@@ -154,7 +154,7 @@ void print_last(LinkedList * list)
 /* Destroy the linked list and free all memory.
  * @param list the LinkedList to destroy.
  */
-void destroy_list(LinkedList * list)
+void destroy_list(LinkedList *list)
 {
 	Item *item = list->first;
 	while (item != NULL) {
@@ -170,13 +170,13 @@ void destroy_list(LinkedList * list)
 }
 
 /*gets first item in list*/
-char *get_first(LinkedList * list)
+char *get_first(LinkedList *list)
 {
 	return list->last->value;
 }
 
 /*checks if list is empty*/
-int is_empty(LinkedList * list)
+int is_empty(LinkedList *list)
 {
 	return list->size == 0;
 }

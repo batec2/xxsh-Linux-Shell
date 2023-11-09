@@ -24,4 +24,4 @@ void FAIL(char *desc);
  */
 void test(int result, char *desc);
 
-#endif /* TESTING */
+#endif				/* TESTING */

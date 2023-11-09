@@ -25,7 +25,7 @@ void print_var()
 	print_entrys(table, NULL);
 }
 
-void write_var(FILE * file)
+void write_var(FILE *file)
 {
 	print_entrys(table, file);
 }

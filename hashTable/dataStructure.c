@@ -41,7 +41,7 @@ HashTable *create_table()
 /*
  * Initalizes all the member variables of array items to NULL
  */
-void set_null(Entry * table, int size)
+void set_null(Entry *table, int size)
 {
 	for (int i = 0; i < size; i++) {
 		table[i] = (Entry) {
@@ -53,7 +53,7 @@ void set_null(Entry * table, int size)
  * Finds index for key and allocates memory for key, the key is then
  * inserted in the table.
 */
-int add_entry(HashTable * table, char *key, char *value)
+int add_entry(HashTable *table, char *key, char *value)
 {
 	//does nothing if key is already inside the table
 	if (find_entry(table, key) != -1) {
@@ -69,9 +69,8 @@ int add_entry(HashTable * table, char *key, char *value)
 		table->tombstones = 0;
 	}
 	//Key and value are malloced for and entered
-	int index =
-	    next_open(table->entryTable, (hash(key) % table->size),
-		      table->size);
+	int index = next_open(table->entryTable, (hash(key) % table->size),
+			      table->size);
 	table->entryTable[index].key = malloc(strlen(key) + 1);
 	check_null(table->entryTable[index].key);
 	strcpy(table->entryTable[index].key, key);
@@ -103,7 +102,7 @@ unsigned int hash(char *str)
  * Creates new array double the size of original and rehashes key,value pairs
  * and inserts into new array
 */
-Entry *resize(Entry * table, int size)
+Entry *resize(Entry *table, int size)
 {
 	int new_size = size * RESIZE_MULT;
 	int index = 0;
@@ -140,7 +139,7 @@ Entry *resize(Entry * table, int size)
  * Looks for the next available spot in array after specified index
  * and returns index number
 */
-int next_open(Entry * table, int index, int size)
+int next_open(Entry *table, int index, int size)
 {
 	while (table[index].key != NULL) {
 		if (index == (size - 1)) {
@@ -156,7 +155,7 @@ int next_open(Entry * table, int index, int size)
  * Prints all key/value pairs in hash table, empty spots in table are
  * printed out as NULL
 */
-void print_entrys(HashTable * table, FILE * file)
+void print_entrys(HashTable *table, FILE *file)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
@@ -175,7 +174,7 @@ void print_entrys(HashTable * table, FILE * file)
 /**
  * Prints the key/value pair of a specified key in array
 */
-void print_entry(HashTable * table, char *key)
+void print_entry(HashTable *table, char *key)
 {
 	int index = find_entry(table, key);
 	if (index == -1) {
@@ -189,7 +188,7 @@ void print_entry(HashTable * table, char *key)
  * Finds specified key in array and returns it's index if found, -1 is 
  * returned if key does not exist
 */
-int find_entry(HashTable * table, char *key)
+int find_entry(HashTable *table, char *key)
 {
 	int index = hash(key) % table->size;
 	if ((table->entryTable[index].key != NULL)
@@ -219,7 +218,7 @@ int find_entry(HashTable * table, char *key)
  * Frees all memory allocated to hash table including all entries and 
  * sets pointers to NULL
 */
-void destroy_table(HashTable * table)
+void destroy_table(HashTable *table)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
@@ -245,7 +244,7 @@ void destroy_table(HashTable * table)
  * Gets the value of a specific key in the array, returns NULL if key does
  * not exist
 */
-char *get_entry(HashTable * table, char *key)
+char *get_entry(HashTable *table, char *key)
 {
 	int index = find_entry(table, key);
 	if (index == -1) {
@@ -259,7 +258,7 @@ char *get_entry(HashTable * table, char *key)
  * Sets the value of specific existing key in array, returns -1 if key is not
  * in the table, otherwise returns the index of key
 */
-int set_entry(HashTable * table, char *key, char *value)
+int set_entry(HashTable *table, char *key, char *value)
 {
 	int index = find_entry(table, key);
 	if (index == -1)
@@ -276,7 +275,7 @@ int set_entry(HashTable * table, char *key, char *value)
  * Remove's key and value in table, frees allocated memory and sets pointers
  * to NULL
 */
-int remove_entry(HashTable * table, char *key)
+int remove_entry(HashTable *table, char *key)
 {
 	int index = find_entry(table, key);
 	if (index == -1) {
