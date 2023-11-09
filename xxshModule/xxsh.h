@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <termios.h>
 
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
@@ -19,6 +20,30 @@ typedef struct command {
 	int size;
 	char **args_list;	//command and arguments
 } command;
+
+/**
+ * Prints out the prompt line
+ */
+void prompt();
+
+/**
+ * Redraws the prompt
+ */
+void reprompt();
+
+/**
+ * Update the buffer with a historic command
+ * @param command
+ */
+void replace_buffer();
+
+/**
+ * Gets input using raw mode from stdin
+ * Using raw mode allows the shell to act on special inputs such as arrow
+ * keys without having to wait for an enter.
+ * @return the buffer with collected input
+ */
+char *get_input();
 
 /**
  * Main program loop that takes in user input and calls corresponding 

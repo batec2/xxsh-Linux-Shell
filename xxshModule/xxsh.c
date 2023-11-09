@@ -10,27 +10,124 @@ int main(void)
 	return 0;
 }
 
+/**
+ * Prints out the prompt line
+ */
+void prompt()
+{
+	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
+}
+
+/**
+ * Redraws the prompt
+ */
+void reprompt()
+{
+	printf("\r\033[K");
+	prompt();
+}
+
+/**
+ * Gets input using raw mode from stdin
+ * Using raw mode allows the shell to act on special inputs such as arrow
+ * keys without having to wait for an enter.
+ * @return the buffer with collected input
+ */
+char *get_input()
+{
+	static char buffer[MAX_LENGTH];
+	int space= MAX_LENGTH;
+	char c;
+	space = MAX_LENGTH;
+	// read in input and check for special characters like arrow keys
+	struct termios tty;
+	tcgetattr(STDIN_FILENO, &tty);
+	// Put terminal into raw mode so that input gets sent to our shell
+	// as soon as it is typed. This allows instant processing of arrows.
+	tty.c_lflag &= ~(ECHO | ICANON);
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty);
+	while(space && (c = getchar()) != '\n' && c != EOF)	
+	{
+		// special characters
+		if (c == '\033')
+		{
+			getchar();
+			char *cmd = NULL;
+			switch(getchar())
+			{
+				// up arrow
+				case 'A':
+					// Redraw tty input
+					if(!(cmd = scroll_up()))
+						continue;
+					reprompt();
+					printf("%s", cmd);
+					// Update buffer
+					strncpy(buffer, cmd, MAX_LENGTH);
+					space = MAX_LENGTH - strlen(cmd);
+					break;
+				// down arrow
+				case 'B':
+					// Redraw tty input
+					if(!(cmd = scroll_down()))
+					{
+						reprompt();
+						buffer[0] = '\0';
+						space = MAX_LENGTH;
+						continue;
+					}
+					reprompt();
+					printf("%s", cmd);
+					// Update buffer
+					strncpy(buffer, cmd, MAX_LENGTH);
+					space = MAX_LENGTH - strlen(cmd);
+					break;
+				default:
+					printf("Unknown special character entered");
+					prompt();
+			}
+		}
+		// backspace
+		else if (c == 127)
+		{
+			if ((MAX_LENGTH - space) > 0)
+			{
+				buffer[MAX_LENGTH - space-1] = '\0';
+				space++;
+				// redraw updated line using ANSI escape sequences for moving 
+				// the cursor backwards.
+				// https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x361.html
+				printf("\033[1D \033[1D");
+			}
+		}
+		else
+		{
+			buffer[MAX_LENGTH - space] = c;
+			space--;
+			printf("%c",c);
+		}
+	}
+	buffer[MAX_LENGTH - space] = '\0';
+	printf("\n");
+	// TODO: Exit raw mode
+	return buffer;
+}
+
 /*Main user input loop*/
 void main_loop(char *input)
 {
 	command *cmd_args = malloc(sizeof(command));
-	char buffer[MAX_LENGTH];
+	char *buffer;
 	char buffer2[MAX_LENGTH];
 	char *token;
 	int check = 0;
-
-	while ((printf("%s@%s:%s>> ", get_user(), get_host(), get_env("PWD")) >
-		0)
-	       && (fgets(buffer, MAX_LENGTH, stdin) != NULL)) {
-
-		/*Clearing stdin */
-		if ((buffer[strlen(buffer) - 1] != '\n') && (buffer[0] != '\0')) {
-			clear_buffer();
-		} else {
-			buffer[strlen(buffer) - 1] = '\0';	//removes \n
-		}
+	prompt();
+	int status = 1;
+	while (status) {
+		buffer = get_input();
 		//no input
 		if (buffer[0] == '\0') {
+			prompt();
 			continue;
 		}
 
@@ -70,7 +167,9 @@ void main_loop(char *input)
 		}
 		free_command(cmd_args);
 
+	prompt();
 	}
+	printf("\n");
 }
 
 /*Parses the commands for export*/
