@@ -83,7 +83,7 @@ char *get_input()
 					space = MAX_LENGTH - strlen(cmd);
 					break;
 				default:
-					printf("Unknown special character entered");
+					printf("Unknown special character entered\n");
 					prompt();
 			}
 		}
@@ -316,7 +316,7 @@ int arg_cmd(command *cmd)
 		status = piping(cmd->args_list);
 	}
 	/*export needs valid key/value */
-	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
+	else if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
 	}
 	/*env needs only env as input */
@@ -330,6 +330,12 @@ int arg_cmd(command *cmd)
 	/*exit need exit/quit as input */
 	else if ((strcmp(cmd->args_list[0], "exit") == 0 ||
 		  strcmp(cmd->args_list[0], "quit") == 0) && cmd->size == 2) {
+		
+		struct termios tty;
+		tcgetattr(STDIN_FILENO, &tty);
+		tty.c_lflag &= ~(ECHO | ICANON);
+		tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty);
+
 		write_env(FILE_NAME);
 		destroy_env();
 		destroy_history();
@@ -338,6 +344,9 @@ int arg_cmd(command *cmd)
 		status = -1;
 	}
 	else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
+		printf("%s\n", get_path());
+	}
+	else if (strcmp(cmd->args_list[0], "cd") == 0 && cmd->size == 2) {
 		printf("%s\n", get_path());
 	}
 	/*checks if command exists in bin */
