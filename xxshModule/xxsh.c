@@ -123,6 +123,8 @@ void main_loop()
 	int check = 0;
 	prompt();
 	int status = 1;
+	struct termios old;
+	tcgetattr(STDIN_FILENO, &old);
 	while (status) {
 		buffer = get_input();
 		//no input
@@ -159,7 +161,8 @@ void main_loop()
 		read_flags(buffer, cmd_args);
 
 		if ((check = arg_cmd(cmd_args)) == -1) {
-			break;
+			tcsetattr(STDIN_FILENO, TCSAFLUSH, &old);
+			exit(EXIT_SUCCESS);
 		};
 
 		if (check == 0) {
@@ -330,12 +333,6 @@ int arg_cmd(command *cmd)
 	/*exit need exit/quit as input */
 	else if ((strcmp(cmd->args_list[0], "exit") == 0 ||
 		  strcmp(cmd->args_list[0], "quit") == 0) && cmd->size == 2) {
-		
-		struct termios tty;
-		tcgetattr(STDIN_FILENO, &tty);
-		tty.c_lflag &= ~(ECHO | ICANON);
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty);
-
 		write_env(FILE_NAME);
 		destroy_env();
 		destroy_history();
