@@ -5,6 +5,7 @@
 #include "../fileIO/fileIO.h"
 #define MAX_COUNT 256
 #define PRIVATE static
+
 /**
  * Initializes the environment table and all the default environment variables
  */
@@ -39,12 +40,18 @@ char *get_path();
 char *get_env(char *key);
 
 /** 
- * 
  * @param String name of environment variable
  * @param String value of environment variable
- * @return 
  */
 void set_var(char *key, char *value);
+
+/** 
+ * Only sets the environment variable if it isn't already set.
+ * @param String name of environment variable
+ * @param String value of environment variable
+ */
+void check_set_var(char *key, char *value);
+
 /** 
  * Checks if Environment variable already exists in table
  * @param String name of environment variable
@@ -71,4 +78,13 @@ void check_env(char *file_name);
  * @param file_name
 */
 void read_env(char *file_name);
+
+/**
+ * Finds a user entry in etc/passwd
+ * @param: id the user ID
+ * @param: environment variable hash table
+ * @returns: 1 on success, 0 on failure
+ */
+int get_user_info(int uid, HashTable *table);
+
 #endif				/*ENV_VARIABLES */

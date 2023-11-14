@@ -5,16 +5,21 @@ PRIVATE HashTable *table = NULL;
 void init_env_vars()
 {
 	table = create_table();
-	add_entry(table, "CC", "Default");
-	add_entry(table, "EDITOR", "Default");
-	add_entry(table, "HOME", "Default");
-	add_entry(table, "OLDPWD", "Default");
-	add_entry(table, "HOST", "Default");
-	add_entry(table, "PATH", "Default");
-	add_entry(table, "PWD", "Default");
-	add_entry(table, "SHELL", "Default");
-	add_entry(table, "HISTSIZE", "5");
-	add_entry(table, "USER", "Default");
+	// Get the user information
+	if (!get_user_info(getuid(), table))
+		printf("WARNING: Failed to look up user information.\n");
+	// Only set defaults if env variable isn't set
+	check_set_var("CC", "Default");
+	check_set_var("EDITOR", "Default");
+	check_set_var("HOME", "Default");
+	check_set_var("OLDPWD", "Default");
+	check_set_var("HOST", "Default");
+	check_set_var("PATH", "Default");
+	check_set_var("PWD", "Default");
+	check_set_var("SHELL", "Default");
+	check_set_var("HISTSIZE", "5");
+	check_set_var("USER", "Default");
+
 	check_env(FILE_N);
 	read_env(FILE_N);
 }
@@ -66,6 +71,17 @@ void set_var(char *key, char *value)
 	set_entry(table, key, value);
 }
 
+/** 
+ * Only sets the environment variable if it isn't already set.
+ * @param String name of environment variable
+ * @param String value of environment variable
+ */
+void check_set_var(char *key, char *value)
+{
+	if(!get_entry(table, key))
+		add_entry(table, key, value);
+}
+
 //frees all memory associated with the table
 void destroy_env()
 {
@@ -108,4 +124,54 @@ void read_env(char *file_name)
 		set_var(token, token2);
 	}
 	fclose(file);
+}
+
+/**
+ * Finds a user entry in etc/passwd
+ * @param: id the user ID
+ * @returns: 1 on success, 0 on failure
+ */
+int get_user_info(int uid, HashTable *table)
+{
+	char user_id[20];
+	snprintf(user_id, 20, "%d", uid);
+	char data[255];
+	FILE *file = open_file("/etc/passwd", "r");
+	int found = 0;
+	while (fgets(data, sizeof(data), file) != NULL)
+	{
+		if (strstr(data, user_id) != NULL)
+		{
+			found = 1;
+			break;
+		}
+	}
+	fclose(file);
+	if (!found)
+	{
+		printf("Unable to find the current user in the /etc/password file.\n");
+		return 0;
+	}
+	// Extract information
+	char *substring = strtok(data, ":");
+	int count = 0;
+	while (substring != NULL && ++count)
+	{
+		switch(count)
+		{
+			case 1:
+				add_entry(table, "USER", substring);
+				break;
+			case 6:
+				add_entry(table, "HOME", substring);
+				add_entry(table, "PWD", substring);
+				break;
+			case 7:
+				strtok(substring, "\n");
+				add_entry(table, "SHELL", substring);
+				break;
+		}
+		substring = strtok(NULL, ":");
+	}
+	return 1;
 }
