@@ -20,8 +20,7 @@ void init_env_vars()
 	check_set_var("HISTSIZE", "5");
 	check_set_var("USER", "Default");
 
-	check_env(FILE_N);
-	read_env(FILE_N);
+	read_env();
 }
 
 //prints all values in the table
@@ -71,6 +70,26 @@ void set_var(char *key, char *value)
 	set_entry(table, key, value);
 }
 
+/**
+ * Set the current working directory and PWD and OLDPWD env variables
+ * @param path string representing the path to set as the current working
+ * directory.
+ * @return 0 if successful, else -1
+ */
+int change_directory(char *path)
+{
+	if (chdir(path))
+	{
+		printf("Unable to change directory to: %s\n", path);
+		return -1;
+	}
+	char *pwd = get_env("PWD");
+	if (pwd != NULL)
+		set_var("OLDPWD", pwd);
+	set_var("PWD", path);
+	return 0;
+}
+
 /** 
  * Only sets the environment variable if it isn't already set.
  * @param String name of environment variable
@@ -89,41 +108,38 @@ void destroy_env()
 }
 
 //writes env vars to file
-void write_env(char *file_name)
+void write_env()
 {
-	FILE *out_file = open_file(file_name, "w");
+	char config_path[254];
+	strcpy(config_path, get_env("HOME"));
+	strcat(config_path, "/");
+	strcat(config_path, CONFIG_FILE);
+	FILE *out_file = open_file(config_path, "w");
 	print_entrys(table, out_file);
 	fclose(out_file);
 }
 
 /**
- * Checks if file exists, if it doesnt, creates the file if and writes default
- * environment variables
-*/
-void check_env(char *file_name)
-{
-	FILE *file = open_file(file_name, "r");
-	if (file == NULL) {
-		write_env(file_name);
-	} else {
-		fclose(file);
-	}
-}
-
-/**
  * Takes env variables from file and sets them in hashmap
 */
-void read_env(char *file_name)
+void read_env()
 {
 	char buffer[MAX_COUNT];
 	char *token, *token2;
-	FILE *file = open_file(file_name, "r");
-	while (fgets(buffer, MAX_COUNT, file) != NULL) {
-		token = strtok(buffer, ",\n");
-		token2 = strtok(NULL, "\n");
-		set_var(token, token2);
+	char config_path[254];
+	strcpy(config_path, get_env("HOME"));
+	strcat(config_path, "/");
+	strcat(config_path, CONFIG_FILE);
+	FILE *file = open_file(config_path, "r");
+	if (file != NULL)
+	{
+		while (fgets(buffer, MAX_COUNT, file) != NULL) {
+			token = strtok(buffer, ",\n");
+			token2 = strtok(NULL, "\n");
+			set_var(token, token2);
+		}
+		fclose(file);
 	}
-	fclose(file);
 }
 
 /**
@@ -164,7 +180,8 @@ int get_user_info(int uid, HashTable *table)
 				break;
 			case 6:
 				add_entry(table, "HOME", substring);
-				add_entry(table, "PWD", substring);
+				// Update current working directory
+				change_directory(substring);
 				break;
 			case 7:
 				strtok(substring, "\n");

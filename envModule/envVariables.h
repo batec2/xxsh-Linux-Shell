@@ -1,6 +1,6 @@
 #ifndef ENV_VARIABLES
 #define ENV_VARIABLES
-#define FILE_N "config.txt"
+#define CONFIG_FILE ".xxsh.rc"
 #include "../hashTable/dataStructure.h"
 #include "../fileIO/fileIO.h"
 #define MAX_COUNT 256
@@ -45,6 +45,14 @@ char *get_env(char *key);
  */
 void set_var(char *key, char *value);
 
+/**
+ * Set the current working directory and PWD and OLDPWD env variables
+ * @param path string representing the path to set as the current working
+ * directory.
+ * @return 0 if successful, else -1
+ */
+int change_directory(char *path);
+
 /** 
  * Only sets the environment variable if it isn't already set.
  * @param String name of environment variable
@@ -62,22 +70,16 @@ int check_var(char *key);
  * Frees all mememory allocated to environment variable hashtable
  */
 void destroy_env();
-/**
- * env vars are written to file
- * @param file file for env vars to be written to
-*/
-void write_env(char *file_name);
-/**
- * Checks if file exists, if not a new file is made and env are written to it
- * @param file file to be checked and or written to
-*/
-void check_env(char *file_name);
 
 /**
- * Takes env  variables from list and sets into hashmap
- * @param file_name
+ *writes env vars to file
+ */
+void write_env();
+
+/**
+ * Reads environment variables in from a file.
 */
-void read_env(char *file_name);
+void read_env();
 
 /**
  * Finds a user entry in etc/passwd
