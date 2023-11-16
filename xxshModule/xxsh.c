@@ -83,7 +83,7 @@ char *get_input()
 					space = MAX_LENGTH - strlen(cmd);
 					break;
 				default:
-					printf("Unknown special character entered");
+					printf("Unknown special character entered\n");
 					prompt();
 			}
 		}
@@ -114,7 +114,7 @@ char *get_input()
 }
 
 /*Main user input loop*/
-void main_loop(char *input)
+void main_loop()
 {
 	command *cmd_args = malloc(sizeof(command));
 	char *buffer;
@@ -123,6 +123,8 @@ void main_loop(char *input)
 	int check = 0;
 	prompt();
 	int status = 1;
+	struct termios old;
+	tcgetattr(STDIN_FILENO, &old);
 	while (status) {
 		buffer = get_input();
 		//no input
@@ -159,7 +161,8 @@ void main_loop(char *input)
 		read_flags(buffer, cmd_args);
 
 		if ((check = arg_cmd(cmd_args)) == -1) {
-			break;
+			tcsetattr(STDIN_FILENO, TCSAFLUSH, &old);
+			exit(EXIT_SUCCESS);
 		};
 
 		if (check == 0) {
@@ -316,7 +319,7 @@ int arg_cmd(command *cmd)
 		status = piping(cmd->args_list);
 	}
 	/*export needs valid key/value */
-	if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
+	else if (strcmp(cmd->args_list[0], "export") == 0 && cmd->size == 3) {
 		parse(cmd->args_list[1]);
 	}
 	/*env needs only env as input */
@@ -336,6 +339,12 @@ int arg_cmd(command *cmd)
 		free_command(cmd);
 		free(cmd);
 		status = -1;
+	}
+	else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
+		printf("%s\n", get_path());
+	}
+	else if (strcmp(cmd->args_list[0], "cd") == 0 && cmd->size == 2) {
+		printf("%s\n", get_path());
 	}
 	/*checks if command exists in bin */
 	else {
