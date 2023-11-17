@@ -363,14 +363,6 @@ void cmd_cd(command *cmd){
 		change_directory(get_env("HOME"));	
 		set_var("PWD",get_env("HOME"));
 	}
-	else if(strcmp(cmd->args_list[1],"..")==0){
-		change_directory(cmd->args_list[1]);
-		set_var("PWD",getcwd(buffer,1024));
-	}
-	else if(strcmp(cmd->args_list[1],".")==0){
-		change_directory(cmd->args_list[1]);
-		set_var("PWD",getcwd(buffer,1024));
-	}
 	else{
 		change_directory(cmd->args_list[1]);
 		set_var("PWD",getcwd(buffer,1024));
