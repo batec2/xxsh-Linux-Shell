@@ -342,10 +342,11 @@ int arg_cmd(command *cmd)
 		status = -1;
 	}
 	else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
-		printf("%s\n", get_path());
+		cmd_pwd();
 	}
-	else if (strcmp(cmd->args_list[0], "cd") == 0 && cmd->size == 2) {
-		printf("%s\n", get_path());
+	else if (strcmp(cmd->args_list[0], "cd") == 0 &&
+								 (cmd->size >= 2 && cmd->size <= 3)) {
+		cmd_cd(cmd);
 	}
 	/*checks if command exists in bin */
 	else {
@@ -354,6 +355,33 @@ int arg_cmd(command *cmd)
 	revert_redirects(backup_fds);
 	return status;
 }
+
+void cmd_cd(command *cmd){
+	char buffer[1024];
+	//cd no parameters
+	if(cmd->size==2 || strcmp(cmd->args_list[1],"~")==0){
+		change_directory(get_env("HOME"));	
+		set_var("PWD",get_env("HOME"));
+	}
+	else if(strcmp(cmd->args_list[1],"..")==0){
+		change_directory(cmd->args_list[1]);
+		set_var("PWD",getcwd(buffer,1024));
+	}
+	else if(strcmp(cmd->args_list[1],".")==0){
+		change_directory(cmd->args_list[1]);
+		set_var("PWD",getcwd(buffer,1024));
+	}
+	else{
+		change_directory(cmd->args_list[1]);
+		set_var("PWD",getcwd(buffer,1024));
+	}
+}
+//prints otu current working directory
+void cmd_pwd(){
+	char buffer[1024];
+	getcwd(buffer,1024);
+	printf("%s\n",buffer);
+}	
 
 /**
  * command and parses flags

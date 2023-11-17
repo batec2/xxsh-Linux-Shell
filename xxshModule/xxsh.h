@@ -97,6 +97,17 @@ void revert_redirects(int *stdout_backup);
 int arg_cmd(command * cmd);
 
 /**
+ * Changes directories to user indicated
+ * @param command struct with list of arguments and size
+*/
+void cmd_cd(command *cmd);
+
+/**
+ * gets the current working directory and prints to screen
+*/
+void cmd_pwd();
+
+/**
  * parses input and puts arguments into a list
  * @param command struct with list of arguments
 */
