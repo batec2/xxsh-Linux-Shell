@@ -12,6 +12,7 @@ LinkedList *initialize()
 	LinkedList *list = malloc(sizeof(LinkedList));
 	list->first = NULL;
 	list->last = NULL;
+	list->current = NULL;
 	list->size = 0;
 
 	return list;

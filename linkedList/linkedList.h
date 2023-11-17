@@ -25,6 +25,8 @@ typedef struct LinkedList {
 	struct Item *first;
 	// Pointer to last item in list
 	struct Item *last;
+	// Pointer to current item in list. Useful for scrolling through history
+	struct Item *current;
 	// Integer to track list size
 	int size;
 } LinkedList;

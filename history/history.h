@@ -41,4 +41,18 @@ char *get_last();
  * @return returns 1 if the list is empty 0 if it isnt
 */
 int history_empty();
+
+/**
+ * Position tracking history scrolling. This function is used for the arrow key
+ * history scrolling implementation.
+ * @return the current history item
+ */
+char *scroll_up();
+
+/**
+ * Position tracking history scrolling. This function is used for the arrow key
+ * history scrolling implementation.
+ * @return the current history item
+ */
+char *scroll_down();
 #endif				/* HISTORY */
