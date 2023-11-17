@@ -149,7 +149,7 @@ void main_loop()
 				token = get_history(buffer + 1);
 				//mprintf("")
 				if (token == NULL) {
-					prinft("Command not found\n");
+					printf("Command not found\n");
 					continue;
 				}
 				strcpy(buffer, token);
