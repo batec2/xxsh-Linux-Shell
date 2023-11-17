@@ -13,8 +13,6 @@
 #include "../binary/binary.h"
 #include "../pipe/pipe.h"
 
-#define FILE_NAME "config.txt"
-
 /* Struct for list items */
 typedef struct command {
 	int size;

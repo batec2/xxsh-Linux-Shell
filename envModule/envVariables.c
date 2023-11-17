@@ -5,18 +5,22 @@ PRIVATE HashTable *table = NULL;
 void init_env_vars()
 {
 	table = create_table();
-	add_entry(table, "CC", "Default");
-	add_entry(table, "EDITOR", "Default");
-	add_entry(table, "HOME", "Default");
-	add_entry(table, "OLDPWD", "Default");
-	add_entry(table, "HOST", "Default");
-	add_entry(table, "PATH", "Default");
-	add_entry(table, "PWD", "Default");
-	add_entry(table, "SHELL", "Default");
-	add_entry(table, "HISTSIZE", "5");
-	add_entry(table, "USER", "Default");
-	check_env(FILE_N);
-	read_env(FILE_N);
+	// Get the user information
+	if (!get_user_info(getuid(), table))
+		printf("WARNING: Failed to look up user information.\n");
+	// Only set defaults if env variable isn't set
+	check_set_var("CC", "Default");
+	check_set_var("EDITOR", "Default");
+	check_set_var("HOME", "Default");
+	check_set_var("OLDPWD", "Default");
+	check_set_var("HOST", "Default");
+	check_set_var("PATH", "Default");
+	check_set_var("PWD", "Default");
+	check_set_var("SHELL", "Default");
+	check_set_var("HISTSIZE", "5");
+	check_set_var("USER", "Default");
+
+	read_env();
 }
 
 //prints all values in the table
@@ -66,6 +70,37 @@ void set_var(char *key, char *value)
 	set_entry(table, key, value);
 }
 
+/**
+ * Set the current working directory and PWD and OLDPWD env variables
+ * @param path string representing the path to set as the current working
+ * directory.
+ * @return 0 if successful, else -1
+ */
+int change_directory(char *path)
+{
+	if (chdir(path))
+	{
+		printf("Unable to change directory to: %s\n", path);
+		return -1;
+	}
+	char *pwd = get_env("PWD");
+	if (pwd != NULL)
+		set_var("OLDPWD", pwd);
+	set_var("PWD", path);
+	return 0;
+}
+
+/** 
+ * Only sets the environment variable if it isn't already set.
+ * @param String name of environment variable
+ * @param String value of environment variable
+ */
+void check_set_var(char *key, char *value)
+{
+	if(!get_entry(table, key))
+		add_entry(table, key, value);
+}
+
 //frees all memory associated with the table
 void destroy_env()
 {
@@ -73,39 +108,87 @@ void destroy_env()
 }
 
 //writes env vars to file
-void write_env(char *file_name)
+void write_env()
 {
-	FILE *out_file = open_file(file_name, "w");
+	char config_path[254];
+	strcpy(config_path, get_env("HOME"));
+	strcat(config_path, "/");
+	strcat(config_path, CONFIG_FILE);
+	FILE *out_file = open_file(config_path, "w");
 	print_entrys(table, out_file);
 	fclose(out_file);
 }
 
 /**
- * Checks if file exists, if it doesnt, creates the file if and writes default
- * environment variables
+ * Takes env variables from file and sets them in hashmap
 */
-void check_env(char *file_name)
+void read_env()
 {
-	FILE *file = open_file(file_name, "r");
-	if (file == NULL) {
-		write_env(file_name);
-	} else {
+	char buffer[MAX_COUNT];
+	char *token, *token2;
+	char config_path[254];
+	strcpy(config_path, get_env("HOME"));
+	strcat(config_path, "/");
+	strcat(config_path, CONFIG_FILE);
+	FILE *file = open_file(config_path, "r");
+	if (file != NULL)
+	{
+		while (fgets(buffer, MAX_COUNT, file) != NULL) {
+			token = strtok(buffer, ",\n");
+			token2 = strtok(NULL, "\n");
+			set_var(token, token2);
+		}
 		fclose(file);
 	}
 }
 
 /**
- * Takes env variables from file and sets them in hashmap
-*/
-void read_env(char *file_name)
+ * Finds a user entry in etc/passwd
+ * @param: id the user ID
+ * @returns: 1 on success, 0 on failure
+ */
+int get_user_info(int uid, HashTable *table)
 {
-	char buffer[MAX_COUNT];
-	char *token, *token2;
-	FILE *file = open_file(file_name, "r");
-	while (fgets(buffer, MAX_COUNT, file) != NULL) {
-		token = strtok(buffer, ",\n");
-		token2 = strtok(NULL, "\n");
-		set_var(token, token2);
+	char user_id[20];
+	snprintf(user_id, 20, "%d", uid);
+	char data[255];
+	FILE *file = open_file("/etc/passwd", "r");
+	int found = 0;
+	while (fgets(data, sizeof(data), file) != NULL)
+	{
+		if (strstr(data, user_id) != NULL)
+		{
+			found = 1;
+			break;
+		}
 	}
 	fclose(file);
+	if (!found)
+	{
+		printf("Unable to find the current user in the /etc/password file.\n");
+		return 0;
+	}
+	// Extract information
+	char *substring = strtok(data, ":");
+	int count = 0;
+	while (substring != NULL && ++count)
+	{
+		switch(count)
+		{
+			case 1:
+				add_entry(table, "USER", substring);
+				break;
+			case 6:
+				add_entry(table, "HOME", substring);
+				// Update current working directory
+				change_directory(substring);
+				break;
+			case 7:
+				strtok(substring, "\n");
+				add_entry(table, "SHELL", substring);
+				break;
+		}
+		substring = strtok(NULL, ":");
+	}
+	return 1;
 }

@@ -334,7 +334,7 @@ int arg_cmd(command *cmd)
 	/*exit need exit/quit as input */
 	else if ((strcmp(cmd->args_list[0], "exit") == 0 ||
 		  strcmp(cmd->args_list[0], "quit") == 0) && cmd->size == 2) {
-		write_env(FILE_NAME);
+		write_env();
 		destroy_env();
 		destroy_history();
 		free_command(cmd);
