@@ -4,6 +4,7 @@ PRIVATE HashTable *table = NULL;
 //initiates the table
 void init_env_vars()
 {
+	char buffer[1024];
 	table = create_table();
 	// Get the user information
 	if (!get_user_info(getuid(), table))
@@ -19,8 +20,8 @@ void init_env_vars()
 	check_set_var("SHELL", "Default");
 	check_set_var("HISTSIZE", "5");
 	check_set_var("USER", "Default");
-
 	read_env();
+	set_var("PWD", getcwd(buffer,1024));
 }
 
 //prints all values in the table
@@ -181,7 +182,7 @@ int get_user_info(int uid, HashTable *table)
 			case 6:
 				add_entry(table, "HOME", substring);
 				// Update current working directory
-				change_directory(substring);
+				//change_directory(substring);
 				break;
 			case 7:
 				strtok(substring, "\n");
