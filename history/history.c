@@ -81,17 +81,13 @@ char *scroll_up()
 	if (!history_ll->last)
 		return NULL;
 	// initiate a scroll if not already scrolling
-	if (!history_ll->current)
-	{
+	if (!history_ll->current) {
 		history_ll->current = history_ll->last;
 	}
 	// prevent scrolling past start of history
-	else if (history_ll->current->previous)
-	{
+	else if (history_ll->current->previous) {
 		history_ll->current = history_ll->current->previous;
-	}
-	else
-	{
+	} else {
 		return NULL;
 	}
 
@@ -106,13 +102,10 @@ char *scroll_up()
 char *scroll_down()
 {
 	// If not scrolling or at the end of history
-	if (!history_ll->current || !history_ll->current->next)
-	{
+	if (!history_ll->current || !history_ll->current->next) {
 		return NULL;
 	}
 
 	history_ll->current = history_ll->current->next;
 	return history_ll->current->value;;
 }
-
-
