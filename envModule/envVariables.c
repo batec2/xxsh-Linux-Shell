@@ -5,24 +5,6 @@ PRIVATE char source_dir[255];
 //initiates the table
 void init_env_vars()
 {
-<<<<<<< HEAD
-	char buffer[1024];
-	table = create_table();
-	// Get the user information
-	if (!get_user_info(getuid(), table))
-		printf("WARNING: Failed to look up user information.\n");
-	// Only set defaults if env variable isn't set
-	check_set_var("CC", "Default");
-	check_set_var("EDITOR", "Default");
-	check_set_var("HOME", "Default");
-	check_set_var("OLDPWD", "Default");
-	check_set_var("HOST", "Default");
-	check_set_var("PATH", "Default");
-	check_set_var("PWD", "Default");
-	check_set_var("SHELL", "Default");
-	check_set_var("HISTSIZE", "5");
-	check_set_var("USER", "Default");
-=======
 	// Get the current path when the program is started.
 	// This is used for reading in system and user variables. Also
 	// used on program exit for writing user variables.
@@ -30,7 +12,6 @@ void init_env_vars()
 	strncat(source_dir, "/", 2);
 	table = create_table();
 
->>>>>>> e551f42f9afb1b4edab011990dfbd754b76c66d5
 	read_env();
 	set_var("PWD", getcwd(buffer,1024));
 }
