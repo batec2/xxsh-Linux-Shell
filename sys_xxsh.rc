@@ -1,0 +1,5 @@
+CC,/usr/bin/gcc
+EDITOR,/usr/bin/vi
+PATH,/usr/bin
+SHELL,/usr/bin/xxsh
+HISTSIZE,5

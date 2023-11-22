@@ -1,6 +1,7 @@
 #ifndef ENV_VARIABLES
 #define ENV_VARIABLES
-#define CONFIG_FILE ".xxsh.rc"
+#define SYS_CONFIG_FILE "sys_xxsh.rc"
+#define USER_CONFIG_FILE "user_xxsh.rc"
 #include "../hashTable/dataStructure.h"
 #include "../fileIO/fileIO.h"
 #define MAX_COUNT 256
@@ -78,8 +79,27 @@ void write_env();
 
 /**
  * Reads environment variables in from a file.
+ *
+ * Order of reading:
+ * 1) Variables are loaded in from the system default configuration file
+ * 2) User specific information is retrieved from the /etc/passwd entry
+ * 3) The user config file is read if it exists.
+ * 4) System specific environment variables such as the hostname are
+ * retrieved from the system if they aren't found in the user config file.
 */
 void read_env();
+
+/**
+ * Reads in the hostname for the system and stores it in the HOST env var
+ */
+void get_hostname();
+
+/**
+ * Reads in environment variables from a config file
+ *
+ * @param config the path to the config file
+ */
+void read_in_config(char *config);
 
 /**
  * Finds a user entry in etc/passwd
