@@ -1,24 +1,16 @@
 #include "envVariables.h"
 
 PRIVATE HashTable *table = NULL;
+PRIVATE char source_dir[255];
 //initiates the table
 void init_env_vars()
 {
+	// Get the current path when the program is started.
+	// This is used for reading in system and user variables. Also
+	// used on program exit for writing user variables.
+	getcwd(source_dir, 253);
+	strncat(source_dir, "/", 2);
 	table = create_table();
-	// Get the user information
-	if (!get_user_info(getuid(), table))
-		printf("WARNING: Failed to look up user information.\n");
-	// Only set defaults if env variable isn't set
-	check_set_var("CC", "Default");
-	check_set_var("EDITOR", "Default");
-	check_set_var("HOME", "Default");
-	check_set_var("OLDPWD", "Default");
-	check_set_var("HOST", "Default");
-	check_set_var("PATH", "Default");
-	check_set_var("PWD", "Default");
-	check_set_var("SHELL", "Default");
-	check_set_var("HISTSIZE", "5");
-	check_set_var("USER", "Default");
 
 	read_env();
 }
@@ -86,6 +78,8 @@ int change_directory(char *path)
 	char *pwd = get_env("PWD");
 	if (pwd != NULL)
 		set_var("OLDPWD", pwd);
+	else
+		set_var("OLDPWD", path);
 	set_var("PWD", path);
 	return 0;
 }
@@ -110,27 +104,56 @@ void destroy_env()
 //writes env vars to file
 void write_env()
 {
-	char config_path[254];
-	strcpy(config_path, get_env("HOME"));
-	strcat(config_path, "/");
-	strcat(config_path, CONFIG_FILE);
-	FILE *out_file = open_file(config_path, "w");
+	char *config = malloc(sizeof(source_dir) + sizeof(USER_CONFIG_FILE));
+	strcpy(config, source_dir);
+	strcat(config, USER_CONFIG_FILE);
+	FILE *out_file = open_file(config, "w");
+	free(config);
 	print_entrys(table, out_file);
 	fclose(out_file);
 }
 
 /**
  * Takes env variables from file and sets them in hashmap
+ *
+ * Order of reading:
+ * 1) Variables are loaded in from the system default configuration file
+ * 2) User specific information is retrieved from the /etc/passwd entry
+ * 3) The user config file is read if it exists.
+ * 4) System specific environment variables such as the hostname are
+ * retrieved from the system if they aren't found in the user config file.
 */
 void read_env()
 {
+	// Load in system config file
+	char *sys_config = malloc(sizeof(source_dir) + sizeof(SYS_CONFIG_FILE));
+	strcpy(sys_config, source_dir);
+	strcat(sys_config, SYS_CONFIG_FILE);
+	read_in_config(sys_config);
+	free(sys_config);
+
+	// Get the user passwd entry information
+	if (!get_user_info(getuid(), table))
+		printf("WARNING: Failed to look up user information.\n");
+
+	// Load in user config file
+	char *user_config = malloc(sizeof(source_dir) + sizeof(USER_CONFIG_FILE));
+	strcpy(user_config, source_dir);
+	strcat(user_config, USER_CONFIG_FILE);
+	read_in_config(user_config);
+	free(user_config);
+}
+
+/**
+ * Reads in environment variables from a config file
+ *
+ * @param config the path to the config file
+ */
+void read_in_config(char *config)
+{
 	char buffer[MAX_COUNT];
 	char *token, *token2;
-	char config_path[254];
-	strcpy(config_path, get_env("HOME"));
-	strcat(config_path, "/");
-	strcat(config_path, CONFIG_FILE);
-	FILE *file = open_file(config_path, "r");
+	FILE *file = open_file(config, "r");
 	if (file != NULL)
 	{
 		while (fgets(buffer, MAX_COUNT, file) != NULL) {
@@ -139,6 +162,10 @@ void read_env()
 			set_var(token, token2);
 		}
 		fclose(file);
+	}
+	else
+	{
+		printf("ERROR: Unable to find configuration file: %s\n", config);
 	}
 }
 
@@ -176,16 +203,16 @@ int get_user_info(int uid, HashTable *table)
 		switch(count)
 		{
 			case 1:
-				add_entry(table, "USER", substring);
+				set_entry(table, "USER", substring);
 				break;
 			case 6:
-				add_entry(table, "HOME", substring);
+				set_entry(table, "HOME", substring);
 				// Update current working directory
 				change_directory(substring);
 				break;
 			case 7:
 				strtok(substring, "\n");
-				add_entry(table, "SHELL", substring);
+				set_entry(table, "SHELL", substring);
 				break;
 		}
 		substring = strtok(NULL, ":");
