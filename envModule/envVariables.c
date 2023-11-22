@@ -13,7 +13,6 @@ void init_env_vars()
 	table = create_table();
 
 	read_env();
-	set_var("PWD", getcwd(buffer,1024));
 }
 
 //prints all values in the table
@@ -225,7 +224,7 @@ int get_user_info(int uid, HashTable *table)
 			case 6:
 				set_entry(table, "HOME", substring);
 				// Update current working directory
-				//change_directory(substring);
+				change_directory(substring);
 				break;
 			case 7:
 				strtok(substring, "\n");
