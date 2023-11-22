@@ -90,6 +90,11 @@ void write_env();
 void read_env();
 
 /**
+ * Reads in the hostname for the system and stores it in the HOST env var
+ */
+void get_hostname();
+
+/**
  * Reads in environment variables from a config file
  *
  * @param config the path to the config file

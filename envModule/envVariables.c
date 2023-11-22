@@ -142,6 +142,26 @@ void read_env()
 	strcat(user_config, USER_CONFIG_FILE);
 	read_in_config(user_config);
 	free(user_config);
+	
+	// Check for any missing system-specific env variables and attempt to 
+	// read them in
+	if (get_env("HOST") == NULL)
+	{
+		get_hostname();
+	}
+	
+}
+
+/**
+ * Reads in the hostname for the system and stores it in the HOST env var
+ */
+void get_hostname()
+{
+	FILE *hostname = open_file("/proc/sys/kernel/hostname", "r");
+	char data[255];
+	fgets(data, sizeof(data), hostname);
+	strtok(data, "\n");
+	set_var("HOST", data);
 }
 
 /**
@@ -162,10 +182,6 @@ void read_in_config(char *config)
 			set_var(token, token2);
 		}
 		fclose(file);
-	}
-	else
-	{
-		printf("ERROR: Unable to find configuration file: %s\n", config);
 	}
 }
 
