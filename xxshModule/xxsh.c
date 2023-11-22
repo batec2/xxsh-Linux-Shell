@@ -149,6 +149,7 @@ void main_loop()
 				token = get_history(buffer + 1);
 				//mprintf("")
 				if (token == NULL) {
+					printf("Command not found\n");
 					continue;
 				}
 				strcpy(buffer, token);
@@ -341,10 +342,11 @@ int arg_cmd(command *cmd)
 		status = -1;
 	}
 	else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
-		printf("%s\n", get_path());
+		cmd_pwd();
 	}
-	else if (strcmp(cmd->args_list[0], "cd") == 0 && cmd->size == 2) {
-		printf("%s\n", get_path());
+	else if (strcmp(cmd->args_list[0], "cd") == 0 &&
+								 (cmd->size >= 2 && cmd->size <= 3)) {
+		cmd_cd(cmd);
 	}
 	/*checks if command exists in bin */
 	else {
@@ -353,6 +355,23 @@ int arg_cmd(command *cmd)
 	revert_redirects(backup_fds);
 	return status;
 }
+
+//changes current directory 
+void cmd_cd(command *cmd){
+	//cd no parameters
+	if(cmd->size==2 || strcmp(cmd->args_list[1],"~")==0){
+		change_directory(get_env("HOME"));	
+	}
+	else{
+		change_directory(cmd->args_list[1]);
+	}
+}
+//prints out current working directory
+void cmd_pwd(){
+	char buffer[1024];
+	getcwd(buffer,1024);
+	printf("%s\n",buffer);
+}	
 
 /**
  * command and parses flags

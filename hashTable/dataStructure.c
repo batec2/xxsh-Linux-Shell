@@ -159,6 +159,10 @@ void print_entrys(HashTable *table, FILE *file)
 {
 	for (int i = 0; i < table->size; i++) {
 		if (table->entryTable[i].key != NULL) {
+			if(strcmp(table->entryTable[i].key,"PWD")==0||
+								strcmp(table->entryTable[i].key,"OLDPWD")==0){
+				continue;
+			}
 			if (file != NULL) {
 				fprintf(file, "%s,%s\n",
 					table->entryTable[i].key,
