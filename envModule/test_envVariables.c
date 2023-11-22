@@ -4,15 +4,11 @@
 int main(void)
 {
 	init_env_vars();
-	check_env("test.txt");
-	read_env("test.txt");
+	read_env();
 	print_var();
-	printf("Should be: Default->%s\n", get_user());
-	printf("Should be: Default->%s\n", get_host());
-	printf("Should be: Default->%s\n", get_path());
 	set_var("Test", "Test");
-	printf("Should be: Test->%s\n", get_env("Test"));
-	printf("Should be: 0<%i\n", check_var("Test"));
+	printf("Should be: /usr/bin/->%s\n", get_env("PATH")));
+	printf("Should be: 0<%i\n", check_var("USER"));
 	printf("Should be: 0>%i\n", check_var("NotHere"));
 	destroy_env();
 }
