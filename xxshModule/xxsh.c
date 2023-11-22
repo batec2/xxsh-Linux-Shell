@@ -356,19 +356,17 @@ int arg_cmd(command *cmd)
 	return status;
 }
 
+//changes current directory 
 void cmd_cd(command *cmd){
-	char buffer[1024];
 	//cd no parameters
 	if(cmd->size==2 || strcmp(cmd->args_list[1],"~")==0){
 		change_directory(get_env("HOME"));	
-		set_var("PWD",get_env("HOME"));
 	}
 	else{
 		change_directory(cmd->args_list[1]);
-		set_var("PWD",getcwd(buffer,1024));
 	}
 }
-//prints otu current working directory
+//prints out current working directory
 void cmd_pwd(){
 	char buffer[1024];
 	getcwd(buffer,1024);

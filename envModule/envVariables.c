@@ -70,6 +70,7 @@ void set_var(char *key, char *value)
  */
 int change_directory(char *path)
 {
+	char buffer[1024];
 	if (chdir(path))
 	{
 		printf("Unable to change directory to: %s\n", path);
@@ -80,7 +81,7 @@ int change_directory(char *path)
 		set_var("OLDPWD", pwd);
 	else
 		set_var("OLDPWD", path);
-	set_var("PWD", path);
+	set_var("PWD",getcwd(buffer,1024));
 	return 0;
 }
 
