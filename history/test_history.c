@@ -7,6 +7,7 @@ int main()
 	init_env_vars();
 	init_list();
 	printf("Startings history module tests\n\n");
+	set_var("HISTSIZE", "5");
 
 	/*Test adding items to history. This is a manual test */
 	printf("Adding three items to history\n\n");
