@@ -348,6 +348,11 @@ int arg_cmd(command *cmd)
 								 (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
 	}
+	else if (strcmp(cmd->args_list[0], "glob") == 0 && cmd->size == 2) {
+		glob_t globbing;
+		glob("*.c",GLOB_ERR,NULL,&globbing);
+		printf("%s\n",globbing.gl_pathv[0]);
+	}
 	/*checks if command exists in bin */
 	else {
 		status = run_cmd(cmd->args_list);

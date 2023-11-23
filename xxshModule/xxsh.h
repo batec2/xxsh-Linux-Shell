@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>
+#include <glob.h>
 
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
