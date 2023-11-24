@@ -348,10 +348,55 @@ int arg_cmd(command *cmd)
 								 (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
 	}
-	else if (strcmp(cmd->args_list[0], "glob") == 0 && cmd->size == 2) {
+	else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
 		glob_t globbing;
-		glob("*.c",GLOB_ERR,NULL,&globbing);
-		printf("%s\n",globbing.gl_pathv[0]);
+		char *pattern = NULL;
+		// offset trick from man 3 glob example
+		globbing.gl_offs = 2;
+		// Set initial flags
+		int flags = GLOB_DOOFFS;
+		int options = 0;
+		// iterate over the arguments and glob for any that aren't options 
+		// This supports multiple patterns in a command such as:
+		// ls -l *.conf *.md
+		for( int i = 1; i < cmd->size-1; i++)
+		{
+			// Check if the current argument is options
+			if (cmd->args_list[i][0] == '-')
+			{
+				// prevent the user from entering ungrouped options
+				if(options)
+					printf("ls options may only be specified once\n");
+				else
+					options= i;
+				continue;
+			}
+			pattern = cmd->args_list[i];
+			if (glob(pattern, flags, NULL, &globbing) == GLOB_NOMATCH)
+			{
+				printf("xxsh: no matches found: %s\n", pattern); 
+				return 1;
+			}
+			flags = flags | GLOB_APPEND;
+		}
+		if (pattern)
+		{
+			globbing.gl_pathv[0] = "ls";
+			if (options)
+			{
+				globbing.gl_pathv[1] = cmd->args_list[options];
+				status = run_cmd(&globbing.gl_pathv[0]);
+			}
+			else
+			{
+				globbing.gl_pathv[1] = globbing.gl_pathv[0];
+				status = run_cmd(&globbing.gl_pathv[1]);
+			}
+		}
+		else
+		{
+			status = run_cmd(cmd->args_list);
+		}
 	}
 	/*checks if command exists in bin */
 	else {
