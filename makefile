@@ -53,8 +53,8 @@ memCheck: xxsh
 
 tar:
 	make clean
-	tar --exclude="lab6/.git*" -czvf ../lab06_CrushBate_DakotaDoolaege.tar.gz\
-	   	-C .. lab6
+	tar --exclude="lab10/.git*" -czvf ../lab10_CrushBate_DakotaDoolaege.tar.gz\
+	   	-C .. lab10
 
 clean:
 	rm -f *~ *.o xxsh
