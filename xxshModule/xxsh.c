@@ -15,7 +15,8 @@ int main(void)
  */
 void prompt()
 {
-	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
+	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(),
+	       get_env("PWD"));
 }
 
 /**
@@ -36,7 +37,7 @@ void reprompt()
 char *get_input()
 {
 	static char buffer[MAX_LENGTH];
-	int space= MAX_LENGTH;
+	int space = MAX_LENGTH;
 	char c;
 	space = MAX_LENGTH;
 	// read in input and check for special characters like arrow keys
@@ -46,65 +47,57 @@ char *get_input()
 	// as soon as it is typed. This allows instant processing of arrows.
 	tty.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty);
-	while(space && (c = getchar()) != '\n' && c != EOF)	
-	{
+	while (space && (c = getchar()) != '\n' && c != EOF) {
 		// special characters
-		if (c == '\033')
-		{
+		if (c == '\033') {
 			getchar();
 			char *cmd = NULL;
-			switch(getchar())
-			{
+			switch (getchar()) {
 				// up arrow
-				case 'A':
-					// Redraw tty input
-					if(!(cmd = scroll_up()))
-						continue;
-					reprompt();
-					printf("%s", cmd);
-					// Update buffer
-					strncpy(buffer, cmd, MAX_LENGTH);
-					space = MAX_LENGTH - strlen(cmd);
-					break;
+			case 'A':
+				// Redraw tty input
+				if (!(cmd = scroll_up()))
+					continue;
+				reprompt();
+				printf("%s", cmd);
+				// Update buffer
+				strncpy(buffer, cmd, MAX_LENGTH);
+				space = MAX_LENGTH - strlen(cmd);
+				break;
 				// down arrow
-				case 'B':
-					// Redraw tty input
-					if(!(cmd = scroll_down()))
-					{
-						reprompt();
-						buffer[0] = '\0';
-						space = MAX_LENGTH;
-						continue;
-					}
+			case 'B':
+				// Redraw tty input
+				if (!(cmd = scroll_down())) {
 					reprompt();
-					printf("%s", cmd);
-					// Update buffer
-					strncpy(buffer, cmd, MAX_LENGTH);
-					space = MAX_LENGTH - strlen(cmd);
-					break;
-				default:
-					printf("Unknown special character entered\n");
-					prompt();
+					buffer[0] = '\0';
+					space = MAX_LENGTH;
+					continue;
+				}
+				reprompt();
+				printf("%s", cmd);
+				// Update buffer
+				strncpy(buffer, cmd, MAX_LENGTH);
+				space = MAX_LENGTH - strlen(cmd);
+				break;
+			default:
+				printf("Unknown special character entered\n");
+				prompt();
 			}
 		}
 		// backspace
-		else if (c == 127)
-		{
-			if ((MAX_LENGTH - space) > 0)
-			{
-				buffer[MAX_LENGTH - space-1] = '\0';
+		else if (c == 127) {
+			if ((MAX_LENGTH - space) > 0) {
+				buffer[MAX_LENGTH - space - 1] = '\0';
 				space++;
 				// redraw updated line using ANSI escape sequences for moving 
 				// the cursor backwards.
 				// https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x361.html
 				printf("\033[1D \033[1D");
 			}
-		}
-		else
-		{
+		} else {
 			buffer[MAX_LENGTH - space] = c;
 			space--;
-			printf("%c",c);
+			printf("%c", c);
 		}
 	}
 	buffer[MAX_LENGTH - space] = '\0';
@@ -171,7 +164,7 @@ void main_loop()
 		}
 		free_command(cmd_args);
 
-	prompt();
+		prompt();
 	}
 	printf("\n");
 }
@@ -340,12 +333,10 @@ int arg_cmd(command *cmd)
 		free_command(cmd);
 		free(cmd);
 		status = -1;
-	}
-	else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
+	} else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
 		cmd_pwd();
-	}
-	else if (strcmp(cmd->args_list[0], "cd") == 0 &&
-								 (cmd->size >= 2 && cmd->size <= 3)) {
+	} else if (strcmp(cmd->args_list[0], "cd") == 0 &&
+		   (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
 	}
 	else if (strcmp(cmd->args_list[0], "glob") == 0 && cmd->size == 2) {
@@ -362,21 +353,23 @@ int arg_cmd(command *cmd)
 }
 
 //changes current directory 
-void cmd_cd(command *cmd){
+void cmd_cd(command *cmd)
+{
 	//cd no parameters
-	if(cmd->size==2 || strcmp(cmd->args_list[1],"~")==0){
-		change_directory(get_env("HOME"));	
-	}
-	else{
+	if (cmd->size == 2 || strcmp(cmd->args_list[1], "~") == 0) {
+		change_directory(get_env("HOME"));
+	} else {
 		change_directory(cmd->args_list[1]);
 	}
 }
+
 //prints out current working directory
-void cmd_pwd(){
+void cmd_pwd()
+{
 	char buffer[1024];
-	getcwd(buffer,1024);
-	printf("%s\n",buffer);
-}	
+	getcwd(buffer, 1024);
+	printf("%s\n", buffer);
+}
 
 /**
  * command and parses flags
