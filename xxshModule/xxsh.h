@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <termios.h>
 #include <glob.h>
+#include <regex.h>
+#include <stdint.h>
 
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
@@ -139,5 +141,8 @@ int is_pipe(char **args);
  * @param string to shift
  */
 void shift_str(char *pattern);
+
+char* replace_mark(char *pattern);
+void check_regex(char *args,char *regex2);
 
 #endif /*XXSH*/

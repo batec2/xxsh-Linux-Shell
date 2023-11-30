@@ -1,6 +1,7 @@
 #include "xxsh.h"
 
 #define MAX_LENGTH 256
+#define ARRAY_SIZE(arr) (sizeof((arr)) / sizeof((arr)[0]))
 
 int main(void)
 {
@@ -338,6 +339,10 @@ int arg_cmd(command *cmd)
 	} else if (strcmp(cmd->args_list[0], "cd") == 0 &&
 		   (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
+	} else if (strcmp(cmd->args_list[0], "test") == 0) {
+		//check_regex("","");
+		char *newstr = replace_mark(cmd->args_list[1]);
+		printf("%s\n",newstr);
 	}
 	else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
 		glob_t globbing;
@@ -513,4 +518,78 @@ void shift_str(char *pattern)
 	{
 		pattern[i] = pattern[i+1];
 	}
+}
+
+char* replace_mark(char *pattern)
+{
+	int counter = 0;
+	for(int i =0;i<=strlen(pattern);i++){
+		if(pattern[i]=='?'){
+			counter++;
+		}
+	}
+	
+	//creates a new space to hold new string
+	char *newstr = malloc(strlen(pattern)+1+counter);
+	strcpy(newstr,"");
+	//Copies the string into new string with ? replaced with .?
+	char *ptr;
+
+	for(int i =0;i<counter;i++){
+		if(i==0){
+			ptr = strtok(pattern,"?");
+		}
+		else{
+			ptr=strtok(NULL,"?");
+			strcat(newstr,ptr);
+			if(){
+				strcat(newstr,".?");
+				counter--;
+			}
+		}
+	}	
+	do{
+		strcat(newstr,ptr);
+		if(counter!=0||strlen(ptr)==0){
+			strcat(newstr,".?");
+			counter--;
+		}
+	}while(ptr=strtok(NULL,"?"));
+	
+	return newstr;
+}
+
+/**
+ * Copied from man pages
+*/
+void check_regex(char *args,char *regex2)
+{
+	char *str ="1) John Driverhacker;\n2) John Doe;\n3) John Foo;\n";
+	char *re = "John.*o";
+	char *s = str;
+
+	regex_t     regex;
+	regmatch_t  pmatch[1];
+	regoff_t    off, len;
+
+	if (regcomp(&regex, re,REG_NEWLINE | REG_EXTENDED))
+		exit(EXIT_FAILURE);
+
+	printf("String = \"%s\"\n", str);
+	printf("Matches:\n");
+
+	for (int i = 0; ; i++) {
+		if (regexec(&regex, s, ARRAY_SIZE(pmatch), pmatch, 0))
+			break;
+
+		off = pmatch[0].rm_so + (s - str);
+		len = pmatch[0].rm_eo - pmatch[0].rm_so;
+		printf("#%zu:\n", i);
+		printf("offset = %jd; length = %jd\n", (intmax_t) off,
+				(intmax_t) len);
+		printf("substring = \"%.*s\"\n", len, s + pmatch[0].rm_so);
+
+		s += pmatch[0].rm_eo;
+	}
+
 }
