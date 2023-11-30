@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>
+#include <glob.h>
 
 #include "../envModule/envVariables.h"
 #include "../history/history.h"
@@ -132,5 +133,11 @@ void free_command(command * cmd);
  * @return returns index of pipe, -1 if no pipe
 */
 int is_pipe(char **args);
+
+/**
+ * shifts a string to remove a character
+ * @param string to shift
+ */
+void shift_str(char *pattern);
 
 #endif /*XXSH*/
