@@ -71,8 +71,7 @@ void set_var(char *key, char *value)
 int change_directory(char *path)
 {
 	char buffer[1024];
-	if (chdir(path))
-	{
+	if (chdir(path)) {
 		printf("Unable to change directory to: %s\n", path);
 		return -1;
 	}
@@ -81,7 +80,7 @@ int change_directory(char *path)
 		set_var("OLDPWD", pwd);
 	else
 		set_var("OLDPWD", path);
-	set_var("PWD",getcwd(buffer,1024));
+	set_var("PWD", getcwd(buffer, 1024));
 	return 0;
 }
 
@@ -92,7 +91,7 @@ int change_directory(char *path)
  */
 void check_set_var(char *key, char *value)
 {
-	if(!get_entry(table, key))
+	if (!get_entry(table, key))
 		add_entry(table, key, value);
 }
 
@@ -138,19 +137,19 @@ void read_env()
 		printf("WARNING: Failed to look up user information.\n");
 
 	// Load in user config file
-	char *user_config = malloc(sizeof(source_dir) + sizeof(USER_CONFIG_FILE));
+	char *user_config =
+	    malloc(sizeof(source_dir) + sizeof(USER_CONFIG_FILE));
 	strcpy(user_config, source_dir);
 	strcat(user_config, USER_CONFIG_FILE);
 	read_in_config(user_config);
 	free(user_config);
-	
+
 	// Check for any missing system-specific env variables and attempt to 
 	// read them in
-	if (get_env("HOST") == NULL)
-	{
+	if (get_env("HOST") == NULL) {
 		get_hostname();
 	}
-	
+
 }
 
 /**
@@ -175,8 +174,7 @@ void read_in_config(char *config)
 	char buffer[MAX_COUNT];
 	char *token, *token2;
 	FILE *file = open_file(config, "r");
-	if (file != NULL)
-	{
+	if (file != NULL) {
 		while (fgets(buffer, MAX_COUNT, file) != NULL) {
 			token = strtok(buffer, ",\n");
 			token2 = strtok(NULL, "\n");
@@ -198,39 +196,35 @@ int get_user_info(int uid, HashTable *table)
 	char data[255];
 	FILE *file = open_file("/etc/passwd", "r");
 	int found = 0;
-	while (fgets(data, sizeof(data), file) != NULL)
-	{
-		if (strstr(data, user_id) != NULL)
-		{
+	while (fgets(data, sizeof(data), file) != NULL) {
+		if (strstr(data, user_id) != NULL) {
 			found = 1;
 			break;
 		}
 	}
 	fclose(file);
-	if (!found)
-	{
-		printf("Unable to find the current user in the /etc/password file.\n");
+	if (!found) {
+		printf
+		    ("Unable to find the current user in the /etc/password file.\n");
 		return 0;
 	}
 	// Extract information
 	char *substring = strtok(data, ":");
 	int count = 0;
-	while (substring != NULL && ++count)
-	{
-		switch(count)
-		{
-			case 1:
-				set_entry(table, "USER", substring);
-				break;
-			case 6:
-				set_entry(table, "HOME", substring);
-				// Update current working directory
-				change_directory(substring);
-				break;
-			case 7:
-				strtok(substring, "\n");
-				set_entry(table, "SHELL", substring);
-				break;
+	while (substring != NULL && ++count) {
+		switch (count) {
+		case 1:
+			set_entry(table, "USER", substring);
+			break;
+		case 6:
+			set_entry(table, "HOME", substring);
+			// Update current working directory
+			change_directory(substring);
+			break;
+		case 7:
+			strtok(substring, "\n");
+			set_entry(table, "SHELL", substring);
+			break;
 		}
 		substring = strtok(NULL, ":");
 	}

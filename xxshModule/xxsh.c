@@ -15,7 +15,8 @@ int main(void)
  */
 void prompt()
 {
-	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(), get_env("PWD"));
+	printf("\033[34m%s@%s:%s>>\033[0m ", get_user(), get_host(),
+	       get_env("PWD"));
 }
 
 /**
@@ -36,7 +37,7 @@ void reprompt()
 char *get_input()
 {
 	static char buffer[MAX_LENGTH];
-	int space= MAX_LENGTH;
+	int space = MAX_LENGTH;
 	char c;
 	space = MAX_LENGTH;
 	// read in input and check for special characters like arrow keys
@@ -46,65 +47,57 @@ char *get_input()
 	// as soon as it is typed. This allows instant processing of arrows.
 	tty.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty);
-	while(space && (c = getchar()) != '\n' && c != EOF)	
-	{
+	while (space && (c = getchar()) != '\n' && c != EOF) {
 		// special characters
-		if (c == '\033')
-		{
+		if (c == '\033') {
 			getchar();
 			char *cmd = NULL;
-			switch(getchar())
-			{
+			switch (getchar()) {
 				// up arrow
-				case 'A':
-					// Redraw tty input
-					if(!(cmd = scroll_up()))
-						continue;
-					reprompt();
-					printf("%s", cmd);
-					// Update buffer
-					strncpy(buffer, cmd, MAX_LENGTH);
-					space = MAX_LENGTH - strlen(cmd);
-					break;
+			case 'A':
+				// Redraw tty input
+				if (!(cmd = scroll_up()))
+					continue;
+				reprompt();
+				printf("%s", cmd);
+				// Update buffer
+				strncpy(buffer, cmd, MAX_LENGTH);
+				space = MAX_LENGTH - strlen(cmd);
+				break;
 				// down arrow
-				case 'B':
-					// Redraw tty input
-					if(!(cmd = scroll_down()))
-					{
-						reprompt();
-						buffer[0] = '\0';
-						space = MAX_LENGTH;
-						continue;
-					}
+			case 'B':
+				// Redraw tty input
+				if (!(cmd = scroll_down())) {
 					reprompt();
-					printf("%s", cmd);
-					// Update buffer
-					strncpy(buffer, cmd, MAX_LENGTH);
-					space = MAX_LENGTH - strlen(cmd);
-					break;
-				default:
-					printf("Unknown special character entered\n");
-					prompt();
+					buffer[0] = '\0';
+					space = MAX_LENGTH;
+					continue;
+				}
+				reprompt();
+				printf("%s", cmd);
+				// Update buffer
+				strncpy(buffer, cmd, MAX_LENGTH);
+				space = MAX_LENGTH - strlen(cmd);
+				break;
+			default:
+				printf("Unknown special character entered\n");
+				prompt();
 			}
 		}
 		// backspace
-		else if (c == 127)
-		{
-			if ((MAX_LENGTH - space) > 0)
-			{
-				buffer[MAX_LENGTH - space-1] = '\0';
+		else if (c == 127) {
+			if ((MAX_LENGTH - space) > 0) {
+				buffer[MAX_LENGTH - space - 1] = '\0';
 				space++;
 				// redraw updated line using ANSI escape sequences for moving 
 				// the cursor backwards.
 				// https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x361.html
 				printf("\033[1D \033[1D");
 			}
-		}
-		else
-		{
+		} else {
 			buffer[MAX_LENGTH - space] = c;
 			space--;
-			printf("%c",c);
+			printf("%c", c);
 		}
 	}
 	buffer[MAX_LENGTH - space] = '\0';
@@ -171,7 +164,7 @@ void main_loop()
 		}
 		free_command(cmd_args);
 
-	prompt();
+		prompt();
 	}
 	printf("\n");
 }
@@ -340,15 +333,12 @@ int arg_cmd(command *cmd)
 		free_command(cmd);
 		free(cmd);
 		status = -1;
-	}
-	else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
+	} else if (strcmp(cmd->args_list[0], "pwd") == 0 && cmd->size == 2) {
 		cmd_pwd();
-	}
-	else if (strcmp(cmd->args_list[0], "cd") == 0 &&
-								 (cmd->size >= 2 && cmd->size <= 3)) {
+	} else if (strcmp(cmd->args_list[0], "cd") == 0 &&
+		   (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
-	}
-	else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
+	} else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
 		glob_t globbing;
 		char *pattern = NULL;
 		// offset trick from man 3 glob example
@@ -359,48 +349,40 @@ int arg_cmd(command *cmd)
 		// iterate over the arguments and glob for any that aren't options 
 		// This supports multiple patterns in a command such as:
 		// ls -l *.conf *.md
-		for( int i = 1; i < cmd->size-1; i++)
-		{
+		for (int i = 1; i < cmd->size - 1; i++) {
 			// Check if the current argument is options
-			if (cmd->args_list[i][0] == '-')
-			{
+			if (cmd->args_list[i][0] == '-') {
 				// prevent the user from entering ungrouped options
-				if(options)
-					printf("ls options may only be specified once\n");
+				if (options)
+					printf
+					    ("ls options may only be specified once\n");
 				else
-					options= i;
+					options = i;
 				continue;
 			}
 			pattern = cmd->args_list[i];
-			if (glob(pattern, flags, NULL, &globbing) == GLOB_NOMATCH)
-			{
-				printf("xxsh: no matches found: %s\n", pattern); 
+			if (glob(pattern, flags, NULL, &globbing) ==
+			    GLOB_NOMATCH) {
+				printf("xxsh: no matches found: %s\n", pattern);
 				return 1;
 			}
 			flags = flags | GLOB_APPEND;
 			char *wc = NULL;
-			while ((wc = strstr(pattern, "?")))
-			{
+			while ((wc = strstr(pattern, "?"))) {
 				shift_str(wc);
 				glob(pattern, flags, NULL, &globbing);
 			}
 		}
-		if (pattern)
-		{
+		if (pattern) {
 			globbing.gl_pathv[0] = "ls";
-			if (options)
-			{
+			if (options) {
 				globbing.gl_pathv[1] = cmd->args_list[options];
 				status = run_cmd(&globbing.gl_pathv[0]);
-			}
-			else
-			{
+			} else {
 				globbing.gl_pathv[1] = globbing.gl_pathv[0];
 				status = run_cmd(&globbing.gl_pathv[1]);
 			}
-		}
-		else
-		{
+		} else {
 			status = run_cmd(cmd->args_list);
 		}
 	}
@@ -413,21 +395,23 @@ int arg_cmd(command *cmd)
 }
 
 //changes current directory 
-void cmd_cd(command *cmd){
+void cmd_cd(command *cmd)
+{
 	//cd no parameters
-	if(cmd->size==2 || strcmp(cmd->args_list[1],"~")==0){
-		change_directory(get_env("HOME"));	
-	}
-	else{
+	if (cmd->size == 2 || strcmp(cmd->args_list[1], "~") == 0) {
+		change_directory(get_env("HOME"));
+	} else {
 		change_directory(cmd->args_list[1]);
 	}
 }
+
 //prints out current working directory
-void cmd_pwd(){
+void cmd_pwd()
+{
 	char buffer[1024];
-	getcwd(buffer,1024);
-	printf("%s\n",buffer);
-}	
+	getcwd(buffer, 1024);
+	printf("%s\n", buffer);
+}
 
 /**
  * command and parses flags
@@ -514,10 +498,13 @@ int is_pipe(char **args)
 	return -1;
 }
 
+/**
+ * shifts a string to remove a character
+ * @param string to shift
+ */
 void shift_str(char *pattern)
 {
-	for(int i = 0; i < strlen(pattern);i++)
-	{
-		pattern[i] = pattern[i+1];
+	for (int i = 0; i < strlen(pattern); i++) {
+		pattern[i] = pattern[i + 1];
 	}
 }
