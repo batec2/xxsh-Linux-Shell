@@ -339,12 +339,16 @@ int arg_cmd(command *cmd)
 	} else if (strcmp(cmd->args_list[0], "cd") == 0 &&
 		   (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
+<<<<<<< HEAD
 	} else if (strcmp(cmd->args_list[0], "test") == 0) {
 		//check_regex("","");
 		char *newstr = replace_mark(cmd->args_list[1]);
 		printf("%s\n",newstr);
 	}
 	else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
+=======
+	} else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
+>>>>>>> 694b83feaba2e3623fda0b9c0eabb9cecf53bcc8
 		glob_t globbing;
 		char *pattern = NULL;
 		// offset trick from man 3 glob example
@@ -355,48 +359,40 @@ int arg_cmd(command *cmd)
 		// iterate over the arguments and glob for any that aren't options 
 		// This supports multiple patterns in a command such as:
 		// ls -l *.conf *.md
-		for( int i = 1; i < cmd->size-1; i++)
-		{
+		for (int i = 1; i < cmd->size - 1; i++) {
 			// Check if the current argument is options
-			if (cmd->args_list[i][0] == '-')
-			{
+			if (cmd->args_list[i][0] == '-') {
 				// prevent the user from entering ungrouped options
-				if(options)
-					printf("ls options may only be specified once\n");
+				if (options)
+					printf
+					    ("ls options may only be specified once\n");
 				else
-					options= i;
+					options = i;
 				continue;
 			}
 			pattern = cmd->args_list[i];
-			if (glob(pattern, flags, NULL, &globbing) == GLOB_NOMATCH)
-			{
-				printf("xxsh: no matches found: %s\n", pattern); 
+			if (glob(pattern, flags, NULL, &globbing) ==
+			    GLOB_NOMATCH) {
+				printf("xxsh: no matches found: %s\n", pattern);
 				return 1;
 			}
 			flags = flags | GLOB_APPEND;
 			char *wc = NULL;
-			while ((wc = strstr(pattern, "?")))
-			{
+			while ((wc = strstr(pattern, "?"))) {
 				shift_str(wc);
 				glob(pattern, flags, NULL, &globbing);
 			}
 		}
-		if (pattern)
-		{
+		if (pattern) {
 			globbing.gl_pathv[0] = "ls";
-			if (options)
-			{
+			if (options) {
 				globbing.gl_pathv[1] = cmd->args_list[options];
 				status = run_cmd(&globbing.gl_pathv[0]);
-			}
-			else
-			{
+			} else {
 				globbing.gl_pathv[1] = globbing.gl_pathv[0];
 				status = run_cmd(&globbing.gl_pathv[1]);
 			}
-		}
-		else
-		{
+		} else {
 			status = run_cmd(cmd->args_list);
 		}
 	}
@@ -512,11 +508,14 @@ int is_pipe(char **args)
 	return -1;
 }
 
+/**
+ * shifts a string to remove a character
+ * @param string to shift
+ */
 void shift_str(char *pattern)
 {
-	for(int i = 0; i < strlen(pattern);i++)
-	{
-		pattern[i] = pattern[i+1];
+	for (int i = 0; i < strlen(pattern); i++) {
+		pattern[i] = pattern[i + 1];
 	}
 }
 
