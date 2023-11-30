@@ -134,4 +134,10 @@ void free_command(command * cmd);
 */
 int is_pipe(char **args);
 
+/**
+ * shifts a string to remove a character
+ * @param string to shift
+ */
+void shift_str(char *pattern);
+
 #endif /*XXSH*/

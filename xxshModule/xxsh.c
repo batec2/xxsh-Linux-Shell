@@ -378,6 +378,12 @@ int arg_cmd(command *cmd)
 				return 1;
 			}
 			flags = flags | GLOB_APPEND;
+			char *wc = NULL;
+			while ((wc = strstr(pattern, "?")))
+			{
+				shift_str(wc);
+				glob(pattern, flags, NULL, &globbing);
+			}
 		}
 		if (pattern)
 		{
@@ -506,4 +512,12 @@ int is_pipe(char **args)
 		i++;
 	}
 	return -1;
+}
+
+void shift_str(char *pattern)
+{
+	for(int i = 0; i < strlen(pattern);i++)
+	{
+		pattern[i] = pattern[i+1];
+	}
 }
