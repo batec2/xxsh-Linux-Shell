@@ -339,12 +339,6 @@ int arg_cmd(command *cmd)
 	} else if (strcmp(cmd->args_list[0], "cd") == 0 &&
 		   (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
-	} else if (strcmp(cmd->args_list[0], "test") == 0) {
-		char *newstr = replace_mark(cmd->args_list[1],'?',".?");
-		newstr = replace_mark(newstr,'*',".*");
-		printf("%s\n",newstr);
-
-		check_regex(cmd->args_list[2],newstr);
 	}
 	else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
 		glob_t globbing;
@@ -374,20 +368,35 @@ int arg_cmd(command *cmd)
 				printf("xxsh: no matches found: %s\n", pattern);
 				return 1;
 			}
-			flags = flags | GLOB_APPEND;
-			char *wc = NULL;
-			while ((wc = strstr(pattern, "?"))) {
-				shift_str(wc);
-				glob(pattern, flags, NULL, &globbing);
-			}
+			glob("*", flags, NULL, &globbing);
+			pattern = replace_mark(cmd->args_list[i],'?',".?");
+			pattern = replace_mark(pattern,'*',".*");
 		}
+		
 		if (pattern) {
 			globbing.gl_pathv[0] = "ls";
+			int i = 2;
+			int check = 2;
 			if (options) {
 				globbing.gl_pathv[1] = cmd->args_list[options];
+				while(globbing.gl_pathv[i]!=NULL){
+					if(check_regex(globbing.gl_pathv[i],pattern)==1){
+						globbing.gl_pathv[check] = globbing.gl_pathv[i];
+						check++;
+					}
+					i++;
+				}
 				status = run_cmd(&globbing.gl_pathv[0]);
 			} else {
 				globbing.gl_pathv[1] = globbing.gl_pathv[0];
+				while(globbing.gl_pathv[i]!=NULL){
+					if(check_regex(globbing.gl_pathv[i],pattern)==1){
+						globbing.gl_pathv[check] = globbing.gl_pathv[i];
+						check++;
+					}
+					i++;
+				}
+				globbing.gl_pathv[check] = NULL;
 				status = run_cmd(&globbing.gl_pathv[1]);
 			}
 		} else {
@@ -517,9 +526,13 @@ void shift_str(char *pattern)
 	}
 }
 
+
+//Replaces a character with a new 2 char long string
+//adds ^ to the start of the string and $ to the end
 char* replace_mark(char *pattern,char old,char *new)
 {
 	int counter = 0;
+	int counter2 = 0;
 	int length = strlen(pattern);
 
 	for(int i=0;i<length;i++){
@@ -531,9 +544,17 @@ char* replace_mark(char *pattern,char old,char *new)
 	if(counter==0){
 		return pattern;
 	}
-	char *newstr = malloc(length+counter);
+
+	char *newstr = malloc(length+1+counter+counter2+2);
 	
-	newstr[0] = '\0';
+	if(pattern[0]!='^')
+	{
+		strcpy(newstr,"^");
+	}
+	else
+	{
+		newstr[0]='\0';
+	}
 	char *ptr = pattern;
 	for(int i=0;i<=length;i++){
 		if(pattern[i]=='\0'){
@@ -545,27 +566,31 @@ char* replace_mark(char *pattern,char old,char *new)
 			}
 		}
 	}
-	strcat(newstr,ptr);
+	strcat(newstr,ptr);	
+	if(pattern[length]!='^')
+	{
+		strcat(newstr,"$");
+	}
+
 	return newstr;
 }
 
-/**
- * Copied from man pages
-*/
-void check_regex(char *args,char *regex2)
+
+//Checks if a regex matches a passed in character
+//Some of it taken from the regex man pages
+int check_regex(char *args,char *regex2)
 {
 	regex_t     regex; //stores regex
 	regmatch_t  pmatch[1];
-	regoff_t    off, len;
 
 	if (regcomp(&regex, regex2,REG_EXTENDED))
-		exit(EXIT_FAILURE);
-
-	
+		return 0;
 	if (regexec(&regex, args, ARRAY_SIZE(pmatch), pmatch, 0)==REG_NOMATCH){
-		printf("no match for:%s\n",args);
+		//printf("NO!\n");
+		return 0;
 	}
 	else{
-		printf("YES a MATCH for:%s\n",args);
+		//printf("YES!\n");
+		return 1;
 	}
 }

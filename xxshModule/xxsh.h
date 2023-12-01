@@ -142,7 +142,21 @@ int is_pipe(char **args);
  */
 void shift_str(char *pattern);
 
+/**
+ * Replaces the a character in a String with a new string two characters long,
+ * if fresh is 1 then it adds ^ to start of string and $ to end.
+ * @param pattern Regex string to be modified
+ * @param old character to be replaced
+ * @param new String to be inserted
+ * @return Returns modified string
+*/
 char* replace_mark(char *pattern,char old,char *new);
-void check_regex(char *args,char *regex2);
+/**
+ * Checks if the string matches the regex and returns 1 if true 0 if false
+ * @param args string to be matched
+ * @param regex2 regular expression
+ * @return int 1 if true 0 if false
+*/
+int check_regex(char *args,char *regex2);
 
 #endif /*XXSH*/
