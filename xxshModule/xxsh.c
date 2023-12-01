@@ -386,6 +386,7 @@ int arg_cmd(command *cmd)
 					}
 					i++;
 				}
+				globbing.gl_pathv[check] = NULL;
 				status = run_cmd(&globbing.gl_pathv[0]);
 			} else {
 				globbing.gl_pathv[1] = globbing.gl_pathv[0];
@@ -532,7 +533,6 @@ void shift_str(char *pattern)
 char* replace_mark(char *pattern,char old,char *new)
 {
 	int counter = 0;
-	int counter2 = 0;
 	int length = strlen(pattern);
 
 	for(int i=0;i<length;i++){
@@ -545,7 +545,7 @@ char* replace_mark(char *pattern,char old,char *new)
 		return pattern;
 	}
 
-	char *newstr = malloc(length+1+counter+counter2+2);
+	char *newstr = malloc(length+1+counter+2);
 	
 	if(pattern[0]!='^')
 	{
