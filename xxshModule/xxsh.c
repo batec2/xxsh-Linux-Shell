@@ -339,16 +339,14 @@ int arg_cmd(command *cmd)
 	} else if (strcmp(cmd->args_list[0], "cd") == 0 &&
 		   (cmd->size >= 2 && cmd->size <= 3)) {
 		cmd_cd(cmd);
-<<<<<<< HEAD
 	} else if (strcmp(cmd->args_list[0], "test") == 0) {
-		//check_regex("","");
-		char *newstr = replace_mark(cmd->args_list[1]);
+		char *newstr = replace_mark(cmd->args_list[1],'?',".?");
+		newstr = replace_mark(newstr,'*',".*");
 		printf("%s\n",newstr);
+
+		check_regex(cmd->args_list[2],newstr);
 	}
 	else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
-=======
-	} else if (strcmp(cmd->args_list[0], "ls") == 0 && cmd->size > 2) {
->>>>>>> 694b83feaba2e3623fda0b9c0eabb9cecf53bcc8
 		glob_t globbing;
 		char *pattern = NULL;
 		// offset trick from man 3 glob example
@@ -519,42 +517,35 @@ void shift_str(char *pattern)
 	}
 }
 
-char* replace_mark(char *pattern)
+char* replace_mark(char *pattern,char old,char *new)
 {
 	int counter = 0;
-	for(int i =0;i<=strlen(pattern);i++){
-		if(pattern[i]=='?'){
+	int length = strlen(pattern);
+
+	for(int i=0;i<length;i++){
+		if(pattern[i]==old){
 			counter++;
+			pattern[i]='\0';
 		}
 	}
+	if(counter==0){
+		return pattern;
+	}
+	char *newstr = malloc(length+counter);
 	
-	//creates a new space to hold new string
-	char *newstr = malloc(strlen(pattern)+1+counter);
-	strcpy(newstr,"");
-	//Copies the string into new string with ? replaced with .?
-	char *ptr;
-
-	for(int i =0;i<counter;i++){
-		if(i==0){
-			ptr = strtok(pattern,"?");
-		}
-		else{
-			ptr=strtok(NULL,"?");
-			strcat(newstr,ptr);
-			if(){
-				strcat(newstr,".?");
-				counter--;
+	newstr[0] = '\0';
+	char *ptr = pattern;
+	for(int i=0;i<=length;i++){
+		if(pattern[i]=='\0'){
+			if(counter!=0){
+				strcat(newstr,ptr);
+				strcat(newstr,new);
+				ptr = &pattern[i+1];
+				counter--;	
 			}
 		}
-	}	
-	do{
-		strcat(newstr,ptr);
-		if(counter!=0||strlen(ptr)==0){
-			strcat(newstr,".?");
-			counter--;
-		}
-	}while(ptr=strtok(NULL,"?"));
-	
+	}
+	strcat(newstr,ptr);
 	return newstr;
 }
 
@@ -563,32 +554,18 @@ char* replace_mark(char *pattern)
 */
 void check_regex(char *args,char *regex2)
 {
-	char *str ="1) John Driverhacker;\n2) John Doe;\n3) John Foo;\n";
-	char *re = "John.*o";
-	char *s = str;
-
-	regex_t     regex;
+	regex_t     regex; //stores regex
 	regmatch_t  pmatch[1];
 	regoff_t    off, len;
 
-	if (regcomp(&regex, re,REG_NEWLINE | REG_EXTENDED))
+	if (regcomp(&regex, regex2,REG_EXTENDED))
 		exit(EXIT_FAILURE);
 
-	printf("String = \"%s\"\n", str);
-	printf("Matches:\n");
-
-	for (int i = 0; ; i++) {
-		if (regexec(&regex, s, ARRAY_SIZE(pmatch), pmatch, 0))
-			break;
-
-		off = pmatch[0].rm_so + (s - str);
-		len = pmatch[0].rm_eo - pmatch[0].rm_so;
-		printf("#%zu:\n", i);
-		printf("offset = %jd; length = %jd\n", (intmax_t) off,
-				(intmax_t) len);
-		printf("substring = \"%.*s\"\n", len, s + pmatch[0].rm_so);
-
-		s += pmatch[0].rm_eo;
+	
+	if (regexec(&regex, args, ARRAY_SIZE(pmatch), pmatch, 0)==REG_NOMATCH){
+		printf("no match for:%s\n",args);
 	}
-
+	else{
+		printf("YES a MATCH for:%s\n",args);
+	}
 }

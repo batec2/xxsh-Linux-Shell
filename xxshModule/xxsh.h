@@ -142,7 +142,7 @@ int is_pipe(char **args);
  */
 void shift_str(char *pattern);
 
-char* replace_mark(char *pattern);
+char* replace_mark(char *pattern,char old,char *new);
 void check_regex(char *args,char *regex2);
 
 #endif /*XXSH*/
